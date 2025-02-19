@@ -1,7 +1,11 @@
+import { PrismaClient } from '@prisma/client/edge'
+import { withAccelerate } from '@prisma/extension-accelerate'
+
+const prisma = new PrismaClient().$extends(withAccelerate())
+
 const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 const app = express();
-const prisma = new PrismaClient();
 
 app.use(express.json());
 

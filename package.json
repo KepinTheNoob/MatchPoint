@@ -19,6 +19,7 @@
   "homepage": "https://github.com/KepinTheNoob/BE-Softeng#readme",
   "dependencies": {
     "@prisma/client": "^6.4.0",
+    "@prisma/extension-accelerate": "^1.2.2",
     "express": "^4.21.2"
   },
   "devDependencies": {
