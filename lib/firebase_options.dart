@@ -86,4 +86,5 @@ class DefaultFirebaseOptions {
     storageBucket: 'matchpoint-6dc1a.firebasestorage.app',
     measurementId: 'G-N2RNWZTM2G',
   );
+
 }
