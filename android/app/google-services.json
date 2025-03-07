@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "289368523952",
+    "project_id": "matchpoint-6dc1a",
+    "storage_bucket": "matchpoint-6dc1a.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:289368523952:android:ca78de0251a69502506775",
+        "android_client_info": {
+          "package_name": "com.example.matchpoint"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "289368523952-stqulgg8vnnes05uhpimf4i53ik6ihl4.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAcaMzamzf4u9aDjbHseHffjFoiVgVfcLw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "289368523952-stqulgg8vnnes05uhpimf4i53ik6ihl4.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "289368523952-b6vid2e74di917dp8kjn0qspn9rlpct6.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.matchpoint"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
