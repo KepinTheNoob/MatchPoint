@@ -1,0 +1,2 @@
+C:/Users/Evaldo Raynardi/OneDrive/Desktop/Kuilah/Semester 4/Software Engineer/Project/MatchPoint/android/app/.cxx/Debug/5i5k6v6j/x86/CMakeFiles/edit_cache.dir
+C:/Users/Evaldo Raynardi/OneDrive/Desktop/Kuilah/Semester 4/Software Engineer/Project/MatchPoint/android/app/.cxx/Debug/5i5k6v6j/x86/CMakeFiles/rebuild_cache.dir
