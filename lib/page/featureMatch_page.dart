@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:matchpoint/main.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class FeatureMatchPage extends StatelessWidget {
   const FeatureMatchPage({super.key});
@@ -135,7 +136,7 @@ class FeatureMatchPage extends StatelessWidget {
             children: [
               // Left team
               _buildTeamColumn("Apex"),
-              const Expanded(
+              Expanded(
                 child: Column(
                   children: [
                     Text("VS",
@@ -151,15 +152,27 @@ class FeatureMatchPage extends StatelessWidget {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text("WIN",
-                            style: TextStyle(
-                                color: Colors.green,
-                                fontWeight: FontWeight.w900)),
+                        Text(
+                          "WIN",
+                          style: GoogleFonts.quicksand(
+                            textStyle: TextStyle(
+                              color: Colors.green,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
                         SizedBox(width: 12),
-                        Text("LOSE",
-                            style: TextStyle(
-                                color: Colors.red,
-                                fontWeight: FontWeight.w900)),
+                        Text(
+                          "LOSE",
+                          style: GoogleFonts.quicksand(
+                            textStyle: TextStyle(
+                              color: Colors.red,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
                   ],
