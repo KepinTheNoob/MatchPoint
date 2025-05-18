@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:matchpoint/page/featureMatch_page.dart';
 import 'package:matchpoint/page/login_page.dart';
 import 'firebase_options.dart';
 import 'page/register_page.dart';
@@ -27,10 +28,10 @@ class MyApp extends StatelessWidget {
         title: 'MatchPoint Demo',
         debugShowCheckedModeBanner: false,
         routes: {
-          // '/login': (context) => const login_page(),
           '/register': (context) => RegisterPage(),
           '/home': (context) => const MyHomePage(),
-          '/login': (context) => const LoginPage()
+          '/login': (context) => const LoginPage(),
+          '/feature': (context) => const FeatureMatchPage()
         },
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -95,9 +96,23 @@ class _MyHomePageState extends State<MyHomePage> {
             tooltip: "Go to Register Page",
             child: Icon(Icons.person_add),
           ),
+          SizedBox(height: 16),
+          FloatingActionButton(
+            heroTag: "btn2", // Tambahkan heroTag untuk menghindari error
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        FeatureMatchPage()), // Ganti dengan nama halaman register
+              );
+            },
+            tooltip: "Go to feature Page",
+            child: Icon(Icons.person_outline),
+          ),
           SizedBox(height: 16), // Jarak antar tombol
           FloatingActionButton(
-            heroTag: "btn2",
+            heroTag: "btn3",
             onPressed: () {
               _showAddNotionItemDialog(context);
             },
