@@ -1,60 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:matchpoint/page/login_page.dart';
+import 'package:matchpoint/page/register_page.dart';
 import '../main.dart';
 
-class RegisterPage extends StatefulWidget {
-  const RegisterPage({super.key});
+class LoginPage extends StatefulWidget {
+  const LoginPage({super.key});
 
   @override
-  State<RegisterPage> createState() => _RegisterPageState();
+  State<LoginPage> createState() => _LoginPageState();
 }
 
-class _RegisterPageState extends State<RegisterPage> {
+class _LoginPageState extends State<LoginPage> {
   bool _isPasswordVisible = false;
-  bool _isConfirmPasswordVisible = false;
 
-  // Controllers
   final TextEditingController _usernameController = TextEditingController();
-  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
 
-  // Error Messages
   String _usernameError = '';
-  String _emailError = '';
   String _passwordError = '';
-  String _confirmPasswordError = '';
 
-  void _validateAndRegister() {
+  void _validateAndLogin() {
     setState(() {
       _usernameError =
           _usernameController.text.isEmpty ? 'Username must be filled' : '';
-
-      _emailError = _emailController.text.isEmpty
-          ? 'Email must be filled'
-          : (!_emailController.text.contains('@') ||
-                  !_emailController.text.contains('.'))
-              ? 'Email must contain "@" and "."'
-              : '';
 
       _passwordError = _passwordController.text.isEmpty
           ? 'Password must be filled'
           : (!_passwordController.text.contains(RegExp(r'[A-Z]')))
               ? 'Password must contain an uppercase letter'
               : '';
-
-      _confirmPasswordError =
-          _confirmPasswordController.text != _passwordController.text
-              ? 'Passwords do not match'
-              : '';
     });
 
-    if (_usernameError.isEmpty &&
-        _emailError.isEmpty &&
-        _passwordError.isEmpty &&
-        _confirmPasswordError.isEmpty) {
+    if (_usernameError.isEmpty && _passwordError.isEmpty) {
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const MyHomePage()),
@@ -79,19 +56,16 @@ class _RegisterPageState extends State<RegisterPage> {
                 child: Text("Logo"),
               ),
               Text(
-                "Welcome!",
+                "Welcome Back!",
                 style: GoogleFonts.quicksand(
                   fontSize: 40,
                   fontWeight: FontWeight.bold,
-                  color: Color(0xFF174B7E),
+                  color: const Color(0xFF174B7E),
                 ),
               ),
 
               // Username
               _buildTextField("Username", _usernameController, _usernameError),
-
-              // Email
-              _buildTextField("Email", _emailController, _emailError),
 
               // Password
               _buildPasswordField(
@@ -101,17 +75,9 @@ class _RegisterPageState extends State<RegisterPage> {
                   (value) => setState(() => _isPasswordVisible = value),
                   _passwordError),
 
-              // Confirm Password
-              _buildPasswordField(
-                  "Confirm Password",
-                  _confirmPasswordController,
-                  _isConfirmPasswordVisible,
-                  (value) => setState(() => _isConfirmPasswordVisible = value),
-                  _confirmPasswordError),
-
-              // Register Button
+              // Login Button
               ElevatedButton(
-                onPressed: _validateAndRegister,
+                onPressed: _validateAndLogin,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.orangeAccent,
                   minimumSize: const Size(double.infinity, 50),
@@ -121,7 +87,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                 ),
                 child: const Text(
-                  "Register",
+                  "Login",
                   style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
                 ),
               ),
@@ -145,7 +111,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   elevation: 3,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8),
-                    side: BorderSide(color: Colors.grey, width: 1),
+                    side: const BorderSide(color: Colors.grey, width: 1),
                   ),
                 ),
                 child: Row(
@@ -169,11 +135,12 @@ class _RegisterPageState extends State<RegisterPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()),
+                    MaterialPageRoute(
+                        builder: (context) => const RegisterPage()),
                   );
                 },
                 child: const Text(
-                  "Already have an account?",
+                  "Don't have an account? Register",
                   style: TextStyle(
                     color: Color(0xff174B7E),
                     decoration: TextDecoration.underline,
@@ -278,7 +245,7 @@ class _RegisterPageState extends State<RegisterPage> {
             suffixIcon: IconButton(
               icon: Icon(
                 isVisible ? Icons.visibility : Icons.visibility_off,
-                color: Color.fromARGB(255, 96, 96, 96),
+                color: const Color.fromARGB(255, 96, 96, 96),
               ),
               onPressed: () {
                 onToggle(!isVisible);

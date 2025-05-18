@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:matchpoint/page/login_page.dart';
 import 'firebase_options.dart';
 import 'page/register_page.dart';
 import 'package:provider/provider.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
           // '/login': (context) => const login_page(),
           '/register': (context) => RegisterPage(),
           '/home': (context) => const MyHomePage(),
+          '/login': (context) => const LoginPage()
         },
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
