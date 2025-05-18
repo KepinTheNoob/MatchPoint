@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
+import 'page/register_page.dart';
 import 'package:provider/provider.dart';
 import 'package:matchpoint/Home.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,8 +25,14 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'MatchPoint Demo',
         debugShowCheckedModeBanner: false,
+        routes: {
+          // '/login': (context) => const login_page(),
+          '/register': (context) => RegisterPage(),
+          '/home': (context) => const MyHomePage(),
+        },
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+          textTheme: GoogleFonts.quicksandTextTheme(),
         ),
         // home: const MyHomePage(title: 'Flutter Demo Home Page'),
         home: const MyHomePage(),
@@ -34,9 +42,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  // const MyHomePage({super.key, required this.title});
   const MyHomePage({super.key});
-  // final String title; // App state
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -44,14 +50,6 @@ class MyHomePage extends StatefulWidget {
 
 // State Class
 class _MyHomePageState extends State<MyHomePage> {
-  // int _counter = 0; // Kalo variabel ada didalam stateclass -> ephemeral state
-
-  // void _incrementCounter() {
-  //   setState(() {
-  //     _counter++;
-  //   });
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -79,12 +77,32 @@ class _MyHomePageState extends State<MyHomePage> {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _showAddNotionItemDialog(context);
-        },
-        tooltip: "Add Match",
-        child: Icon(Icons.add),
+      floatingActionButton: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          FloatingActionButton(
+            heroTag: "btn1", // Tambahkan heroTag untuk menghindari error
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                    builder: (context) =>
+                        RegisterPage()), // Ganti dengan nama halaman register
+              );
+            },
+            tooltip: "Go to Register Page",
+            child: Icon(Icons.person_add),
+          ),
+          SizedBox(height: 16), // Jarak antar tombol
+          FloatingActionButton(
+            heroTag: "btn2",
+            onPressed: () {
+              _showAddNotionItemDialog(context);
+            },
+            tooltip: "Add Match",
+            child: Icon(Icons.add),
+          ),
+        ],
       ),
     );
   }
