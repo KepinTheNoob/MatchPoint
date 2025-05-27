@@ -50,10 +50,30 @@ class _LoginPageState extends State<LoginPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
-              const CircleAvatar(
-                radius: 50,
-                backgroundColor: Color(0xffD9D9D9),
-                child: Text("Logo"),
+              // Logo
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.asset(
+                    'assets/logo.png',
+                    height: 50,
+                    width: 50,
+                    fit: BoxFit.contain,
+                  ),
+                  SizedBox(height: 10),
+                  Baseline(
+                    baseline: 5,
+                    baselineType: TextBaseline.alphabetic,
+                    child: Text(
+                      "Match Point",
+                      style: GoogleFonts.quicksand(
+                        fontSize: 20,
+                        fontWeight: FontWeight.normal,
+                        color: Colors.black,
+                      ),
+                    ),
+                  ),
+                ],
               ),
               Text(
                 "Welcome Back!",
@@ -104,7 +124,12 @@ class _LoginPageState extends State<LoginPage> {
               ),
 
               ElevatedButton(
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const MyHomePage()),
+                  );
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,
                   minimumSize: const Size(double.infinity, 50),

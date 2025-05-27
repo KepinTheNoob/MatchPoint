@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:matchpoint/page/featureMatch_page.dart';
+import 'package:matchpoint/page/historyMatch_page.dart';
 import 'package:matchpoint/page/login_page.dart';
+import 'package:matchpoint/page/settings_page.dart';
 import 'firebase_options.dart';
 import 'page/register_page.dart';
 import 'package:provider/provider.dart';
@@ -31,7 +33,9 @@ class MyApp extends StatelessWidget {
           '/register': (context) => RegisterPage(),
           '/home': (context) => const MyHomePage(),
           '/login': (context) => const LoginPage(),
-          '/feature': (context) => const FeatureMatchPage()
+          '/feature': (context) => const FeatureMatchPage(),
+          '/history': (context) => const HistoryMatchPage(),
+          '/settings': (context) => const SettingsPage()
         },
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
@@ -110,9 +114,21 @@ class _MyHomePageState extends State<MyHomePage> {
             tooltip: "Go to feature Page",
             child: Icon(Icons.person_outline),
           ),
-          SizedBox(height: 16), // Jarak antar tombol
+          SizedBox(height: 16),
           FloatingActionButton(
             heroTag: "btn3",
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => HistoryMatchPage()),
+              );
+            },
+            tooltip: "Go to feature Page",
+            child: Icon(Icons.history),
+          ),
+          SizedBox(height: 16), // Jarak antar tombol
+          FloatingActionButton(
+            heroTag: "btn4",
             onPressed: () {
               _showAddNotionItemDialog(context);
             },

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:matchpoint/Home.dart';
 import 'package:matchpoint/main.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:matchpoint/page/settings_page.dart';
+import 'package:provider/provider.dart';
 
 class FeatureMatchPage extends StatelessWidget {
   const FeatureMatchPage({super.key});
@@ -69,7 +72,13 @@ class FeatureMatchPage extends StatelessWidget {
             children: [
               IconButton(
                 icon: const Icon(Icons.settings),
-                onPressed: () {},
+                onPressed: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const SettingsPage()),
+                  );
+                },
               ),
               const SizedBox(width: 30), // space for the FAB
               IconButton(
@@ -89,7 +98,7 @@ class FeatureMatchPage extends StatelessWidget {
       floatingActionButton: FloatingActionButton(
         backgroundColor: Colors.lightBlueAccent,
         onPressed: () {
-          // Logic to add new match
+          _showAddNotionItemDialog(context);
         },
         child: const Icon(Icons.add, size: 30),
       ),
@@ -254,6 +263,67 @@ class FeatureMatchPage extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  void _showAddNotionItemDialog(BuildContext context) {
+    TextEditingController titleController = TextEditingController();
+    TextEditingController descController = TextEditingController();
+    bool isChecked = false;
+
+    showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return AlertDialog(
+              title: Text("MatchPoint"),
+              content: Column(
+                children: [
+                  TextField(
+                    controller: titleController,
+                    decoration: const InputDecoration(
+                      labelText: "Input Match Title",
+                    ),
+                  ),
+                  TextField(
+                    controller: descController,
+                    decoration: const InputDecoration(
+                      labelText: "Input Match Description",
+                    ),
+                  ),
+                  CheckboxListTile(
+                    title: Text("isFinish?"),
+                    value: isChecked,
+                    onChanged: (value) {
+                      setState(() {
+                        isChecked = value!;
+                      });
+                    },
+                  ),
+                ],
+              ),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    final home = Provider.of<Home>(
+                      context,
+                      listen: false,
+                    );
+                    home.addItem(
+                      titleController.text,
+                      descController.text,
+                      isChecked,
+                    );
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("Add"),
+                ),
+              ],
+            );
+          },
+        );
+      },
     );
   }
 }
