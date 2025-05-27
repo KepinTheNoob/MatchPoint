@@ -75,7 +75,6 @@ class _LoginPageState extends State<LoginPage> {
                 _isPasswordVisible,
                 (value) => setState(() => _isPasswordVisible = value),
                 _passwordError,
-                onChanged: null,
               ),
 
               // Login Button

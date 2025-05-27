@@ -55,16 +55,6 @@ class _RegisterPageState extends State<RegisterPage>
     super.dispose();
   }
 
-  void _validatePassword(String password) {
-    setState(() {
-      hasUppercase = password.contains(RegExp(r'[A-Z]'));
-      hasLowercase = password.contains(RegExp(r'[a-z]'));
-      hasDigit = password.contains(RegExp(r'\d'));
-      hasSpecialChar = password.contains(RegExp(r'[!@#$%^&*()\-\_\+=.]'));
-      atLeast8 = password.length >= 8;
-    });
-  }
-
   // Backend Fokus kesini
   void _validateAndRegister() {
     setState(() {
@@ -202,7 +192,6 @@ class _RegisterPageState extends State<RegisterPage>
                   _passwordError,
                   focusNode: _passwordFocusNode,
                   key: _passwordFieldKey,
-                  onChanged: _validatePassword,
                 ),
 
                 // Confirm Password Field
@@ -212,7 +201,6 @@ class _RegisterPageState extends State<RegisterPage>
                   _isConfirmPasswordVisible,
                   (value) => setState(() => _isConfirmPasswordVisible = value),
                   _confirmPasswordError,
-                  onChanged: null,
                 ),
 
                 // Register Button
