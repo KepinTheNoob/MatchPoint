@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:matchpoint/page/register_page.dart';
+import 'package:matchpoint/widgets/matchPoint_logo_widget.dart';
+import 'package:matchpoint/widgets/loginRegisterField_widget.dart';
 import '../main.dart';
 
 class LoginPage extends StatefulWidget {
@@ -32,6 +34,7 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     if (_usernameError.isEmpty && _passwordError.isEmpty) {
+      // Harusnya backend bagian sini fokusnya
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const MyHomePage()),
@@ -51,30 +54,8 @@ class _LoginPageState extends State<LoginPage> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: [
               // Logo
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Image.asset(
-                    'assets/logo.png',
-                    height: 50,
-                    width: 50,
-                    fit: BoxFit.contain,
-                  ),
-                  SizedBox(height: 10),
-                  Baseline(
-                    baseline: 5,
-                    baselineType: TextBaseline.alphabetic,
-                    child: Text(
-                      "Match Point",
-                      style: GoogleFonts.quicksand(
-                        fontSize: 20,
-                        fontWeight: FontWeight.normal,
-                        color: Colors.black,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
+              MatchPointLogoName(),
+
               Text(
                 "Welcome Back!",
                 style: GoogleFonts.quicksand(
@@ -84,33 +65,21 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
 
-              // Username
-              _buildTextField("Username", _usernameController, _usernameError),
+              // Username Field
+              buildTextField("Username", _usernameController, _usernameError),
 
-              // Password
-              _buildPasswordField(
-                  "Password",
-                  _passwordController,
-                  _isPasswordVisible,
-                  (value) => setState(() => _isPasswordVisible = value),
-                  _passwordError),
+              // Password Field
+              buildPasswordField(
+                "Password",
+                _passwordController,
+                _isPasswordVisible,
+                (value) => setState(() => _isPasswordVisible = value),
+                _passwordError,
+                onChanged: null,
+              ),
 
               // Login Button
-              ElevatedButton(
-                onPressed: _validateAndLogin,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.orangeAccent,
-                  minimumSize: const Size(double.infinity, 50),
-                  elevation: 3,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                  ),
-                ),
-                child: const Text(
-                  "Login",
-                  style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
-                ),
-              ),
+              loginRegisterButton(_validateAndLogin, "Login"),
 
               const Row(
                 children: [
@@ -201,92 +170,6 @@ class _LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildTextField(
-      String label, TextEditingController controller, String errorText) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextField(
-          controller: controller,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 16,
-          ),
-          decoration: InputDecoration(
-            labelText: label,
-            labelStyle: const TextStyle(
-              color: Color(0XFF17597E),
-              fontWeight: FontWeight.w500,
-            ),
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-          ),
-        ),
-        if (errorText.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(top: 4, left: 4),
-            child: Text(
-              errorText,
-              style: const TextStyle(color: Colors.red, fontSize: 12),
-            ),
-          ),
-      ],
-    );
-  }
-
-  Widget _buildPasswordField(String label, TextEditingController controller,
-      bool isVisible, Function(bool) onToggle, String errorText) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextField(
-          controller: controller,
-          obscureText: !isVisible,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 16,
-          ),
-          decoration: InputDecoration(
-            labelText: label,
-            labelStyle: const TextStyle(
-              color: Color(0XFF17597E),
-              fontWeight: FontWeight.w500,
-            ),
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-            suffixIcon: IconButton(
-              icon: Icon(
-                isVisible ? Icons.visibility : Icons.visibility_off,
-                color: const Color.fromARGB(255, 96, 96, 96),
-              ),
-              onPressed: () {
-                onToggle(!isVisible);
-              },
-            ),
-          ),
-        ),
-        if (errorText.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(top: 4, left: 4),
-            child: Text(
-              errorText,
-              style: const TextStyle(color: Colors.red, fontSize: 12),
-            ),
-          ),
-      ],
     );
   }
 }

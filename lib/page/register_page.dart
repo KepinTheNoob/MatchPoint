@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:matchpoint/page/login_page.dart';
+import 'package:matchpoint/widgets/matchPoint_logo_widget.dart';
+import 'package:matchpoint/widgets/loginRegisterField_widget.dart';
 import '../main.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -43,19 +45,6 @@ class _RegisterPageState extends State<RegisterPage>
   late AnimationController _animationController;
   late Animation<Offset> _slideAnimation;
 
-  void _updatePopupPosition() {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      final renderBox =
-          _passwordFieldKey.currentContext?.findRenderObject() as RenderBox?;
-      if (renderBox != null) {
-        final position = renderBox.localToGlobal(Offset.zero);
-        setState(() {
-          _popupTopPosition = position.dy - renderBox.size.height - 175;
-        });
-      }
-    });
-  }
-
   @override
   void dispose() {
     _usernameController.dispose();
@@ -76,6 +65,7 @@ class _RegisterPageState extends State<RegisterPage>
     });
   }
 
+  // Backend Fokus kesini
   void _validateAndRegister() {
     setState(() {
       _usernameError =
@@ -109,6 +99,7 @@ class _RegisterPageState extends State<RegisterPage>
         _emailError.isEmpty &&
         _passwordError.isEmpty &&
         _confirmPasswordError.isEmpty) {
+      // harusnya ini bagian paling penting buat backend?
       Navigator.push(
         context,
         MaterialPageRoute(builder: (context) => const MyHomePage()),
@@ -116,139 +107,18 @@ class _RegisterPageState extends State<RegisterPage>
     }
   }
 
-  Widget _buildPasswordRequirements() {
-    final password = _passwordController.text;
-
-    bool hasUppercase = password.contains(RegExp(r'[A-Z]'));
-    bool hasLowercase = password.contains(RegExp(r'[a-z]'));
-    bool hasDigit = password.contains(RegExp(r'[0-9]'));
-    bool hasSpecialChar =
-        password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>_\-+=]'));
-    bool atLeast8 = password.length >= 8;
-
-    return Material(
-      elevation: 4,
-      color: Colors.white,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-        side: BorderSide(color: Colors.grey.shade300),
-      ),
-      child: Container(
-        padding: const EdgeInsets.only(bottom: 8, top: 8),
-        margin: const EdgeInsets.symmetric(horizontal: 16),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            _requirementText(
-                'Must Contains uppercase letter (A-Z)', hasUppercase),
-            _requirementText(
-                'Must Contains lowercase letter (a-z)', hasLowercase),
-            _requirementText(
-              'Must have at least 8 characters',
-              atLeast8,
-            ),
-            _requirementText('Must Contains number (0-9)', hasDigit),
-            _requirementText(
-              'Must Contains special character (!@#\$%^&*()-_+=.)',
-              hasSpecialChar,
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _requirementText(String text, bool met) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 4),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(
-            met ? Icons.check_circle : Icons.cancel,
-            color: met ? Colors.green : Colors.red,
-            size: 16,
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              text,
-              style: TextStyle(
-                fontSize: 14,
-                color: met ? Colors.green : Colors.red,
-              ),
-              softWrap: true,
-              overflow: TextOverflow.visible,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPasswordField(
-    String label,
-    TextEditingController controller,
-    bool isVisible,
-    Function(bool) onToggle,
-    String errorText, {
-    Function(String)? onChanged,
-    FocusNode? focusNode,
-    Key? key,
-  }) {
-    return Column(
-      key: key,
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextField(
-          controller: controller,
-          focusNode: focusNode,
-          obscureText: !isVisible,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 16,
-          ),
-          decoration: InputDecoration(
-            labelText: label,
-            labelStyle: const TextStyle(
-              color: Color(0XFF17597E),
-              fontWeight: FontWeight.w500,
-            ),
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-            suffixIcon: SizedBox(
-              width: 40, // batas maksimum agar tidak overflow
-              child: IconButton(
-                icon: Icon(
-                  isVisible ? Icons.visibility : Icons.visibility_off,
-                  color: Color.fromARGB(255, 96, 96, 96),
-                  size: 20, // bisa kecilin ukurannya juga jika perlu
-                ),
-                onPressed: () {
-                  onToggle(!isVisible);
-                },
-                padding: EdgeInsets.zero, // hilangkan padding default
-                constraints: BoxConstraints(), // hilangkan constraint default
-              ),
-            ),
-          ),
-          onChanged: onChanged,
-        ),
-        if (errorText.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(top: 4, left: 4),
-            child: Text(
-              errorText,
-              style: const TextStyle(color: Colors.red, fontSize: 12),
-            ),
-          ),
-      ],
-    );
+  // Back End Hiraukan
+  void _updatePopupPosition() {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final renderBox =
+          _passwordFieldKey.currentContext?.findRenderObject() as RenderBox?;
+      if (renderBox != null) {
+        final position = renderBox.localToGlobal(Offset.zero);
+        setState(() {
+          _popupTopPosition = position.dy - renderBox.size.height - 175;
+        });
+      }
+    });
   }
 
   @override
@@ -287,7 +157,7 @@ class _RegisterPageState extends State<RegisterPage>
 
     _passwordController.addListener(() {
       if (_passwordFocusNode.hasFocus) {
-        setState(() {}); // update isi popup
+        setState(() {});
       }
     });
   }
@@ -306,30 +176,7 @@ class _RegisterPageState extends State<RegisterPage>
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 // Logo
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/logo.png',
-                      height: 50,
-                      width: 50,
-                      fit: BoxFit.contain,
-                    ),
-                    SizedBox(height: 10),
-                    Baseline(
-                      baseline: 5,
-                      baselineType: TextBaseline.alphabetic,
-                      child: Text(
-                        "Match Point",
-                        style: GoogleFonts.quicksand(
-                          fontSize: 20,
-                          fontWeight: FontWeight.normal,
-                          color: Colors.black,
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
+                MatchPointLogoName(),
 
                 Text(
                   "Welcome!",
@@ -341,14 +188,13 @@ class _RegisterPageState extends State<RegisterPage>
                 ),
 
                 // Username
-                _buildTextField(
-                    "Username", _usernameController, _usernameError),
+                buildTextField("Username", _usernameController, _usernameError),
 
                 // Email
-                _buildTextField("Email", _emailController, _emailError),
+                buildTextField("Email", _emailController, _emailError),
 
                 // Password
-                _buildPasswordField(
+                buildPasswordField(
                   "Password",
                   _passwordController,
                   _isPasswordVisible,
@@ -360,7 +206,7 @@ class _RegisterPageState extends State<RegisterPage>
                 ),
 
                 // Confirm Password Field
-                _buildPasswordField(
+                buildPasswordField(
                   "Confirm Password",
                   _confirmPasswordController,
                   _isConfirmPasswordVisible,
@@ -370,22 +216,9 @@ class _RegisterPageState extends State<RegisterPage>
                 ),
 
                 // Register Button
-                ElevatedButton(
-                  onPressed: _validateAndRegister,
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.orangeAccent,
-                    minimumSize: const Size(double.infinity, 50),
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  child: const Text(
-                    "Register",
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
-                  ),
-                ),
+                loginRegisterButton(_validateAndRegister, "Register"),
 
+                // Desain or doang
                 const Row(
                   children: [
                     Expanded(child: Divider()),
@@ -397,6 +230,7 @@ class _RegisterPageState extends State<RegisterPage>
                   ],
                 ),
 
+                // Tombol Google
                 ElevatedButton(
                   onPressed: () {},
                   style: ElevatedButton.styleFrom(
@@ -425,6 +259,7 @@ class _RegisterPageState extends State<RegisterPage>
                   ),
                 ),
 
+                // Pindah ke Login page
                 TextButton(
                   onPressed: () {
                     Navigator.push(
@@ -441,6 +276,8 @@ class _RegisterPageState extends State<RegisterPage>
                     ),
                   ),
                 ),
+
+                // Jujur ini gak tahu buat apa, pajangan aja
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -468,7 +305,9 @@ class _RegisterPageState extends State<RegisterPage>
                 ),
               ],
             ),
-          ), // Password popup positioned (muncul hanya saat fokus password)
+          ),
+
+          // Password popup positioned (muncul hanya saat fokus password)
           if (_showPasswordRequirements)
             Positioned(
               left: 32,
@@ -478,50 +317,12 @@ class _RegisterPageState extends State<RegisterPage>
                 position: _slideAnimation,
                 child: FadeTransition(
                   opacity: _animationController,
-                  child: _buildPasswordRequirements(),
+                  child: buildPasswordRequirements(_passwordController),
                 ),
               ),
             ),
         ],
       )),
-    );
-  }
-
-  Widget _buildTextField(
-      String label, TextEditingController controller, String errorText) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        TextField(
-          controller: controller,
-          style: const TextStyle(
-            color: Colors.black,
-            fontSize: 16,
-          ),
-          decoration: InputDecoration(
-            labelText: label,
-            labelStyle: const TextStyle(
-              color: Color(0XFF17597E),
-              fontWeight: FontWeight.w500,
-            ),
-            filled: true,
-            fillColor: Colors.white,
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8.0),
-            ),
-            contentPadding:
-                const EdgeInsets.symmetric(horizontal: 12, vertical: 14),
-          ),
-        ),
-        if (errorText.isNotEmpty)
-          Padding(
-            padding: const EdgeInsets.only(top: 4, left: 4),
-            child: Text(
-              errorText,
-              style: const TextStyle(color: Colors.red, fontSize: 12),
-            ),
-          ),
-      ],
     );
   }
 }
