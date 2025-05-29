@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:matchpoint/page/deleteAccount_page.dart';
@@ -44,8 +45,26 @@ class MyApp extends StatelessWidget {
           textTheme: GoogleFonts.quicksandTextTheme(),
         ),
         // home: const MyHomePage(title: 'Flutter Demo Home Page'),
-        home: const RegisterPage(),
+        home: AuthWrapper(),
       ),
+    );
+  }
+}
+
+class AuthWrapper extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Scaffold(body: Center(child: CircularProgressIndicator()));
+        } else if (snapshot.hasData) {
+          return MyHomePage(); // Sudah login
+        } else {
+          return LoginPage(); // Belum login
+        }
+      },
     );
   }
 }

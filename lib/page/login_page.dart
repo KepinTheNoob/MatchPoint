@@ -22,7 +22,7 @@ class _LoginPageState extends State<LoginPage> {
 
   bool _isLoading = false;
 
-  String _emailError= '';
+  String _emailError = '';
   String _passwordError = '';
 
   void _validateAndLogin() async {
@@ -41,18 +41,14 @@ class _LoginPageState extends State<LoginPage> {
               : '';
     });
 
-    if (
-      _emailError.isEmpty && _passwordError.isEmpty
-    ) {
+    if (_emailError.isEmpty && _passwordError.isEmpty) {
       setState(() {
         _isLoading = true;
       });
       try {
         UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-          email: _emailController.text, 
-          password: _passwordController.text
-        );
-        Navigator.push(
+            email: _emailController.text, password: _passwordController.text);
+        Navigator.pushReplacement(
           context,
           MaterialPageRoute(builder: (context) => const MyHomePage()),
         );

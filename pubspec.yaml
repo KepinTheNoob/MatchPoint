@@ -42,6 +42,7 @@ dependencies:
   flutter_svg: ^2.0.7
   flutter_native_splash: ^2.4.6
   flutter_launcher_icons: ^0.14.3
+  delightful_toast: ^1.1.0
 
 flutter_native_splash:
   color: "#F8FFFE"
