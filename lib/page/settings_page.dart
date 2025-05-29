@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:matchpoint/page/deleteAccount_page.dart';
 import 'package:matchpoint/page/login_page.dart';
 import 'package:matchpoint/widgets/logOut_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -12,6 +13,7 @@ class SettingsPage extends StatefulWidget {
 
 class _SettingsPageState extends State<SettingsPage> {
   bool _isAccountExpanded = false;
+  final User? user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -58,12 +60,12 @@ class _SettingsPageState extends State<SettingsPage> {
               ListTile(
                 leading: const Icon(Icons.person),
                 title: const Text("Username"),
-                subtitle: const Text("JohnDoe"),
+                subtitle: Text(user?.displayName ?? 'John Doe'),
               ),
               ListTile(
                 leading: const Icon(Icons.email),
                 title: const Text("Email"),
-                subtitle: const Text("johndoe@example.com"),
+                subtitle: Text(user?.email ?? 'johndoe@gmail.com'),
               ),
               ListTile(
                 leading: const Icon(Icons.key),

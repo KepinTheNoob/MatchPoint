@@ -178,20 +178,48 @@ Widget buildTextField(
   );
 }
 
-Widget loginRegisterButton(validate, String text) {
+Widget loginRegisterButton(VoidCallback? validate, String text, bool loading) {
   return ElevatedButton(
-    onPressed: validate,
+    onPressed: loading ? null : validate,
     style: ElevatedButton.styleFrom(
       backgroundColor: Colors.orangeAccent,
-      minimumSize: const Size(double.infinity, 50),
+      foregroundColor: Colors.white,
       elevation: 3,
+      shadowColor: loading ? Colors.transparent : null,
+      minimumSize: const Size(double.infinity, 50),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(8),
       ),
+    ).copyWith(
+      backgroundColor: MaterialStateProperty.resolveWith<Color>((states) {
+        if (loading) return Colors.orangeAccent.withOpacity(0.5);
+        return Colors.orangeAccent;
+      }),
     ),
-    child: Text(
-      text,
-      style: TextStyle(fontSize: 18, fontWeight: FontWeight.w800),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        if (loading) ...[
+          const SizedBox(
+            width: 20,
+            height: 20,
+            child: CircularProgressIndicator(
+              strokeWidth: 3,
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+            ),
+          ),
+          const SizedBox(width: 12),
+        ],
+        Text(
+          text,
+          style: TextStyle(
+            fontSize: 18,
+            fontWeight: FontWeight.w800,
+            color: loading ? Colors.white : Color(0xFF174B7E),
+          ),
+        ),
+      ],
     ),
   );
 }

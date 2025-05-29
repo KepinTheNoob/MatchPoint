@@ -4,6 +4,7 @@ import 'package:matchpoint/page/register_page.dart';
 import 'package:matchpoint/widgets/matchPoint_logo_widget.dart';
 import 'package:matchpoint/widgets/loginRegisterField_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:matchpoint/widgets/toast_widget.dart';
 import '../main.dart';
 
 class LoginPage extends StatefulWidget {
@@ -45,17 +46,29 @@ class _LoginPageState extends State<LoginPage> {
       setState(() {
         _isLoading = true;
       });
+
       try {
         UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-            email: _emailController.text, password: _passwordController.text);
-        Navigator.pushReplacement(
-          context,
-          MaterialPageRoute(builder: (context) => const MyHomePage()),
+          email: _emailController.text,
+          password: _passwordController.text,
         );
+
+        if (context.mounted) {
+          toastBool("Login Success", true);
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const MyHomePage()),
+          );
+        }
       } on FirebaseAuthException catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message ?? 'An error occured')),
-        );
+        if (context.mounted) {
+          toastBool("Login Failed", false);
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(e.message ?? 'An error occurred')),
+          );
+        }
       } finally {
         setState(() {
           _isLoading = false;
@@ -100,7 +113,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
 
               // Login Button
-              loginRegisterButton(_validateAndLogin, "Login"),
+              loginRegisterButton(_validateAndLogin, "Login", _isLoading),
 
               const Row(
                 children: [

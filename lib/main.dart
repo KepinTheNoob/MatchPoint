@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import 'package:matchpoint/Home.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
@@ -31,6 +32,7 @@ class MyApp extends StatelessWidget {
       child: MaterialApp(
         title: 'MatchPoint Demo',
         debugShowCheckedModeBanner: false,
+        navigatorKey: navigatorKey,
         routes: {
           '/register': (context) => RegisterPage(),
           '/home': (context) => const MyHomePage(),

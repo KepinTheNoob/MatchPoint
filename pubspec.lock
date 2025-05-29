@@ -352,6 +352,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.1.1"
+  loading_icon_button:
+    dependency: "direct main"
+    description:
+      name: loading_icon_button
+      sha256: "682c03eaaeb6d00e3cce318ec365c0190eeacbc56ff1b6694a4561ed1e3b7e02"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.7"
   matcher:
     dependency: transitive
     description:
@@ -488,6 +496,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "6.1.5"
+  rxdart:
+    dependency: transitive
+    description:
+      name: rxdart
+      sha256: "5c3004a4a8dbb94bd4bf5412a4def4acdaa12e12f269737a5751369e12d1a962"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.28.0"
   sky_engine:
     dependency: transitive
     description: flutter

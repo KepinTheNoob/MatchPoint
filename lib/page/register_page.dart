@@ -4,6 +4,7 @@ import 'package:matchpoint/page/login_page.dart';
 import 'package:matchpoint/widgets/matchPoint_logo_widget.dart';
 import 'package:matchpoint/widgets/loginRegisterField_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:matchpoint/widgets/toast_widget.dart';
 import '../main.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -110,14 +111,22 @@ class _RegisterPageState extends State<RegisterPage>
             await _auth.createUserWithEmailAndPassword(
                 email: _emailController.text,
                 password: _passwordController.text);
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => const MyHomePage()),
-        );
+        if (context.mounted) {
+          toastBool("Register Success", true);
+
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const MyHomePage()),
+          );
+        }
       } on FirebaseAuthException catch (e) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text(e.message ?? 'An error occured')),
-        );
+        if (context.mounted) {
+          toastBool("Register Failed", false);
+
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(content: Text(e.message ?? 'An error occurred')),
+          );
+        }
       } finally {
         setState(() {
           _isLoading = false;
@@ -233,7 +242,8 @@ class _RegisterPageState extends State<RegisterPage>
                 ),
 
                 // Register Button
-                loginRegisterButton(_validateAndRegister, "Register"),
+                loginRegisterButton(
+                    _validateAndRegister, "Register", _isLoading),
 
                 // Desain or doang
                 const Row(
