@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:matchpoint/page/register_page.dart';
 import 'package:matchpoint/widgets/matchPoint_logo_widget.dart';
 import 'package:matchpoint/widgets/loginRegisterField_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../main.dart';
 
 class LoginPage extends StatefulWidget {
@@ -15,16 +16,23 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   bool _isPasswordVisible = false;
 
-  final TextEditingController _usernameController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
-  String _usernameError = '';
+  bool _isLoading = false;
+
+  String _emailError= '';
   String _passwordError = '';
 
-  void _validateAndLogin() {
+  void _validateAndLogin() async {
     setState(() {
-      _usernameError =
-          _usernameController.text.isEmpty ? 'Username must be filled' : '';
+      _emailError = _emailController.text.isEmpty
+          ? 'Email must be filled'
+          : (!_emailController.text.contains('@') ||
+                  !_emailController.text.contains('.'))
+              ? 'Email must contain "@" and "."'
+              : '';
 
       _passwordError = _passwordController.text.isEmpty
           ? 'Password must be filled'
@@ -33,12 +41,30 @@ class _LoginPageState extends State<LoginPage> {
               : '';
     });
 
-    if (_usernameError.isEmpty && _passwordError.isEmpty) {
-      // Harusnya backend bagian sini fokusnya
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const MyHomePage()),
-      );
+    if (
+      _emailError.isEmpty && _passwordError.isEmpty
+    ) {
+      setState(() {
+        _isLoading = true;
+      });
+      try {
+        UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+          email: _emailController.text, 
+          password: _passwordController.text
+        );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const MyHomePage()),
+        );
+      } on FirebaseAuthException catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.message ?? 'An error occured')),
+        );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
@@ -65,8 +91,8 @@ class _LoginPageState extends State<LoginPage> {
                 ),
               ),
 
-              // Username Field
-              buildTextField("Username", _usernameController, _usernameError),
+              // Email Field
+              buildTextField("Email", _emailController, _emailError),
 
               // Password Field
               buildPasswordField(
