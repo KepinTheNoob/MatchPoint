@@ -21,7 +21,8 @@ class _RegisterPageState extends State<RegisterPage>
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // Password validation flags
@@ -65,7 +66,6 @@ class _RegisterPageState extends State<RegisterPage>
     atLeast8 = password.length >= 8;
   }
 
-
   // Backend Fokus kesini
   void _validateAndRegister() async {
     setState(() {
@@ -98,20 +98,18 @@ class _RegisterPageState extends State<RegisterPage>
               : '';
     });
 
-    if (
-      _usernameError.isEmpty &&
-      _emailError.isEmpty &&
-      _passwordError.isEmpty &&
-      _confirmPasswordError.isEmpty
-    ) {
+    if (_usernameError.isEmpty &&
+        _emailError.isEmpty &&
+        _passwordError.isEmpty &&
+        _confirmPasswordError.isEmpty) {
       setState(() {
         _isLoading = true;
       });
       try {
-        UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
-          email: _emailController.text, 
-          password: _passwordController.text
-        );
+        UserCredential userCredential =
+            await _auth.createUserWithEmailAndPassword(
+                email: _emailController.text,
+                password: _passwordController.text);
         Navigator.push(
           context,
           MaterialPageRoute(builder: (context) => const MyHomePage()),
