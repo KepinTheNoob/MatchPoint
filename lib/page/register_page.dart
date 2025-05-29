@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:matchpoint/page/login_page.dart';
 import 'package:matchpoint/widgets/matchPoint_logo_widget.dart';
 import 'package:matchpoint/widgets/loginRegisterField_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import '../main.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -20,8 +21,8 @@ class _RegisterPageState extends State<RegisterPage>
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
+  final FirebaseAuth _auth = FirebaseAuth.instance;
 
   // Password validation flags
   bool hasUppercase = false;
@@ -29,6 +30,7 @@ class _RegisterPageState extends State<RegisterPage>
   bool hasDigit = false;
   bool hasSpecialChar = false;
   bool atLeast8 = false;
+  bool _isLoading = false; // Optional mau pake gak
 
   final FocusNode _passwordFocusNode = FocusNode();
   final GlobalKey _passwordFieldKey = GlobalKey();
@@ -55,9 +57,20 @@ class _RegisterPageState extends State<RegisterPage>
     super.dispose();
   }
 
+  void _updatePasswordFlags(String password) {
+    hasUppercase = password.contains(RegExp(r'[A-Z]'));
+    hasLowercase = password.contains(RegExp(r'[a-z]'));
+    hasDigit = password.contains(RegExp(r'\d'));
+    hasSpecialChar = password.contains(RegExp(r'[!@#$%^&*(),.?":{}|<>]'));
+    atLeast8 = password.length >= 8;
+  }
+
+
   // Backend Fokus kesini
-  void _validateAndRegister() {
+  void _validateAndRegister() async {
     setState(() {
+      _updatePasswordFlags(_passwordController.text);
+
       _usernameError =
           _usernameController.text.isEmpty ? 'Username must be filled' : '';
 
@@ -85,15 +98,33 @@ class _RegisterPageState extends State<RegisterPage>
               : '';
     });
 
-    if (_usernameError.isEmpty &&
-        _emailError.isEmpty &&
-        _passwordError.isEmpty &&
-        _confirmPasswordError.isEmpty) {
-      // harusnya ini bagian paling penting buat backend?
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const MyHomePage()),
-      );
+    if (
+      _usernameError.isEmpty &&
+      _emailError.isEmpty &&
+      _passwordError.isEmpty &&
+      _confirmPasswordError.isEmpty
+    ) {
+      setState(() {
+        _isLoading = true;
+      });
+      try {
+        UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
+          email: _emailController.text, 
+          password: _passwordController.text
+        );
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const MyHomePage()),
+        );
+      } on FirebaseAuthException catch (e) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(e.message ?? 'An error occured')),
+        );
+      } finally {
+        setState(() {
+          _isLoading = false;
+        });
+      }
     }
   }
 
