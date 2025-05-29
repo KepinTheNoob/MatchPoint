@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:matchpoint/page/deleteAccount_page.dart';
 import 'package:matchpoint/page/login_page.dart';
-import 'package:matchpoint/page/register_page.dart';
+import 'package:matchpoint/widgets/logOut_widget.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -15,10 +16,10 @@ class _SettingsPageState extends State<SettingsPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xF0F8FFFE),
+      backgroundColor: const Color(0xFFF8FFFE),
       appBar: AppBar(
         elevation: 0.5,
-        backgroundColor: const Color(0xF0F8FFFE),
+        backgroundColor: const Color(0xFFF3FEFD),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
           onPressed: () => Navigator.pop(context),
@@ -28,10 +29,16 @@ class _SettingsPageState extends State<SettingsPage> {
           style: TextStyle(color: Colors.black),
         ),
         centerTitle: false,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(1.0),
+          child: Container(
+            color: Colors.black12, // Warna border
+            height: 1, // Ketebalan border
+          ),
+        ),
       ),
       body: Column(
         children: [
-          const Divider(height: 1, color: Colors.black12),
           ExpansionTile(
             initiallyExpanded: _isAccountExpanded,
             onExpansionChanged: (expanded) {
@@ -85,7 +92,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => const RegisterPage()),
+                        builder: (context) => const DeleteAccountPage()),
                   );
                 },
               ),
@@ -113,23 +120,39 @@ class _SettingsPageState extends State<SettingsPage> {
               // TODO: Ubah bahasa
             },
           ),
-          const Spacer(),
-          Padding(
-            padding: const EdgeInsets.only(bottom: 16),
-            child: TextButton(
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const LoginPage()),
-                );
-              },
-              child: const Text(
-                "Log out",
-                style: TextStyle(color: Colors.redAccent),
+        ],
+      ),
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          border: Border(
+            top: BorderSide(
+              color: Colors.black, // Warna border top
+              width: 0.3, // Ketebalan border
+            ),
+          ),
+        ),
+        padding: const EdgeInsets.fromLTRB(
+            20, 0, 20, 20), // padding agar tidak mentok ke pinggir dan bawah
+        child: SizedBox(
+          width: double.infinity,
+          height: 50,
+          child: TextButton(
+            onPressed: () => {showLogOutDialog(context)},
+            style: TextButton.styleFrom(
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+              splashFactory: NoSplash.splashFactory, // tanpa splash
+            ),
+            child: const Text(
+              'Log out',
+              style: TextStyle(
+                color: Colors.red,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
               ),
             ),
           ),
-        ],
+        ),
       ),
     );
   }

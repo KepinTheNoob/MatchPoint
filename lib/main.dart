@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:matchpoint/page/deleteAccount_page.dart';
 import 'package:matchpoint/page/featureMatch_page.dart';
 import 'package:matchpoint/page/historyMatch_page.dart';
 import 'package:matchpoint/page/login_page.dart';
@@ -35,14 +36,15 @@ class MyApp extends StatelessWidget {
           '/login': (context) => const LoginPage(),
           '/feature': (context) => const FeatureMatchPage(),
           '/history': (context) => const HistoryMatchPage(),
-          '/settings': (context) => const SettingsPage()
+          '/settings': (context) => const SettingsPage(),
+          '/deleteAcc': (context) => const DeleteAccountPage(),
         },
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
           textTheme: GoogleFonts.quicksandTextTheme(),
         ),
         // home: const MyHomePage(title: 'Flutter Demo Home Page'),
-        home: const MyHomePage(),
+        home: const RegisterPage(),
       ),
     );
   }
