@@ -24,7 +24,7 @@ void showLogOutDialog(BuildContext context) {
                 const SizedBox(height: 16),
                 const Center(
                   child: Text(
-                    'Logout Account?',
+                    'Logout Account',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,
