@@ -16,7 +16,6 @@ void toastBool(String text, bool status) {
               color: Colors.white,
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                // 👉 Border color & width diatur di sini
                 color: status ? Colors.greenAccent : Colors.redAccent,
                 width: 2,
               ),

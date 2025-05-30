@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:matchpoint/page/home_page.dart';
 import 'package:matchpoint/page/login_page.dart';
 import 'package:matchpoint/widgets/matchPoint_logo_widget.dart';
 import 'package:matchpoint/widgets/loginRegisterField_widget.dart';
@@ -116,7 +117,7 @@ class _RegisterPageState extends State<RegisterPage>
 
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const MyHomePage()),
+            MaterialPageRoute(builder: (context) => const Home()),
           );
         }
       } on FirebaseAuthException catch (e) {

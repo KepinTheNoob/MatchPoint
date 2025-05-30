@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:matchpoint/page/home_page.dart';
 import 'package:matchpoint/page/register_page.dart';
 import 'package:matchpoint/widgets/matchPoint_logo_widget.dart';
 import 'package:matchpoint/widgets/loginRegisterField_widget.dart';
@@ -58,12 +59,12 @@ class _LoginPageState extends State<LoginPage> {
 
           Navigator.pushReplacement(
             context,
-            MaterialPageRoute(builder: (context) => const MyHomePage()),
+            MaterialPageRoute(builder: (context) => const Home()),
           );
         }
       } on FirebaseAuthException catch (e) {
         if (context.mounted) {
-          toastBool("Login Failed", false);
+          toastBool(e.message ?? "Login Failed", false);
 
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text(e.message ?? 'An error occurred')),
@@ -130,7 +131,7 @@ class _LoginPageState extends State<LoginPage> {
                 onPressed: () {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => const MyHomePage()),
+                    MaterialPageRoute(builder: (context) => const Home()),
                   );
                 },
                 style: ElevatedButton.styleFrom(

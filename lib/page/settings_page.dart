@@ -34,8 +34,8 @@ class _SettingsPageState extends State<SettingsPage> {
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(1.0),
           child: Container(
-            color: Colors.black12, // Warna border
-            height: 1, // Ketebalan border
+            color: Colors.black12,
+            height: 1,
           ),
         ),
       ),
@@ -119,7 +119,7 @@ class _SettingsPageState extends State<SettingsPage> {
               style: TextStyle(color: Colors.grey),
             ),
             onTap: () {
-              // TODO: Ubah bahasa
+              // something
             },
           ),
         ],
@@ -128,13 +128,12 @@ class _SettingsPageState extends State<SettingsPage> {
         decoration: const BoxDecoration(
           border: Border(
             top: BorderSide(
-              color: Colors.black, // Warna border top
-              width: 0.3, // Ketebalan border
+              color: Colors.black,
+              width: 0.3,
             ),
           ),
         ),
-        padding: const EdgeInsets.fromLTRB(
-            20, 0, 20, 20), // padding agar tidak mentok ke pinggir dan bawah
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
         child: SizedBox(
           width: double.infinity,
           height: 50,
@@ -143,7 +142,7 @@ class _SettingsPageState extends State<SettingsPage> {
             style: TextButton.styleFrom(
               shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8)),
-              splashFactory: NoSplash.splashFactory, // tanpa splash
+              splashFactory: NoSplash.splashFactory,
             ),
             child: const Text(
               'Log out',
