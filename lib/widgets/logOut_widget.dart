@@ -5,11 +5,11 @@ import 'package:matchpoint/widgets/toast_widget.dart';
 
 void showLogOutDialog(BuildContext context) {
   bool isChecked = false;
-  bool isLoading = false; // tambah variabel isLoading
+  bool isLoading = false;
 
   showDialog(
     context: context,
-    barrierDismissible: !isLoading, // agar tidak bisa dismiss saat loading
+    barrierDismissible: !isLoading,
     builder: (BuildContext context) {
       return StatefulBuilder(
         builder: (context, setState) {
@@ -76,7 +76,20 @@ void showLogOutDialog(BuildContext context) {
               ],
             ),
             actions: isLoading
-                ? []
+                ? [
+                    const Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(vertical: 12),
+                        child: Text(
+                          'Please wait',
+                          style: TextStyle(
+                            fontWeight: FontWeight.w700,
+                            fontSize: 24,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ]
                 : [
                     TextButton(
                       onPressed: () => Navigator.pop(context),

@@ -52,7 +52,7 @@ void toastBool(String text, bool status) {
     },
     position: DelightSnackbarPosition.top,
     autoDismiss: true,
-    snackbarDuration: const Duration(seconds: 2),
+    snackbarDuration: const Duration(seconds: 3),
     animationDuration: const Duration(milliseconds: 300),
   ).show(navigatorKey.currentContext!);
 }
