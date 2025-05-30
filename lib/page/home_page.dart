@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:matchpoint/page/settings_page.dart';
+import 'package:matchpoint/widgets/createMatch_widget.dart';
 import 'featureMatch_page.dart';
 
 class Home extends StatefulWidget {
@@ -28,7 +29,9 @@ class _HomeState extends State<Home> {
           Icons.add,
           size: 28,
         ),
-        onPressed: () {},
+        onPressed: () {
+          showCreateMatchHistoryDialog(context);
+        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: Container(

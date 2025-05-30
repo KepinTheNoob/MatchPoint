@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:matchpoint/data.dart';
+import 'package:matchpoint/widgets/carousel_widget.dart';
+import 'package:matchpoint/widgets/matchCard_widget.dart';
 
 class FeatureMatchPage extends StatelessWidget {
   const FeatureMatchPage({super.key});
@@ -28,7 +30,10 @@ class FeatureMatchPage extends StatelessWidget {
               endIndent: MediaQuery.of(context).size.width * 0.03,
             ),
             SizedBox(height: 16),
-            _buildMatchCard(), // Featured match
+            CustomCarousel(
+              imageUrls: AppData.innerStyleImages,
+              isInnerStyle: true,
+            ),
             const Padding(
               padding: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 2),
               child: Align(
@@ -47,176 +52,12 @@ class FeatureMatchPage extends StatelessWidget {
             ),
             Expanded(
               child: ListView(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                children: [
-                  // Nanti isi match history di sini, gunakan _buildMatchCard()
-                  // _buildMatchCard(),
-                ],
+                padding: const EdgeInsets.symmetric(vertical: 8),
+                children: [matchCard()],
               ),
             ),
           ],
         ),
-      ),
-    );
-  }
-
-  Widget _buildMatchCard() {
-    return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        gradient: const LinearGradient(
-          colors: [Color(0xFFEFF4FF), Color(0xFFFFE5E5)],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(20),
-        boxShadow: const [
-          BoxShadow(
-            color: Colors.black26,
-            blurRadius: 8,
-            offset: Offset(0, 4),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: const [
-              Text(
-                "Tuesday, 28 Jan 2014, 14:00 PM EST",
-                style: TextStyle(fontSize: 12, color: Colors.black),
-              ),
-              Text(
-                "Basketball Match",
-                style: TextStyle(fontSize: 12, color: Colors.black),
-              ),
-            ],
-          ),
-          const SizedBox(height: 12),
-          Row(
-            children: [
-              // Left team
-              _buildTeamColumn("Apex"),
-              Expanded(
-                child: Column(
-                  children: [
-                    Text("VS",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
-                    SizedBox(height: 4),
-                    Text(
-                      "21 - 20",
-                      style:
-                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                    SizedBox(height: 4),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          "WIN",
-                          style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                              color: Colors.green,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 12),
-                        Text(
-                          "LOSE",
-                          style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                              color: Colors.red,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              // Right team
-              _buildTeamColumn("T1 Sports", isLeft: false),
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _buildTeamColumn(String teamName, {bool isLeft = true}) {
-    return Expanded(
-      child: Column(
-        crossAxisAlignment:
-            isLeft ? CrossAxisAlignment.start : CrossAxisAlignment.end,
-        children: [
-          Text(
-            teamName,
-            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-          ),
-          const SizedBox(height: 8),
-          Row(
-            mainAxisAlignment:
-                isLeft ? MainAxisAlignment.start : MainAxisAlignment.end,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: isLeft
-                ? [
-                    Container(
-                      width: 40,
-                      height: 40,
-                      margin: const EdgeInsets.only(right: 8),
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: const [
-                          Text("Lenardo", overflow: TextOverflow.ellipsis),
-                          Text("Avocado", overflow: TextOverflow.ellipsis),
-                          Text("Ilianiano", overflow: TextOverflow.ellipsis),
-                          Text("La Mancha Don",
-                              overflow: TextOverflow.ellipsis),
-                          Text("...", overflow: TextOverflow.ellipsis),
-                        ],
-                      ),
-                    ),
-                  ]
-                : [
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: const [
-                          Text("Lenardo", overflow: TextOverflow.ellipsis),
-                          Text("Avocado", overflow: TextOverflow.ellipsis),
-                          Text("Ilianiano", overflow: TextOverflow.ellipsis),
-                          Text("La Mancha Don",
-                              overflow: TextOverflow.ellipsis),
-                          Text("...", overflow: TextOverflow.ellipsis),
-                        ],
-                      ),
-                    ),
-                    Container(
-                      width: 40,
-                      height: 40,
-                      margin: const EdgeInsets.only(left: 8),
-                      decoration: const BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: Colors.grey,
-                      ),
-                    ),
-                  ],
-          ),
-        ],
       ),
     );
   }
