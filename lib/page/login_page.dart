@@ -6,7 +6,6 @@ import 'package:matchpoint/widgets/matchPoint_logo_widget.dart';
 import 'package:matchpoint/widgets/loginRegisterField_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:matchpoint/widgets/toast_widget.dart';
-import '../main.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
