@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:matchpoint/page/login_page.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 void showDeleteDialog(BuildContext context) {
   bool isChecked = false;
@@ -76,13 +77,25 @@ void showDeleteDialog(BuildContext context) {
               ),
               TextButton(
                 onPressed: isChecked
-                    ? () {
-                        // TODO
-                        // Navigator.pop(context);
-                        Navigator.push(
+                    ? () async {
+                        try {
+                          await FirebaseAuth.instance.currentUser?.delete();
+
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('Account deleted')),
+                          );
+
+                          Navigator.push(
                             context,
                             MaterialPageRoute(
-                                builder: (context) => LoginPage()));
+                              builder: (context) => LoginPage()
+                            )
+                          );
+                        } on FirebaseAuthException catch (e) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text('Error: ${e.message}')),
+                          );
+                        }
                       }
                     : null,
                 style: TextButton.styleFrom(
