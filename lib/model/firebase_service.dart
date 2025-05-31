@@ -39,14 +39,25 @@ class FirebaseService {
     return null;
   }
 
+  Future<void> editUsername(String username) async {
+    try {
+      String uid = FirebaseAuth.instance.currentUser!.uid;
+
+      await FirebaseFirestore.instance
+        .collection('users')
+        .doc(uid)
+        .update({'username': username});
+    } catch (e) {
+      print("Error updating username: $e");
+    }
+  }
+
   Future<void> deleteAccount() async {
   try {
     final user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      // Delete Firestore user document
       await FirebaseFirestore.instance.collection('users').doc(user.uid).delete();
 
-      // Delete Firebase Auth user
       await user.delete();
     }
   } catch (e) {

@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:matchpoint/model/firebase_service.dart';
 
 void editUsernameDialog({
   required BuildContext context,
   required String currentUsername,
   required void Function(String newUsername) onSave,
 }) {
-  final TextEditingController controller =
-      TextEditingController(text: currentUsername);
+  final TextEditingController controller = TextEditingController(text: currentUsername);
+  final FirebaseService _auth = FirebaseService();
   bool isLoading = false;
 
   showDialog(
@@ -68,9 +69,26 @@ void editUsernameDialog({
                   ),
                 ),
                 TextButton(
-                  onPressed: () {
-                    onSave(controller.text);
-                    Navigator.pop(context);
+                  onPressed: () async {
+                    setState() => ({
+                      isLoading = true;
+                    })
+                    try {
+                      await _auth.editUsername(controller.text);
+
+                      Navigator.pop(context);
+                    } on FirebaseAuthException catch (e) {
+                      if (context.mounted) {
+                        toastBool(
+                            e.message ?? "Update Username Failed",
+                            true);
+
+                        // ScaffoldMessenger.of(context).showSnackBar(
+                        //   SnackBar(
+                        //       content: Text('Error: ${e.message}')),
+                        // );
+                      }
+                    }
                   },
                   child: const Text(
                     "Save",
