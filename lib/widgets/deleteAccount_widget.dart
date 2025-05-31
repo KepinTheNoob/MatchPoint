@@ -113,11 +113,6 @@ void showDeleteDialog(BuildContext context) {
                               try {
                                 await _auth.deleteAccount();
 
-                                // ScaffoldMessenger.of(context).showSnackBar(
-                                //   const SnackBar(
-                                //       content: Text('Account deleted')),
-                                // );
-
                                 if (context.mounted) {
                                   toastBool('Account deleted', true);
                                   Navigator.push(
