@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:matchpoint/model/firebase_service.dart';
 import 'package:matchpoint/page/login_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:matchpoint/widgets/toast_widget.dart';
@@ -6,6 +7,8 @@ import 'package:matchpoint/widgets/toast_widget.dart';
 void showDeleteDialog(BuildContext context) {
   bool isChecked = false;
   bool isLoading = false;
+
+  final FirebaseService _auth = FirebaseService();
 
   showDialog(
     context: context,
@@ -108,8 +111,7 @@ void showDeleteDialog(BuildContext context) {
                                 isLoading = true;
                               });
                               try {
-                                await FirebaseAuth.instance.currentUser
-                                    ?.delete();
+                                await _auth.deleteAccount();
 
                                 // ScaffoldMessenger.of(context).showSnackBar(
                                 //   const SnackBar(

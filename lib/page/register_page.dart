@@ -1,5 +1,7 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:matchpoint/model/firebase_service.dart';
 import 'package:matchpoint/page/home_page.dart';
 import 'package:matchpoint/page/login_page.dart';
 import 'package:matchpoint/widgets/matchPoint_logo_widget.dart';
@@ -22,9 +24,10 @@ class _RegisterPageState extends State<RegisterPage>
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController =
-      TextEditingController();
-  final FirebaseAuth _auth = FirebaseAuth.instance;
+  final TextEditingController _confirmPasswordController = TextEditingController();
+  final FirebaseService _auth = FirebaseService();
+  final FirebaseFirestore db = FirebaseFirestore.instance;
+  final CollectionReference _userCollection = FirebaseFirestore.instance.collection("users");
 
   // Password validation flags
   bool hasUppercase = false;
@@ -44,6 +47,10 @@ class _RegisterPageState extends State<RegisterPage>
   String _emailError = '';
   String _passwordError = '';
   String _confirmPasswordError = '';
+
+  String username = '';
+  String email = '';
+  String password = '';
 
   // Animation
   late AnimationController _animationController;
@@ -107,11 +114,10 @@ class _RegisterPageState extends State<RegisterPage>
         _isLoading = true;
       });
       try {
-        UserCredential userCredential =
-            await _auth.createUserWithEmailAndPassword(
-                email: _emailController.text,
-                password: _passwordController.text);
-        if (context.mounted) {
+
+        var result = await _auth.signUp(_usernameController.text, _emailController.text, _passwordController.text);
+
+        if (context.mounted && result != null) {
           toastBool("Register Success", true);
 
           Navigator.pushReplacement(
@@ -121,11 +127,7 @@ class _RegisterPageState extends State<RegisterPage>
         }
       } on FirebaseAuthException catch (e) {
         if (context.mounted) {
-          toastBool("Register Failed", false);
-
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(e.message ?? 'An error occurred')),
-          );
+          toastBool(e.message.toString(), false);
         }
       } finally {
         setState(() {

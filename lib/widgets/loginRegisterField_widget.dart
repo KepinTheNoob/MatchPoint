@@ -140,8 +140,7 @@ Widget _requirementText(String text, bool met) {
 }
 
 // Field Text biasa
-Widget buildTextField(
-    String label, TextEditingController controller, String errorText) {
+Widget buildTextField(String label, TextEditingController controller, String errorText) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [

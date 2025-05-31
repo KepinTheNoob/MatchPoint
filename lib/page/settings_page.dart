@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:matchpoint/model/firebase_service.dart';
 import 'package:matchpoint/page/deleteAccount_page.dart';
 import 'package:matchpoint/page/login_page.dart';
 import 'package:matchpoint/widgets/logOut_widget.dart';
@@ -14,8 +15,27 @@ class SettingsPage extends StatefulWidget {
 class _SettingsPageState extends State<SettingsPage> {
   bool _isAccountExpanded = false;
   final User? user = FirebaseAuth.instance.currentUser;
+  final FirebaseService _auth = FirebaseService();
+
+  String _username = 'Loading...';
 
   @override
+  void initState() {
+    super.initState();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    if (user != null) {
+      final userData = await _auth.getUserData(user!.uid);
+      if (userData != null && mounted) {
+        setState(() {
+          _username = userData.username ?? "Unknown";
+        });
+      }
+    }
+  }
+
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: const Color(0xFFF8FFFE),
@@ -60,7 +80,7 @@ class _SettingsPageState extends State<SettingsPage> {
               ListTile(
                 leading: const Icon(Icons.person),
                 title: const Text("Username"),
-                subtitle: Text(user?.displayName ?? 'John Doe'),
+                subtitle: Text(_username),
               ),
               ListTile(
                 leading: const Icon(Icons.email),
