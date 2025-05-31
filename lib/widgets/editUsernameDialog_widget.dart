@@ -19,7 +19,13 @@ void editUsernameDialog({
         ),
         backgroundColor: const Color(0xFfffffff),
         contentPadding: const EdgeInsets.all(24),
-        title: const Text("Edit Username"),
+        title: const Text(
+          "Edit Username",
+          style: TextStyle(
+            fontSize: 20,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         content: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
