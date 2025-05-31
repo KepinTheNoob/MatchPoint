@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:matchpoint/page/settings_page.dart';
-import 'package:matchpoint/widgets/createMatch_widget.dart';
+import 'package:matchpoint/widgets/createMatchDialog_widget.dart';
 import 'featureMatch_page.dart';
 
 class Home extends StatefulWidget {

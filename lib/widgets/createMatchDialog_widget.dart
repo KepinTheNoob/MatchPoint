@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:matchpoint/page/createHistory_page.dart';
 
 void showCreateMatchHistoryDialog(BuildContext context) {
   int selectedOption = 0;
@@ -100,7 +101,10 @@ void showCreateMatchHistoryDialog(BuildContext context) {
                   if (selectedOption == 0) {
                     // NGISI
                   } else {
-                    // NGISI
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const CreateHistory()));
                   }
                 },
                 style: TextButton.styleFrom(

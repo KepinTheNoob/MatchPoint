@@ -14,7 +14,7 @@ class FeatureMatchPage extends StatelessWidget {
         child: Column(
           children: [
             const Padding(
-              padding: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 2),
+              padding: EdgeInsets.only(left: 16, right: 16, top: 2, bottom: 2),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
@@ -29,13 +29,13 @@ class FeatureMatchPage extends StatelessWidget {
               indent: MediaQuery.of(context).size.width * 0.03,
               endIndent: MediaQuery.of(context).size.width * 0.03,
             ),
-            SizedBox(height: 16),
+            SizedBox(height: 10),
             CustomCarousel(
               imageUrls: AppData.innerStyleImages,
               isInnerStyle: true,
             ),
             const Padding(
-              padding: EdgeInsets.only(left: 16, right: 16, top: 16, bottom: 2),
+              padding: EdgeInsets.only(left: 16, right: 16, top: 2, bottom: 2),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(

@@ -24,10 +24,12 @@ class _RegisterPageState extends State<RegisterPage>
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
   final FirebaseService _auth = FirebaseService();
   final FirebaseFirestore db = FirebaseFirestore.instance;
-  final CollectionReference _userCollection = FirebaseFirestore.instance.collection("users");
+  final CollectionReference _userCollection =
+      FirebaseFirestore.instance.collection("users");
 
   // Password validation flags
   bool hasUppercase = false;
@@ -114,8 +116,8 @@ class _RegisterPageState extends State<RegisterPage>
         _isLoading = true;
       });
       try {
-
-        var result = await _auth.signUp(_usernameController.text, _emailController.text, _passwordController.text);
+        var result = await _auth.signUp(_usernameController.text,
+            _emailController.text, _passwordController.text);
 
         if (context.mounted && result != null) {
           toastBool("Register Success", true);
