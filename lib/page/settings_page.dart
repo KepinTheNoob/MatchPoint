@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:matchpoint/model/firebase_service.dart';
 import 'package:matchpoint/page/deleteAccount_page.dart';
 import 'package:matchpoint/page/login_page.dart';
-import 'package:matchpoint/widgets/logOut_widget.dart';
+import 'package:matchpoint/widgets/editUsernameDialog_widget.dart';
+import 'package:matchpoint/widgets/logoutDialog_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class SettingsPage extends StatefulWidget {
@@ -81,6 +82,21 @@ class _SettingsPageState extends State<SettingsPage> {
                 leading: const Icon(Icons.person),
                 title: const Text("Username"),
                 subtitle: Text(_username),
+                trailing: IconButton(
+                  icon: const Icon(Icons.edit, size: 20),
+                  onPressed: () {
+                    editUsernameDialog(
+                      context: context,
+                      currentUsername: _username,
+                      onSave: (newName) {
+                        setState(() {
+                          _username = newName;
+                        });
+                      },
+                    );
+                  },
+                ),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 16),
               ),
               ListTile(
                 leading: const Icon(Icons.email),
