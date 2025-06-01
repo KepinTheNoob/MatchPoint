@@ -52,14 +52,12 @@ class _CreateHistoryState extends State<CreateHistory> {
     print('Duration: ${matchInfo.duration}');
     print('Starting Time: ${matchInfo.startingTime}');
 
-    print('\nTeam A:');
-    print('Name: ${teamA.nameTeam}');
+    print('Team 1: ${teamA.nameTeam}');
     print('Pic ID: ${teamA.picId}');
     print('Members: ${teamA.listTeam}');
     print('Score: ${teamA.score}');
 
-    print('\nTeam B:');
-    print('Name: ${teamB.nameTeam}');
+    print('Team 2: ${teamB.nameTeam}');
     print('Pic ID: ${teamB.picId}');
     print('Members: ${teamB.listTeam}');
     print('Score: ${teamB.score}');
@@ -152,7 +150,7 @@ class _CreateHistoryState extends State<CreateHistory> {
               ElevatedButton(
                 onPressed: canCreateMatch()
                     ? () => {
-                          createMatch,
+                          createMatch(),
                           Navigator.push(
                               context,
                               MaterialPageRoute(
