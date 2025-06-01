@@ -70,9 +70,11 @@ class _LoginPageState extends State<LoginPage> {
           );
         }
       } finally {
-        setState(() {
-          _isLoading = false;
-        });
+        if (mounted) {
+          setState(() {
+            _isLoading = false;
+          });
+        }
       }
     }
   }

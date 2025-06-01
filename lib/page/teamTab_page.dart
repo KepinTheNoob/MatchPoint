@@ -1,70 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:matchpoint/model/match_model.dart';
 import 'package:matchpoint/widgets/teamInput_widget.dart';
 
-class TeamPageWithTab extends StatelessWidget {
-  const TeamPageWithTab({super.key});
+class TeamPageWithTab extends StatefulWidget {
+  final Team teamA;
+  final Team teamB;
+  final ValueChanged<Team> onTeamAChanged;
+  final ValueChanged<Team> onTeamBChanged;
+
+  const TeamPageWithTab({
+    Key? key,
+    required this.teamA,
+    required this.teamB,
+    required this.onTeamAChanged,
+    required this.onTeamBChanged,
+  }) : super(key: key);
+
+  @override
+  State<TeamPageWithTab> createState() => _TeamPageWithTabState();
+}
+
+class _TeamPageWithTabState extends State<TeamPageWithTab> {
+  Team team1Data = Team();
+  Team team2Data = Team();
+
+  @override
+  void initState() {
+    super.initState();
+    team1Data = widget.teamA;
+    team2Data = widget.teamB;
+  }
+
+  void updateTeamData(int teamIndex, Team data) {
+    setState(() {
+      if (teamIndex == 1) {
+        team1Data = data;
+      } else {
+        team2Data = data;
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      bottomNavigationBar: Container(
-        decoration: BoxDecoration(
-          color: Color(0xFFF3FEFD),
-          border: Border(
-            top: BorderSide(
-              color: Colors.grey,
-              width: 1,
-            ),
-          ),
-        ),
-        padding: const EdgeInsets.fromLTRB(12, 7, 12, 7),
-        child: Row(
-          children: [
-            Expanded(
-                child: Row(
-              children: [
-                const Icon(
-                  Icons.warning_amber_outlined,
-                  color: Colors.red,
-                  size: 16, // sesuaikan ukuran icon
-                ),
-                const SizedBox(width: 6),
-                Expanded(
-                  child: RichText(
-                    text: const TextSpan(
-                      style: TextStyle(
-                        color: Colors.red,
-                        fontSize: 10,
-                        fontWeight: FontWeight.w500,
-                      ),
-                      children: [
-                        TextSpan(text: '* A Sports Type Must Be Selected\n'),
-                        TextSpan(
-                            text:
-                                '* Both Teams Must Be Filled With At Least 1 Member'),
-                      ],
-                    ),
-                  ),
-                )
-              ],
-            )),
-            ElevatedButton(
-              onPressed: null,
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.grey.shade300,
-              ),
-              child: Text(
-                'Create Match',
-                style: TextStyle(
-                    color: Colors.grey,
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold),
-              ),
-            ),
-          ],
-        ),
-      ),
+      resizeToAvoidBottomInset: false,
       body: DefaultTabController(
         length: 2,
         child: Column(
@@ -90,11 +71,17 @@ class TeamPageWithTab extends StatelessWidget {
                 ],
               ),
             ),
-            const Expanded(
+            Expanded(
               child: TabBarView(
                 children: [
-                  TeamInputSection(),
-                  TeamInputSection(),
+                  TeamInputSection(
+                    initialData: widget.teamA,
+                    onChanged: widget.onTeamAChanged,
+                  ),
+                  TeamInputSection(
+                    initialData: widget.teamB,
+                    onChanged: widget.onTeamBChanged,
+                  ),
                 ],
               ),
             ),

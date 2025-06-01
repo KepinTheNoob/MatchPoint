@@ -47,6 +47,9 @@ dependencies:
   cached_network_image: ^3.3.1
   motion_tab_bar: ^2.0.4
   carousel_slider: ^5.0.0
+  intl: ^0.20.2
+  dropdown_search: ^6.0.2
+  dropdown_button2: ^2.3.9
 
 flutter_native_splash:
   color: "#F8FFFE"
@@ -87,6 +90,24 @@ flutter:
     - assets/logo.png
     - assets/logos/logo.png
     - assets/jeremy.png
+    - assets/profile/1.png
+    - assets/profile/2.png
+    - assets/profile/3.png
+    - assets/profile/4.png
+    - assets/profile/5.png
+    - assets/profile/6.png
+    - assets/profile/7.png
+    - assets/profile/8.png
+    - assets/profile/9.png
+    - assets/profile/10.png
+    - assets/background/basketball.png
+    - assets/background/custom.png
+    - assets/background/tennis_table.png
+    - assets/background/football.png
+    - assets/background/boxing.png
+    - assets/background/tennis.png
+    - assets/background/volleyball.png
+    - assets/background/badminton.png
     # - images/a_dot_burr.jpeg
     # - images/a_dot_ham.jpeg
 
