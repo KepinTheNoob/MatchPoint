@@ -80,7 +80,7 @@ void editUsernameDialog({
                       try {
                         await _auth.editUsername(controller.text);
 
-                        Navigator.pop(context);
+                        Navigator.pop(context, true);
                       } on FirebaseAuthException catch (e) {
                         if (context.mounted) {
                           toastBool(
