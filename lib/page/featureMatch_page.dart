@@ -55,7 +55,7 @@ class FeatureMatchPage extends StatelessWidget {
               endIndent: MediaQuery.of(context).size.width * 0.03,
             ),
             Expanded(
-              child: FutureBuilder<List<MatchInfo>>(
+              child: FutureBuilder<List<MatchWithTeams>>(
                 future: _matchService.getMatches(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -71,7 +71,8 @@ class FeatureMatchPage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     itemCount: matches.length,
                     itemBuilder: (context, index) {
-                      return matchCard(matches[index]);
+                      final match = matches[index];
+                      return matchCard(match.match, match.teamA, match.teamB);
                     },
                   );
                 },

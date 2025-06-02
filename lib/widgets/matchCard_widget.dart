@@ -3,7 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:matchpoint/model/match_model.dart';
 
-Widget matchCard(MatchInfo match) {
+Widget matchCard(MatchInfo match, Team teamA, Team teamB) {
   final date = match.date != null
       ? DateFormat('EEEE, dd MMM yyyy').format(match.date!)
       : "No Date";
@@ -49,7 +49,7 @@ Widget matchCard(MatchInfo match) {
         Row(
           children: [
             // Left team
-            _buildTeamColumn("Apex"),
+            _buildTeamColumn(teamA.nameTeam.toString() ?? "", teamA.listTeam ?? []),
             Expanded(
               child: Column(
                 children: [
@@ -58,7 +58,7 @@ Widget matchCard(MatchInfo match) {
                           TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
                   SizedBox(height: 4),
                   Text(
-                    "21 - 20",
+                    "${teamA.score} - ${teamB.score}",
                     style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
                   ),
                   SizedBox(height: 4),
@@ -92,7 +92,7 @@ Widget matchCard(MatchInfo match) {
               ),
             ),
             // Right team
-            _buildTeamColumn("T1 Sports", isLeft: false),
+            _buildTeamColumn(teamB.nameTeam.toString() ?? "", teamB.listTeam ?? [], isLeft: false),
           ],
         )
       ],
@@ -100,7 +100,7 @@ Widget matchCard(MatchInfo match) {
   );
 }
 
-Widget _buildTeamColumn(String teamName, {bool isLeft = true}) {
+Widget _buildTeamColumn(String teamName, List<String> teamMembers, {bool isLeft = true}) {
   return Expanded(
     child: Column(
       crossAxisAlignment:
@@ -129,27 +129,17 @@ Widget _buildTeamColumn(String teamName, {bool isLeft = true}) {
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text("Lenardo",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.bold)),
-                        Text("Avocado",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.bold)),
-                        Text("Ilianiano",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.bold)),
-                        Text("La Mancha Don",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.bold)),
-                        Text("...",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 8, fontWeight: FontWeight.bold)),
+                      children: [
+                        ...teamMembers.take(4).map((member) => Text(
+                              member,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                            )),
+                        if (teamMembers.length > 4)
+                          Text(
+                            "+${teamMembers.length - 4} more",
+                            style: const TextStyle(fontSize: 10, fontStyle: FontStyle.italic),
+                          ),
                       ],
                     ),
                   ),
@@ -158,27 +148,17 @@ Widget _buildTeamColumn(String teamName, {bool isLeft = true}) {
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.end,
-                      children: const [
-                        Text("Lenardo",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.bold)),
-                        Text("Avocado",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.bold)),
-                        Text("Ilianiano",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.bold)),
-                        Text("La Mancha Don",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.bold)),
-                        Text("...",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 8, fontWeight: FontWeight.bold)),
+                      children: [
+                        ...teamMembers.take(4).map((member) => Text(
+                              member,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(fontSize: 10, fontWeight: FontWeight.bold),
+                            )),
+                        if (teamMembers.length > 4)
+                          Text(
+                            "+${teamMembers.length - 4} more",
+                            style: const TextStyle(fontSize: 10, fontStyle: FontStyle.italic),
+                          ),
                       ],
                     ),
                   ),
