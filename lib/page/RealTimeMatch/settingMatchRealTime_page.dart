@@ -23,6 +23,7 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
   TextEditingController locationController = TextEditingController();
   TextEditingController durationController = TextEditingController(text: '90');
   String? selectedSportType;
+  final int phoneHeight = 0;
 
   final List<String> sportTypes = [
     'Custom',
