@@ -2,12 +2,38 @@ import 'package:flutter/material.dart';
 import 'package:matchpoint/data.dart';
 import 'package:matchpoint/model/match_model.dart';
 import 'package:matchpoint/model/match_service.dart';
+import 'package:matchpoint/page/viewMatchInfo_page.dart';
 import 'package:matchpoint/widgets/carousel_widget.dart';
 import 'package:matchpoint/widgets/matchCard_widget.dart';
 
 class FeatureMatchPage extends StatelessWidget {
-  final MatchService _matchService =
-      MatchService(); // Renamed to _matchService for clarity
+  final MatchService _matchService = MatchService();
+
+  final MatchInfo dummyMatch = MatchInfo(
+    id: 'match001',
+    date: DateTime.now(),
+    location: 'Lapangan Futsal ABC',
+    duration: 90,
+    startingTime: const TimeOfDay(hour: 19, minute: 30),
+    sportType: 'Futsal',
+    createdBy: 'user123',
+  );
+
+// Dummy Team Kiri
+  final Team dummyTeamLeft = Team(
+    nameTeam: 'BNCC United',
+    picId: '3',
+    listTeam: ['Aldi', 'Budi', 'Citra', 'Dina', 'Eka'],
+    score: 3,
+  );
+
+// Dummy Team Kanan
+  final Team dummyTeamRight = Team(
+    nameTeam: 'Komputek FC',
+    picId: '2',
+    listTeam: ['Faisal', 'Gina', 'Hendra'],
+    score: 2,
+  );
 
   FeatureMatchPage({super.key});
 
@@ -74,9 +100,23 @@ class FeatureMatchPage extends StatelessWidget {
                     itemBuilder: (context, index) {
                       return Column(
                         children: [
-                          matchCard(matches[index]),
-                          if (index != matches.length - 1)
-                            const SizedBox(height: 5),
+                          matchCard(
+                            match: matches[index],
+                            teamLeft: dummyTeamLeft,
+                            teamRight: dummyTeamRight,
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ViewMatchInfoPage(
+                                    matchInfo: matches[index],
+                                    teamA: dummyTeamLeft,
+                                    teamB: dummyTeamRight,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
                         ],
                       );
                     },

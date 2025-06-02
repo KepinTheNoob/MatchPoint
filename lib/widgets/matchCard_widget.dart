@@ -3,7 +3,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:matchpoint/model/match_model.dart';
 
-Widget matchCard(MatchInfo match) {
+Widget matchCard({
+  required MatchInfo match,
+  required Team teamLeft,
+  required Team teamRight,
+  VoidCallback? onTap,
+}) {
   final date = match.date != null
       ? DateFormat('EEEE, dd MMM yyyy').format(match.date!)
       : "No Date";
@@ -11,103 +16,131 @@ Widget matchCard(MatchInfo match) {
       ? "${match.startingTime!.hour.toString().padLeft(2, '0')}:${match.startingTime!.minute.toString().padLeft(2, '0')}"
       : "No Time";
 
-  return Container(
-    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
-    padding: const EdgeInsets.all(16),
-    decoration: BoxDecoration(
-      gradient: const LinearGradient(
-        colors: [Color(0xFFEFF4FF), Color(0xFFFFE5E5)],
-        begin: Alignment.topLeft,
-        end: Alignment.bottomRight,
+  return GestureDetector(
+    onTap: onTap,
+    child: Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: const LinearGradient(
+          colors: [Color(0xFFEFF4FF), Color(0xFFFFE5E5)],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: const [
+          BoxShadow(
+            color: Colors.black26,
+            blurRadius: 8,
+            offset: Offset(0, 4),
+          ),
+        ],
       ),
-      borderRadius: BorderRadius.circular(20),
-      boxShadow: const [
-        BoxShadow(
-          color: Colors.black26,
-          blurRadius: 8,
-          offset: Offset(0, 4),
-        ),
-      ],
-    ),
-    child: Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              "$date, $time",
-              style: TextStyle(fontSize: 12, color: Colors.black),
-            ),
-            Text(
-              match.sportType ?? "Unknown Sport",
-              style: TextStyle(fontSize: 12, color: Colors.black),
-            ),
-          ],
-        ),
-        const SizedBox(height: 12),
-        Row(
-          children: [
-            // Left team
-            _buildTeamColumn("Apex"),
-            Expanded(
-              child: Column(
-                children: [
-                  Text("VS",
-                      style:
-                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  SizedBox(height: 4),
-                  Text(
-                    "21 - 20",
-                    style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(height: 4),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        "WIN",
-                        style: GoogleFonts.quicksand(
-                          textStyle: TextStyle(
-                            color: Colors.green,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-                      SizedBox(width: 12),
-                      Text(
-                        "LOSE",
-                        style: GoogleFonts.quicksand(
-                          textStyle: TextStyle(
-                            color: Colors.red,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ],
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          // Tanggal dan Jenis Olahraga
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                "$date, $time",
+                style: const TextStyle(fontSize: 12, color: Colors.black),
               ),
-            ),
-            // Right team
-            _buildTeamColumn("T1 Sports", isLeft: false),
-          ],
-        ),
-      ],
+              Text(
+                match.sportType ?? "?? Sport",
+                style: const TextStyle(fontSize: 12, color: Colors.black),
+              ),
+            ],
+          ),
+          const SizedBox(height: 12),
+          Row(
+            children: [
+              // Tim kiri
+              _buildTeamColumn(teamLeft, isLeft: true),
+              Expanded(
+                child: Column(
+                  children: [
+                    const Text("VS",
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold)),
+                    const SizedBox(height: 4),
+                    Text(
+                      "${teamLeft.score} - ${teamRight.score}",
+                      style: const TextStyle(
+                          fontSize: 24, fontWeight: FontWeight.bold),
+                    ),
+                    const SizedBox(height: 4),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          teamLeft.score > teamRight.score
+                              ? "WIN"
+                              : teamLeft.score < teamRight.score
+                                  ? "LOSE"
+                                  : "DRAW",
+                          style: GoogleFonts.quicksand(
+                            textStyle: TextStyle(
+                              color: teamLeft.score > teamRight.score
+                                  ? Colors.green
+                                  : teamLeft.score < teamRight.score
+                                      ? Colors.red
+                                      : Colors.grey,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                        const SizedBox(width: 12),
+                        Text(
+                          teamRight.score > teamLeft.score
+                              ? "WIN"
+                              : teamRight.score < teamLeft.score
+                                  ? "LOSE"
+                                  : "DRAW",
+                          style: GoogleFonts.quicksand(
+                            textStyle: TextStyle(
+                              color: teamRight.score > teamLeft.score
+                                  ? Colors.green
+                                  : teamRight.score < teamLeft.score
+                                      ? Colors.red
+                                      : Colors.grey,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              // Tim kanan
+              _buildTeamColumn(teamRight, isLeft: false),
+            ],
+          ),
+        ],
+      ),
     ),
   );
 }
 
-Widget _buildTeamColumn(String teamName, {bool isLeft = true}) {
+Widget _buildTeamColumn(Team team, {bool isLeft = true}) {
+  // Ambil maksimal 4 anggota, lalu tambahkan "..." jika masih ada sisa
+  final displayedMembers = team.listTeam.length > 4
+      ? [...team.listTeam.take(4), "..."]
+      : team.listTeam.isNotEmpty
+          ? team.listTeam
+          : ["??"];
+
   return Expanded(
     child: Column(
       crossAxisAlignment:
           isLeft ? CrossAxisAlignment.start : CrossAxisAlignment.end,
       children: [
         Text(
-          teamName,
+          team.nameTeam ?? "?? Team",
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
         const SizedBox(height: 8),
@@ -117,83 +150,61 @@ Widget _buildTeamColumn(String teamName, {bool isLeft = true}) {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: isLeft
               ? [
-                  Container(
-                    width: 60,
-                    height: 60,
-                    margin: const EdgeInsets.only(right: 8),
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.grey,
-                    ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: const [
-                        Text("Lenardo",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.bold)),
-                        Text("Avocado",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.bold)),
-                        Text("Ilianiano",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.bold)),
-                        Text("La Mancha Don",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.bold)),
-                        Text("...",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 8, fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                  ),
+                  buildTeamProfileImage(team.picId),
+                  const SizedBox(width: 8),
+                  _buildMembersColumn(displayedMembers,
+                      align: CrossAxisAlignment.start),
                 ]
               : [
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: const [
-                        Text("Lenardo",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.bold)),
-                        Text("Avocado",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.bold)),
-                        Text("Ilianiano",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.bold)),
-                        Text("La Mancha Don",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 10, fontWeight: FontWeight.bold)),
-                        Text("...",
-                            overflow: TextOverflow.ellipsis,
-                            style: TextStyle(
-                                fontSize: 8, fontWeight: FontWeight.bold)),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: 60,
-                    height: 60,
-                    margin: const EdgeInsets.only(left: 8),
-                    decoration: const BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Colors.grey,
-                    ),
-                  ),
+                  _buildMembersColumn(displayedMembers,
+                      align: CrossAxisAlignment.end),
+                  const SizedBox(width: 8),
+                  buildTeamProfileImage(team.picId),
                 ],
         ),
       ],
+    ),
+  );
+}
+
+Widget buildTeamProfileImage(String? picId, {double size = 60}) {
+  final path =
+      'assets/profile/${(picId?.isNotEmpty ?? false) ? picId : '1'}.png';
+
+  return Container(
+    decoration: BoxDecoration(
+      shape: BoxShape.circle,
+      border: Border.all(
+        color: Colors.grey.shade400,
+        width: 2,
+      ),
+    ),
+    padding: const EdgeInsets.all(4),
+    child: CircleAvatar(
+      radius: 34,
+      backgroundImage: AssetImage(path),
+    ),
+  );
+}
+
+Widget _buildMembersColumn(List<String> members,
+    {CrossAxisAlignment align = CrossAxisAlignment.start}) {
+  return Expanded(
+    child: Column(
+      crossAxisAlignment: align,
+      mainAxisSize: MainAxisSize.min,
+      children: members
+          .map(
+            (member) => Text(
+              member,
+              overflow: TextOverflow.ellipsis,
+              style: const TextStyle(
+                fontSize: 10,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          )
+          .toList(),
     ),
   );
 }
