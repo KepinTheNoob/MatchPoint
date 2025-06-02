@@ -129,7 +129,7 @@ class _CreateHistoryState extends State<CreateHistory> {
                   const Icon(
                     Icons.warning_amber_outlined,
                     color: Colors.red,
-                    size: 16, // sesuaikan ukuran icon
+                    size: 16,
                   ),
                   const SizedBox(width: 6),
                   Expanded(
