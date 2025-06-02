@@ -48,7 +48,6 @@ dependencies:
   motion_tab_bar: ^2.0.4
   carousel_slider: ^5.0.0
   intl: ^0.20.2
-  dropdown_search: ^6.0.2
   dropdown_button2: ^2.3.9
 
 flutter_native_splash:
@@ -102,7 +101,7 @@ flutter:
     - assets/profile/10.png
     - assets/background/basketball.png
     - assets/background/custom.png
-    - assets/background/tennis_table.png
+    - assets/background/table_tennis.png
     - assets/background/football.png
     - assets/background/boxing.png
     - assets/background/tennis.png

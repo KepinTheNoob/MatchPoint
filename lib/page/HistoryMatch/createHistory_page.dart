@@ -75,7 +75,7 @@ class _CreateHistoryState extends State<CreateHistory> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          elevation: 0, // hilangkan shadow bawaan
+          elevation: 0,
           backgroundColor: const Color(0xFFF3FEFD),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.black),
