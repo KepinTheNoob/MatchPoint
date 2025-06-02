@@ -10,9 +10,9 @@ Widget matchCard(MatchInfo match, Team teamA, Team teamB) {
   final time = match.startingTime != null
       ? "${match.startingTime!.hour.toString().padLeft(2, '0')}:${match.startingTime!.minute.toString().padLeft(2, '0')}"
       : "No Time";
-      
+
   return Container(
-    margin: const EdgeInsets.symmetric(horizontal: 16),
+    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 5),
     padding: const EdgeInsets.all(16),
     decoration: BoxDecoration(
       gradient: const LinearGradient(
@@ -94,7 +94,7 @@ Widget matchCard(MatchInfo match, Team teamA, Team teamB) {
             // Right team
             _buildTeamColumn(teamB.nameTeam.toString() ?? "", teamB.listTeam ?? [], isLeft: false),
           ],
-        )
+        ),
       ],
     ),
   );

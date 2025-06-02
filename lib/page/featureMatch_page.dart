@@ -6,7 +6,8 @@ import 'package:matchpoint/widgets/carousel_widget.dart';
 import 'package:matchpoint/widgets/matchCard_widget.dart';
 
 class FeatureMatchPage extends StatelessWidget {
-  final MatchService _matchService = MatchService(); // Renamed to _matchService for clarity
+  final MatchService _matchService =
+      MatchService(); // Renamed to _matchService for clarity
 
   FeatureMatchPage({super.key});
 
