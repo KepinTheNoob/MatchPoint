@@ -3,6 +3,8 @@ import 'package:matchpoint/model/match_model.dart';
 import 'package:matchpoint/page/home_page.dart';
 import 'package:matchpoint/page/HistoryMatch/settingMatchHistory_page.dart';
 import 'package:matchpoint/page/teamTab_page.dart';
+import 'package:matchpoint/widgets/backButtonMatchDialog_widget.dart';
+import 'package:matchpoint/widgets/finishMatchDialog_widget.dart';
 
 class CreateHistory extends StatefulWidget {
   const CreateHistory({Key? key}) : super(key: key);
@@ -74,7 +76,7 @@ class _CreateHistoryState extends State<CreateHistory> {
           backgroundColor: const Color(0xFFF3FEFD),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => backButtonMatchDialog(context, 'History'),
           ),
           title: const Text(
             "Historical Record",
@@ -149,13 +151,18 @@ class _CreateHistoryState extends State<CreateHistory> {
               SizedBox(width: 24),
               ElevatedButton(
                 onPressed: canCreateMatch()
-                    ? () => {
-                          createMatch(),
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Home()))
+                    ? () async {
+                        final isConfirmed =
+                            await showFinishMatchDialog(context, 'History');
+
+                        if (isConfirmed == true) {
+                          createMatch();
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(builder: (context) => Home()),
+                          );
                         }
+                      }
                     : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: canCreateMatch()

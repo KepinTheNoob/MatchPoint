@@ -22,10 +22,12 @@ class MatchInfo {
 
   factory MatchInfo.fromJson(Map<String, dynamic> json, {String? id}) {
     final timeString = json['startingTime'] as String?;
-    final time = timeString != null ? TimeOfDay(
-      hour: int.parse(timeString.split(":")[0]),
-      minute: int.parse(timeString.split(":")[1]),
-    ) : null;
+    final time = timeString != null
+        ? TimeOfDay(
+            hour: int.parse(timeString.split(":")[0]),
+            minute: int.parse(timeString.split(":")[1]),
+          )
+        : null;
 
     return MatchInfo(
       id: id,

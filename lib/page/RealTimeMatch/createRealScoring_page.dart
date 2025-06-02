@@ -4,6 +4,8 @@ import 'package:matchpoint/page/RealTimeMatch/inputLiveScoring_page.dart';
 import 'package:matchpoint/page/RealTimeMatch/settingMatchRealTime_page.dart';
 import 'package:matchpoint/page/home_page.dart';
 import 'package:matchpoint/page/teamTab_page.dart';
+import 'package:matchpoint/widgets/backButtonMatchDialog_widget.dart';
+import 'package:matchpoint/widgets/finishMatchDialog_widget.dart';
 
 class LiveScoringPage extends StatefulWidget {
   const LiveScoringPage({Key? key}) : super(key: key);
@@ -45,10 +47,30 @@ class _LiveScoringPageState extends State<LiveScoringPage>
     });
   }
 
+  void updateScoreTeamA(int newScore) {
+    setState(() {
+      teamA.score = newScore;
+    });
+  }
+
+  void updateScoreTeamB(int newScore) {
+    setState(() {
+      teamB.score = newScore;
+    });
+  }
+
+  void updateDuration(int time) {
+    setState(() {
+      matchInfo.duration = time;
+    });
+  }
+
   bool canCreateMatch() {
     return (matchInfo.sportType != null && matchInfo.sportType!.isNotEmpty) &&
         (teamA.listTeam.isNotEmpty) &&
-        (teamB.listTeam.isNotEmpty);
+        (teamB.listTeam.isNotEmpty) &&
+        (teamA.nameTeam != null) &&
+        (teamB.nameTeam != null);
   }
 
   void createMatch() {
@@ -77,7 +99,7 @@ class _LiveScoringPageState extends State<LiveScoringPage>
       showInputTab = true;
       _tabController.dispose();
       _tabController = TabController(length: 3, vsync: this);
-      _tabController.index = 2; // langsung ke tab inputLiveScoring
+      _tabController.index = 2;
     });
   }
 
@@ -96,7 +118,7 @@ class _LiveScoringPageState extends State<LiveScoringPage>
         backgroundColor: const Color(0xFFF3FEFD),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back, color: Colors.black),
-          onPressed: () => Navigator.pop(context),
+          onPressed: () => backButtonMatchDialog(context, 'RealTime'),
         ),
         title: const Text(
           "Live Scoring",
@@ -172,11 +194,17 @@ class _LiveScoringPageState extends State<LiveScoringPage>
             const SizedBox(width: 24),
             showInputTab
                 ? ElevatedButton(
-                    onPressed: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => Home()),
-                      );
+                    onPressed: () async {
+                      final isConfirmed =
+                          await showFinishMatchDialog(context, 'RealTime');
+
+                      if (isConfirmed == true) {
+                        createMatch();
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => Home()),
+                        );
+                      }
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: const Color(0xff40BBC4),
@@ -223,7 +251,14 @@ class _LiveScoringPageState extends State<LiveScoringPage>
             onTeamBChanged: updateTeamB,
             matchType: 'RealTime',
           ),
-          if (showInputTab) const InputLiveScoring(),
+          if (showInputTab)
+            InputLiveScoring(
+                teamA: teamA.nameTeam ?? 'Team 1',
+                teamB: teamB.nameTeam ?? 'Team 2',
+                matchType: 'RealTime',
+                onUpdateScoreTeamA: (newScore) => updateScoreTeamA(newScore),
+                onUpdateScoreTeamB: (newScore) => updateScoreTeamB(newScore),
+                onUpdateDuration: (timer) => updateDuration(timer)),
         ],
       ),
     );

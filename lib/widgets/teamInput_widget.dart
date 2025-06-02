@@ -53,7 +53,6 @@ class _TeamTabState extends State<TeamInputSection> {
       memberControllers.add(TextEditingController());
     }
 
-    // Listen to team name changes
     teamNameController.addListener(_triggerOnChanged);
     // Trigger onChanged untuk initial data
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -265,7 +264,8 @@ class _TeamTabState extends State<TeamInputSection> {
                             iconSize: 40,
                             onPressed: () {
                               setState(() {
-                                if (score > 0) score--;
+                                if (score > 0 && matchType == 'history')
+                                  score--;
                               });
                               _triggerOnChanged();
                             },

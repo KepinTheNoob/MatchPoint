@@ -50,7 +50,7 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
 
     locationController.text = widget.matchInfo.location ?? '';
     durationController.text = widget.matchInfo.duration?.toString() ?? '90';
-    selectedSportType = widget.matchInfo.sportType ?? 'Custom';
+    selectedSportType = widget.matchInfo.sportType ?? '';
 
     filteredSportTypes = List.from(sportTypes);
 
@@ -129,7 +129,7 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
             right: 0,
             child: SizedBox(
               child: Image.asset(
-                'assets/background/${(selectedSportType ?? 'Custom').toLowerCase().replaceAll(' ', '_')}.png',
+                'assets/background/${((selectedSportType ?? '').isEmpty ? 'custom' : selectedSportType!.toLowerCase().replaceAll(' ', '_'))}.png',
                 fit: BoxFit.cover,
               ),
             ),

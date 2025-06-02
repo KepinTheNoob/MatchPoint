@@ -2,17 +2,35 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 class InputLiveScoring extends StatefulWidget {
-  const InputLiveScoring({Key? key}) : super(key: key);
+  final String teamA;
+  final String teamB;
+  final String matchType;
+
+  final Function(int) onUpdateScoreTeamA;
+  final Function(int) onUpdateScoreTeamB;
+  final Function(int) onUpdateDuration;
+
+  const InputLiveScoring({
+    Key? key,
+    required this.teamA,
+    required this.teamB,
+    required this.matchType,
+    required this.onUpdateScoreTeamA,
+    required this.onUpdateScoreTeamB,
+    required this.onUpdateDuration,
+  }) : super(key: key);
 
   @override
-  _InputLiveScoringState createState() => _InputLiveScoringState();
+  State<InputLiveScoring> createState() => _InputLiveScoringState();
 }
 
-class _InputLiveScoringState extends State<InputLiveScoring> {
+class _InputLiveScoringState extends State<InputLiveScoring>
+    with AutomaticKeepAliveClientMixin {
   int scoreRed = 0;
   int scoreBlue = 0;
   Duration matchDuration = Duration.zero;
   Timer? _timer;
+  int _lastUpdatedMinute = 0;
   bool isRunning = true;
 
   @override
@@ -21,11 +39,23 @@ class _InputLiveScoringState extends State<InputLiveScoring> {
     _startTimer();
   }
 
+  @override
+  bool get wantKeepAlive => true;
+
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (!isRunning) return;
+
       setState(() {
         matchDuration += const Duration(seconds: 1);
+
+        // Hitung menit yang sedang berjalan
+        int currentMinute = matchDuration.inMinutes;
+
+        if (currentMinute != _lastUpdatedMinute) {
+          _lastUpdatedMinute = currentMinute;
+          widget.onUpdateDuration(currentMinute);
+        }
       });
     });
   }
@@ -41,39 +71,15 @@ class _InputLiveScoringState extends State<InputLiveScoring> {
       if (isRedTeam) {
         scoreRed += isIncrement ? 1 : -1;
         if (scoreRed < 0) scoreRed = 0;
+
+        widget.onUpdateScoreTeamA(scoreRed);
       } else {
         scoreBlue += isIncrement ? 1 : -1;
         if (scoreBlue < 0) scoreBlue = 0;
+
+        widget.onUpdateScoreTeamB(scoreBlue);
       }
     });
-  }
-
-  void _showFinishConfirmation() {
-    setState(() {
-      isRunning = false;
-    });
-    showDialog(
-      context: context,
-      builder: (ctx) => AlertDialog(
-        title: const Text("Finish Match"),
-        content: const Text("Are you sure you want to finish the match early?"),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.of(ctx).pop(),
-            child: const Text("Cancel"),
-          ),
-          TextButton(
-            onPressed: () {
-              Navigator.of(ctx).pop();
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text("Match finished")),
-              );
-            },
-            child: const Text("Yes"),
-          ),
-        ],
-      ),
-    );
   }
 
   String _formatDuration(Duration d) {
@@ -93,7 +99,7 @@ class _InputLiveScoringState extends State<InputLiveScoring> {
     required Color color,
     required String teamName,
     required int score,
-    required Function(bool) onTap,
+    required Function(bool) onUpdateScore,
     required bool isTop,
   }) {
     return Expanded(
@@ -104,7 +110,7 @@ class _InputLiveScoringState extends State<InputLiveScoring> {
             onTapUp: (details) {
               final width = constraints.maxWidth;
               final isRight = details.localPosition.dx > width / 2;
-              onTap(isRight);
+              onUpdateScore(isRight);
             },
             child: Container(
               color: color,
@@ -156,6 +162,7 @@ class _InputLiveScoringState extends State<InputLiveScoring> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       backgroundColor: const Color(0xFFF3FEFD),
       body: Stack(
@@ -163,21 +170,23 @@ class _InputLiveScoringState extends State<InputLiveScoring> {
           Column(
             children: [
               buildScorePanel(
-                color: const Color(0xffFF6868),
-                teamName: "Apex of Generations",
+                color: const Color(0xff68E8FF),
+                teamName: widget.teamA,
                 score: scoreRed,
-                onTap: (isRight) => _updateScore(true, isRight),
+                onUpdateScore: (isIncrement) => _updateScore(true, isIncrement),
                 isTop: true,
               ),
               buildScorePanel(
-                color: const Color(0xff68E8FF),
-                teamName: "T1 Sports",
+                color: const Color(0xffFF6868),
+                teamName: widget.teamB,
                 score: scoreBlue,
-                onTap: (isRight) => _updateScore(false, isRight),
+                onUpdateScore: (isIncrement) =>
+                    _updateScore(false, isIncrement),
                 isTop: false,
               ),
             ],
           ),
+          // Timer
           Positioned.fill(
             child: Center(
               child: Container(
@@ -186,10 +195,7 @@ class _InputLiveScoringState extends State<InputLiveScoring> {
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(20),
-                  border: Border.all(
-                    color: Colors.black,
-                    width: 1,
-                  ),
+                  border: Border.all(color: Colors.black, width: 1),
                   boxShadow: const [
                     BoxShadow(color: Colors.grey, blurRadius: 4)
                   ],
@@ -221,55 +227,55 @@ class _InputLiveScoringState extends State<InputLiveScoring> {
           ),
         ],
       ),
-      // bottomNavigationBar: Container(
-      //   decoration: const BoxDecoration(
-      //     color: Color(0xFFF3FEFD),
-      //     border: Border(
-      //       top: BorderSide(color: Colors.grey, width: 1),
-      //     ),
-      //   ),
-      //   padding: const EdgeInsets.fromLTRB(16, 7, 12, 12),
-      //   child: Row(
-      //     crossAxisAlignment: CrossAxisAlignment.end,
-      //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      //     children: [
-      //       TextButton(
-      //         onPressed: () {
-      //           // Bisa diarahkan ke pengaturan match
-      //         },
-      //         child: const Row(
-      //           children: [
-      //             Icon(Icons.settings_outlined, size: 26, color: Colors.black),
-      //             SizedBox(width: 4),
-      //             Text(
-      //               'Match Settings',
-      //               style: TextStyle(
-      //                   color: Colors.black,
-      //                   fontSize: 16,
-      //                   fontWeight: FontWeight.bold),
-      //             ),
-      //           ],
-      //         ),
-      //       ),
-      //       TextButton(
-      //         onPressed: _showFinishConfirmation,
-      //         child: const Row(
-      //           children: [
-      //             Text(
-      //               'Finish Early',
-      //               style: TextStyle(
-      //                   color: Colors.black,
-      //                   fontSize: 16,
-      //                   fontWeight: FontWeight.bold),
-      //             ),
-      //             SizedBox(width: 4),
-      //             Icon(Icons.sports_score, size: 26, color: Colors.black),
-      //           ],
-      //         ),
-      //       ),
-      //     ],
-      //   ),
-      // ),
     );
   }
+  // bottomNavigationBar: Container(
+  //   decoration: const BoxDecoration(
+  //     color: Color(0xFFF3FEFD),
+  //     border: Border(
+  //       top: BorderSide(color: Colors.grey, width: 1),
+  //     ),
+  //   ),
+  //   padding: const EdgeInsets.fromLTRB(16, 7, 12, 12),
+  //   child: Row(
+  //     crossAxisAlignment: CrossAxisAlignment.end,
+  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+  //     children: [
+  //       TextButton(
+  //         onPressed: () {
+  //           // Bisa diarahkan ke pengaturan match
+  //         },
+  //         child: const Row(
+  //           children: [
+  //             Icon(Icons.settings_outlined, size: 26, color: Colors.black),
+  //             SizedBox(width: 4),
+  //             Text(
+  //               'Match Settings',
+  //               style: TextStyle(
+  //                   color: Colors.black,
+  //                   fontSize: 16,
+  //                   fontWeight: FontWeight.bold),
+  //             ),
+  //           ],
+  //         ),
+  //       ),
+  //       TextButton(
+  //         onPressed: _showFinishConfirmation,
+  //         child: const Row(
+  //           children: [
+  //             Text(
+  //               'Finish Early',
+  //               style: TextStyle(
+  //                   color: Colors.black,
+  //                   fontSize: 16,
+  //                   fontWeight: FontWeight.bold),
+  //             ),
+  //             SizedBox(width: 4),
+  //             Icon(Icons.sports_score, size: 26, color: Colors.black),
+  //           ],
+  //         ),
+  //       ),
+  //     ],
+  //   ),
+  // ),
 }
