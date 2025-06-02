@@ -8,6 +8,7 @@ import 'package:matchpoint/page/home_page.dart';
 import 'package:matchpoint/page/teamTab_page.dart';
 import 'package:matchpoint/widgets/backButtonMatchDialog_widget.dart';
 import 'package:matchpoint/widgets/finishMatchDialog_widget.dart';
+import 'package:matchpoint/widgets/toast_widget.dart';
 
 class LiveScoringPage extends StatefulWidget {
   const LiveScoringPage({Key? key}) : super(key: key);
@@ -212,6 +213,7 @@ class _LiveScoringPageState extends State<LiveScoringPage>
                         matchInfo.createdBy = currentUser.uid;
 
                         await _match.createMatch(matchInfo, teamA, teamB);
+                        toastBool("Successfully create real time match", true);
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(builder: (context) => Home()),

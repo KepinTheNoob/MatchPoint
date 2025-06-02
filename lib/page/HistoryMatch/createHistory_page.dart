@@ -7,6 +7,7 @@ import 'package:matchpoint/page/HistoryMatch/settingMatchHistory_page.dart';
 import 'package:matchpoint/page/teamTab_page.dart';
 import 'package:matchpoint/widgets/backButtonMatchDialog_widget.dart';
 import 'package:matchpoint/widgets/finishMatchDialog_widget.dart';
+import 'package:matchpoint/widgets/toast_widget.dart';
 
 class CreateHistory extends StatefulWidget {
   const CreateHistory({Key? key}) : super(key: key);
@@ -150,6 +151,9 @@ class _CreateHistoryState extends State<CreateHistory> {
                           matchInfo.createdBy = currentUser.uid;
 
                           await _match.createMatch(matchInfo, teamA, teamB);
+
+                          toastBool(
+                              "Successfully create historical match", true);
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(builder: (context) => Home()),

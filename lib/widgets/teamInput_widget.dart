@@ -383,7 +383,8 @@ class _TeamTabState extends State<TeamInputSection> {
                       ],
                     ),
                   ],
-                  if (matchType != 'history')
+                  if (matchType != 'history' &&
+                      (MediaQuery.of(context).size.height > 700))
                     SizedBox(
                       height: MediaQuery.of(context).size.height * 0.27,
                     )

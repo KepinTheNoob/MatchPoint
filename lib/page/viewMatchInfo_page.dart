@@ -59,7 +59,8 @@ class ViewMatchInfoPage extends StatelessWidget {
         padding: const EdgeInsets.fromLTRB(16, 7, 12, 12),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisAlignment: MainAxisAlignment.end,
+          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TextButton(
               onPressed: () async {
@@ -87,22 +88,22 @@ class ViewMatchInfoPage extends StatelessWidget {
                 ],
               ),
             ),
-            TextButton(
-              onPressed: () {},
-              child: const Row(
-                children: [
-                  Text(
-                    'Edit Match',
-                    style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold),
-                  ),
-                  SizedBox(width: 6),
-                  Icon(Icons.edit, size: 24, color: Colors.black),
-                ],
-              ),
-            ),
+            // TextButton(
+            //   onPressed: () {},
+            //   child: const Row(
+            //     children: [
+            //       Text(
+            //         'Edit Match',
+            //         style: TextStyle(
+            //             color: Colors.black,
+            //             fontSize: 16,
+            //             fontWeight: FontWeight.bold),
+            //       ),
+            //       SizedBox(width: 6),
+            //       Icon(Icons.edit, size: 24, color: Colors.black),
+            //     ],
+            //   ),
+            // ),
           ],
         ),
       ),
