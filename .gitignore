@@ -11,6 +11,7 @@
 .svn/
 .swiftpm/
 .dart_tool/
+**/dart_tool/
 migrate_working_dir/
 
 # IntelliJ related
