@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:matchpoint/model/match_model.dart';
+import 'package:matchpoint/model/match_service.dart';
 import 'package:matchpoint/page/RealTimeMatch/inputLiveScoring_page.dart';
 import 'package:matchpoint/page/RealTimeMatch/settingMatchRealTime_page.dart';
 import 'package:matchpoint/page/home_page.dart';
@@ -17,6 +19,7 @@ class LiveScoringPage extends StatefulWidget {
 class _LiveScoringPageState extends State<LiveScoringPage>
     with TickerProviderStateMixin {
   MatchInfo matchInfo = MatchInfo();
+  MatchService _match = MatchService();
   Team teamA = Team();
   Team teamB = Team();
 
@@ -195,11 +198,18 @@ class _LiveScoringPageState extends State<LiveScoringPage>
             showInputTab
                 ? ElevatedButton(
                     onPressed: () async {
-                      final isConfirmed =
-                          await showFinishMatchDialog(context, 'RealTime');
+                      final currentUser = FirebaseAuth.instance.currentUser;
+                      if (currentUser == null) {
+                        print("User not logged in");
+                        return;
+                      }
+
+                      final isConfirmed = await showFinishMatchDialog(context, 'RealTime');
 
                       if (isConfirmed == true) {
-                        createMatch();
+                        matchInfo.createdBy = currentUser.uid;
+
+                        await _match.createMatch(matchInfo, teamA, teamB);
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(builder: (context) => Home()),
