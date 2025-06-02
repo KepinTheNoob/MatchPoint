@@ -8,6 +8,7 @@ class TeamPageWithTab extends StatefulWidget {
   final Team teamB;
   final ValueChanged<Team> onTeamAChanged;
   final ValueChanged<Team> onTeamBChanged;
+  final String matchType;
 
   const TeamPageWithTab({
     Key? key,
@@ -15,6 +16,7 @@ class TeamPageWithTab extends StatefulWidget {
     required this.teamB,
     required this.onTeamAChanged,
     required this.onTeamBChanged,
+    required this.matchType,
   }) : super(key: key);
 
   @override
@@ -24,12 +26,14 @@ class TeamPageWithTab extends StatefulWidget {
 class _TeamPageWithTabState extends State<TeamPageWithTab> {
   Team team1Data = Team();
   Team team2Data = Team();
+  String matchType = 'history';
 
   @override
   void initState() {
     super.initState();
     team1Data = widget.teamA;
     team2Data = widget.teamB;
+    matchType = widget.matchType;
   }
 
   void updateTeamData(int teamIndex, Team data) {
@@ -77,10 +81,12 @@ class _TeamPageWithTabState extends State<TeamPageWithTab> {
                   TeamInputSection(
                     initialData: widget.teamA,
                     onChanged: widget.onTeamAChanged,
+                    matchType: matchType,
                   ),
                   TeamInputSection(
                     initialData: widget.teamB,
                     onChanged: widget.onTeamBChanged,
+                    matchType: matchType,
                   ),
                 ],
               ),

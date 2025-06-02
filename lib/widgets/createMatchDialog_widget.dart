@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:matchpoint/page/createHistory_page.dart';
+import 'package:matchpoint/page/HistoryMatch/createHistory_page.dart';
+import 'package:matchpoint/page/RealTimeMatch/createRealScoring_page.dart';
 
 void showCreateMatchHistoryDialog(BuildContext context) {
   int selectedOption = 0;
@@ -99,7 +100,10 @@ void showCreateMatchHistoryDialog(BuildContext context) {
                 onPressed: () {
                   Navigator.pop(context);
                   if (selectedOption == 0) {
-                    // NGISI
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const LiveScoringPage()));
                   } else {
                     Navigator.push(
                         context,

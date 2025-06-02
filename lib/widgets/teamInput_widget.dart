@@ -6,11 +6,13 @@ import 'package:matchpoint/widgets/selectProfileBottomSheets_widget.dart';
 class TeamInputSection extends StatefulWidget {
   final Team initialData;
   final Function(Team) onChanged;
+  final String matchType;
 
   const TeamInputSection({
     Key? key,
     required this.initialData,
     required this.onChanged,
+    required this.matchType,
   }) : super(key: key);
 
   @override
@@ -23,6 +25,7 @@ class _TeamTabState extends State<TeamInputSection> {
   TextEditingController teamNameController = TextEditingController();
   TextEditingController scoreController = TextEditingController();
   String selectedImage = 'assets/profile/1.png';
+  String? matchType;
 
   bool isEditingScore = false;
   int score = 0;
@@ -35,6 +38,7 @@ class _TeamTabState extends State<TeamInputSection> {
         TextEditingController(text: widget.initialData.nameTeam ?? '');
     score = widget.initialData.score;
     selectedImage = 'assets/profile/${widget.initialData.picId ?? "1"}.png';
+    matchType = widget.matchType;
 
     members = List<String>.from(widget.initialData.listTeam);
     if (members.isEmpty) members = [''];
@@ -241,140 +245,148 @@ class _TeamTabState extends State<TeamInputSection> {
                     ),
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    "Team Score",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
-                  ),
-                  const SizedBox(height: 12),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: 80,
-                        decoration: BoxDecoration(
-                          color: const Color(0xffF19393),
-                          borderRadius: BorderRadius.circular(18),
+                  if (matchType == 'history') ...[
+                    const Text(
+                      "Team Score",
+                      style:
+                          TextStyle(fontWeight: FontWeight.bold, fontSize: 18),
+                    ),
+                    const SizedBox(height: 12),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: 80,
+                          decoration: BoxDecoration(
+                            color: const Color(0xffF19393),
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          child: IconButton(
+                            iconSize: 40,
+                            onPressed: () {
+                              setState(() {
+                                if (score > 0) score--;
+                              });
+                              _triggerOnChanged();
+                            },
+                            icon: const Icon(Icons.remove, color: Colors.black),
+                          ),
                         ),
-                        child: IconButton(
-                          iconSize: 40,
-                          onPressed: () {
-                            setState(() {
-                              if (score > 0) score--;
-                            });
-                            _triggerOnChanged();
-                          },
-                          icon: const Icon(Icons.remove, color: Colors.black),
-                        ),
-                      ),
-                      const SizedBox(width: 26),
-                      GestureDetector(
-                        onTap: () {
-                          scoreController.text = score.toString();
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(28),
-                                ),
-                                backgroundColor: const Color(0xFfffffff),
-                                contentPadding: const EdgeInsets.all(24),
-                                title: const Text('Edit Score'),
-                                content: TextField(
-                                  controller: scoreController,
-                                  autofocus: true,
-                                  keyboardType: TextInputType.number,
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly
-                                  ],
-                                  decoration: const InputDecoration(
-                                    hintText: 'Enter new score',
+                        const SizedBox(width: 26),
+                        GestureDetector(
+                          onTap: () {
+                            scoreController.text = score.toString();
+                            showDialog(
+                              context: context,
+                              builder: (context) {
+                                return AlertDialog(
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(28),
                                   ),
-                                  onSubmitted: (value) {
-                                    setState(() {
-                                      score =
-                                          int.tryParse(value.trim()) ?? score;
-                                    });
-                                    _triggerOnChanged();
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                                actions: [
-                                  TextButton(
-                                    onPressed: () => Navigator.pop(context),
-                                    child: const Text(
-                                      "Cancel",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold,
-                                          color: Colors.grey),
+                                  backgroundColor: const Color(0xFfffffff),
+                                  contentPadding: const EdgeInsets.all(24),
+                                  title: const Text('Edit Score'),
+                                  content: TextField(
+                                    controller: scoreController,
+                                    autofocus: true,
+                                    keyboardType: TextInputType.number,
+                                    inputFormatters: [
+                                      FilteringTextInputFormatter.digitsOnly
+                                    ],
+                                    decoration: const InputDecoration(
+                                      hintText: 'Enter new score',
                                     ),
-                                  ),
-                                  TextButton(
-                                    onPressed: () {
+                                    onSubmitted: (value) {
                                       setState(() {
-                                        score = int.tryParse(
-                                                scoreController.text.trim()) ??
-                                            score;
+                                        score =
+                                            int.tryParse(value.trim()) ?? score;
                                       });
                                       _triggerOnChanged();
                                       Navigator.of(context).pop();
                                     },
-                                    child: const Text(
-                                      "Save",
-                                      style: TextStyle(
-                                          fontWeight: FontWeight.bold),
-                                    ),
                                   ),
-                                ],
-                              );
-                            },
-                          );
-                        },
-                        child: Container(
-                          width: MediaQuery.of(context).size.width * 0.27,
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 24, vertical: 12),
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            borderRadius: BorderRadius.circular(16),
-                            boxShadow: const [
-                              BoxShadow(
-                                color: Colors.black12,
-                                blurRadius: 4,
-                                offset: Offset(0, 2),
-                              )
-                            ],
-                          ),
-                          child: Text(
-                            textAlign: TextAlign.center,
-                            score.toString(),
-                            style: const TextStyle(
-                              fontSize: 32,
-                              fontWeight: FontWeight.bold,
+                                  actions: [
+                                    TextButton(
+                                      onPressed: () => Navigator.pop(context),
+                                      child: const Text(
+                                        "Cancel",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.grey),
+                                      ),
+                                    ),
+                                    TextButton(
+                                      onPressed: () {
+                                        setState(() {
+                                          score = int.tryParse(scoreController
+                                                  .text
+                                                  .trim()) ??
+                                              score;
+                                        });
+                                        _triggerOnChanged();
+                                        Navigator.of(context).pop();
+                                      },
+                                      child: const Text(
+                                        "Save",
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                          },
+                          child: Container(
+                            width: MediaQuery.of(context).size.width * 0.27,
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 24, vertical: 12),
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.circular(16),
+                              boxShadow: const [
+                                BoxShadow(
+                                  color: Colors.black12,
+                                  blurRadius: 4,
+                                  offset: Offset(0, 2),
+                                )
+                              ],
+                            ),
+                            child: Text(
+                              textAlign: TextAlign.center,
+                              score.toString(),
+                              style: const TextStyle(
+                                fontSize: 32,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 26),
-                      Container(
-                        width: 80,
-                        decoration: BoxDecoration(
-                          color: const Color(0xffD2F5ED),
-                          borderRadius: BorderRadius.circular(18),
+                        const SizedBox(width: 26),
+                        Container(
+                          width: 80,
+                          decoration: BoxDecoration(
+                            color: const Color(0xffD2F5ED),
+                            borderRadius: BorderRadius.circular(18),
+                          ),
+                          child: IconButton(
+                            iconSize: 40,
+                            onPressed: () {
+                              setState(() {
+                                score++;
+                              });
+                              _triggerOnChanged();
+                            },
+                            icon: const Icon(Icons.add, color: Colors.black),
+                          ),
                         ),
-                        child: IconButton(
-                          iconSize: 40,
-                          onPressed: () {
-                            setState(() {
-                              score++;
-                            });
-                            _triggerOnChanged();
-                          },
-                          icon: const Icon(Icons.add, color: Colors.black),
-                        ),
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+                  ],
+                  if (matchType != 'history')
+                    SizedBox(
+                      height: MediaQuery.of(context).size.height * 0.27,
+                    )
                 ],
               ),
             );

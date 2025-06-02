@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:matchpoint/page/createHistory_page.dart';
+import 'package:matchpoint/page/HistoryMatch/createHistory_page.dart';
+import 'package:matchpoint/page/RealTimeMatch/createRealScoring_page.dart';
 import 'package:matchpoint/page/deleteAccount_page.dart';
 import 'package:matchpoint/page/featureMatch_page.dart';
 import 'package:matchpoint/page/home_page.dart';
@@ -39,6 +40,7 @@ class MyApp extends StatelessWidget {
         '/settings': (context) => const SettingsPage(),
         '/deleteAcc': (context) => const DeleteAccountPage(),
         '/createHist': (context) => const CreateHistory(),
+        '/createRealScoring': (context) => const LiveScoringPage(),
       },
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
