@@ -1,7 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:intl/intl.dart';
+import 'package:matchpoint/model/match_model.dart';
 
-Widget matchCard() {
+Widget matchCard(MatchInfo match) {
+  final date = match.date != null
+      ? DateFormat('EEEE, dd MMM yyyy').format(match.date!)
+      : "No Date";
+  final time = match.startingTime != null
+      ? "${match.startingTime!.hour.toString().padLeft(2, '0')}:${match.startingTime!.minute.toString().padLeft(2, '0')}"
+      : "No Time";
+      
   return Container(
     margin: const EdgeInsets.symmetric(horizontal: 16),
     padding: const EdgeInsets.all(16),
@@ -25,13 +34,13 @@ Widget matchCard() {
       children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: const [
+          children: [
             Text(
-              "Tuesday, 28 Jan 2014, 14:00 PM EST",
+              "$date, $time",
               style: TextStyle(fontSize: 12, color: Colors.black),
             ),
             Text(
-              "Basketball Match",
+              match.sportType ?? "Unknown Sport",
               style: TextStyle(fontSize: 12, color: Colors.black),
             ),
           ],

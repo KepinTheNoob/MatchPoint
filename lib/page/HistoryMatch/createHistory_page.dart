@@ -1,5 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:matchpoint/model/match_model.dart';
+import 'package:matchpoint/model/match_service.dart';
 import 'package:matchpoint/page/home_page.dart';
 import 'package:matchpoint/page/HistoryMatch/settingMatchHistory_page.dart';
 import 'package:matchpoint/page/teamTab_page.dart';
@@ -13,6 +15,7 @@ class CreateHistory extends StatefulWidget {
 
 class _CreateHistoryState extends State<CreateHistory> {
   MatchInfo matchInfo = MatchInfo();
+  MatchService _match = MatchService();
   Team teamA = Team();
   Team teamB = Team();
 
@@ -44,7 +47,7 @@ class _CreateHistoryState extends State<CreateHistory> {
   }
 
   // Buat mastiin aja
-  void createMatch() {
+   createMatch() {
     print('Match Info:');
     print('Sport Type: ${matchInfo.sportType}');
     print('Date: ${matchInfo.date}');
@@ -149,13 +152,22 @@ class _CreateHistoryState extends State<CreateHistory> {
               SizedBox(width: 24),
               ElevatedButton(
                 onPressed: canCreateMatch()
-                    ? () => {
-                          createMatch(),
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Home()))
+                    ? () async {
+                        final currentUser = FirebaseAuth.instance.currentUser;
+                        if (currentUser == null) {
+                          print("User not logged in");
+                          return;
                         }
+
+                        matchInfo.createdBy = currentUser.uid;
+
+                        await _match.createMatch(matchInfo);
+
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const Home()),
+                        );
+                      }
                     : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: canCreateMatch()
