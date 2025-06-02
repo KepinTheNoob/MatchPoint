@@ -5,7 +5,7 @@ class MatchInfo {
   String? id;
   DateTime? date;
   String? location;
-  int? duration; // dalam menit
+  int? duration;
   TimeOfDay? startingTime;
   String? sportType;
   String? createdBy;

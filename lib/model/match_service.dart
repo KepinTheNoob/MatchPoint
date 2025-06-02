@@ -4,6 +4,11 @@ import 'package:matchpoint/model/match_model.dart';
 
 class MatchService {
   final _firestore = FirebaseFirestore.instance.collection("match");
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+  String? getCurrentUserUid() {
+    return _auth.currentUser?.uid;
+  }
 
   Future<void> createMatch(MatchInfo match) async {
     await _firestore.add(match.toJson());
