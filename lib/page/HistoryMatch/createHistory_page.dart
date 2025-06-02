@@ -155,11 +155,18 @@ class _CreateHistoryState extends State<CreateHistory> {
               ElevatedButton(
                 onPressed: canCreateMatch()
                     ? () async {
+                        final currentUser = FirebaseAuth.instance.currentUser;
+                        if (currentUser == null) {
+                          print("User not logged in");
+                          return;
+                        }
                         final isConfirmed =
                             await showFinishMatchDialog(context, 'History');
 
                         if (isConfirmed == true) {
-                          createMatch();
+                          matchInfo.createdBy = currentUser.uid;
+
+                          await _match.createMatch(matchInfo);
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(builder: (context) => Home()),
