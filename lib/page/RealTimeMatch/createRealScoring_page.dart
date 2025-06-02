@@ -73,7 +73,8 @@ class _LiveScoringPageState extends State<LiveScoringPage>
         (teamA.listTeam.isNotEmpty) &&
         (teamB.listTeam.isNotEmpty) &&
         (teamA.nameTeam != null) &&
-        (teamB.nameTeam != null);
+        (teamB.nameTeam != null) &&
+        (matchInfo.location != null);
   }
 
   void createMatch() {
@@ -204,7 +205,8 @@ class _LiveScoringPageState extends State<LiveScoringPage>
                         return;
                       }
 
-                      final isConfirmed = await showFinishMatchDialog(context, 'RealTime');
+                      final isConfirmed =
+                          await showFinishMatchDialog(context, 'RealTime');
 
                       if (isConfirmed == true) {
                         matchInfo.createdBy = currentUser.uid;

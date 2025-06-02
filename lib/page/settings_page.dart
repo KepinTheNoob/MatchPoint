@@ -50,7 +50,7 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         title: const Text(
           "Settings",
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         centerTitle: false,
         bottom: PreferredSize(

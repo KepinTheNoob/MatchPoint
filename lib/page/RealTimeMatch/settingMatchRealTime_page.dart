@@ -50,7 +50,7 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
     selectedTime = widget.matchInfo.startingTime ?? TimeOfDay.now();
 
     locationController.text = widget.matchInfo.location ?? '';
-    durationController.text = widget.matchInfo.duration?.toString() ?? '90';
+    durationController.text = widget.matchInfo.duration?.toString() ?? '0';
     selectedSportType = widget.matchInfo.sportType ?? '';
 
     filteredSportTypes = List.from(sportTypes);
@@ -129,10 +129,19 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
             left: 0,
             right: 0,
             child: SizedBox(
-              child: Image.asset(
-                'assets/background/${((selectedSportType ?? '').isEmpty ? 'custom' : selectedSportType!.toLowerCase().replaceAll(' ', '_'))}.png',
-                fit: BoxFit.cover,
-              ),
+              child: MediaQuery.of(context).size.height > 750
+                  ? Positioned(
+                      bottom: -60,
+                      left: 0,
+                      right: 0,
+                      child: SizedBox(
+                        child: Image.asset(
+                          'assets/background/${((selectedSportType ?? '').isEmpty ? 'custom' : selectedSportType!.toLowerCase().replaceAll(' ', '_'))}.png',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
             ),
           ),
           Padding(
@@ -386,7 +395,7 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
                     ),
                   ),
                 ),
-                const SizedBox(height: 150),
+                // const SizedBox(height: 100),
               ],
             ),
           ),

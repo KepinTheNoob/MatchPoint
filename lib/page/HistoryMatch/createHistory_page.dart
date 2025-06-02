@@ -45,7 +45,10 @@ class _CreateHistoryState extends State<CreateHistory> {
   bool canCreateMatch() {
     return (matchInfo.sportType != null && matchInfo.sportType!.isNotEmpty) &&
         (teamA.listTeam.isNotEmpty) &&
-        (teamB.listTeam.isNotEmpty);
+        (teamB.listTeam.isNotEmpty) &&
+        (teamA.nameTeam != null) &&
+        (teamB.nameTeam != null) &&
+        (matchInfo.location != null);
   }
 
   @override
@@ -63,7 +66,7 @@ class _CreateHistoryState extends State<CreateHistory> {
           ),
           title: const Text(
             "Historical Record",
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
           foregroundColor: Colors.black,
           bottom: PreferredSize(
@@ -140,7 +143,8 @@ class _CreateHistoryState extends State<CreateHistory> {
                           print("User not logged in");
                           return;
                         }
-                        final isConfirmed = await showFinishMatchDialog(context, 'History');
+                        final isConfirmed =
+                            await showFinishMatchDialog(context, 'History');
 
                         if (isConfirmed == true) {
                           matchInfo.createdBy = currentUser.uid;

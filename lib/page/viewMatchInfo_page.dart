@@ -18,6 +18,7 @@ class ViewMatchInfoPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bool isDraw = teamA.score == teamB.score;
     final bool isTeamAWinner = teamA.score > teamB.score;
     final timeFormatted = matchInfo.startingTime != null
         ? matchInfo.startingTime!.format(context)
@@ -37,7 +38,7 @@ class ViewMatchInfoPage extends StatelessWidget {
         ),
         title: const Text(
           "Match Details",
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         centerTitle: false,
         bottom: PreferredSize(
@@ -117,7 +118,7 @@ class ViewMatchInfoPage extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.only(top: 40),
                   child: _buildScoreColumn(
-                      teamA.score, teamB.score, isTeamAWinner),
+                      teamA.score, teamB.score, isTeamAWinner, isDraw),
                 ),
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -205,20 +206,22 @@ class ViewMatchInfoPage extends StatelessWidget {
     );
   }
 
-  Widget _buildScoreColumn(int scoreA, int scoreB, bool isTeamAWinner) {
+  Widget _buildScoreColumn(
+      int scoreA, int scoreB, bool isTeamAWinner, bool isDraw) {
     return Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // Column team A
         Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              isTeamAWinner ? "WIN" : "LOSE",
+              isDraw ? "DRAW" : (isTeamAWinner ? "WIN" : "LOSE"),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: isTeamAWinner ? Colors.green : Colors.red,
+                color: isDraw
+                    ? Colors.orange
+                    : (isTeamAWinner ? Colors.green : Colors.red),
               ),
             ),
             Text(
@@ -226,35 +229,29 @@ class ViewMatchInfoPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 36,
                 fontWeight: FontWeight.bold,
-                color: isTeamAWinner ? Colors.green : Colors.red,
+                color: isDraw
+                    ? Colors.orange
+                    : (isTeamAWinner ? Colors.green : Colors.red),
               ),
             ),
           ],
         ),
-
         const SizedBox(width: 12),
-
         const Text(
           ":",
-          style: TextStyle(
-            fontSize: 36,
-            fontWeight: FontWeight.bold,
-            color: Colors.black,
-          ),
+          style: TextStyle(fontSize: 36, fontWeight: FontWeight.bold),
         ),
-
         const SizedBox(width: 12),
-
-        // Column team B
         Column(
           mainAxisSize: MainAxisSize.min,
           children: [
             Text(
-              !isTeamAWinner ? "WIN" : "LOSE",
+              isDraw ? "DRAW" : (!isTeamAWinner ? "WIN" : "LOSE"),
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: !isTeamAWinner ? Colors.green : Colors.red,
-                fontSize: 16,
+                color: isDraw
+                    ? Colors.orange
+                    : (!isTeamAWinner ? Colors.green : Colors.red),
               ),
             ),
             Text(
@@ -262,7 +259,9 @@ class ViewMatchInfoPage extends StatelessWidget {
               style: TextStyle(
                 fontSize: 36,
                 fontWeight: FontWeight.bold,
-                color: !isTeamAWinner ? Colors.green : Colors.red,
+                color: isDraw
+                    ? Colors.orange
+                    : (!isTeamAWinner ? Colors.green : Colors.red),
               ),
             ),
           ],
