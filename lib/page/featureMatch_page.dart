@@ -6,7 +6,8 @@ import 'package:matchpoint/widgets/carousel_widget.dart';
 import 'package:matchpoint/widgets/matchCard_widget.dart';
 
 class FeatureMatchPage extends StatelessWidget {
-  final MatchService _matchService = MatchService(); // Renamed to _matchService for clarity
+  final MatchService _matchService =
+      MatchService(); // Renamed to _matchService for clarity
 
   FeatureMatchPage({super.key});
 
@@ -71,7 +72,13 @@ class FeatureMatchPage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     itemCount: matches.length,
                     itemBuilder: (context, index) {
-                      return matchCard(matches[index]);
+                      return Column(
+                        children: [
+                          matchCard(matches[index]),
+                          if (index != matches.length - 1)
+                            const SizedBox(height: 5),
+                        ],
+                      );
                     },
                   );
                 },
