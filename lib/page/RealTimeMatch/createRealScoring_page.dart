@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:matchpoint/model/match_model.dart';
-import 'package:matchpoint/page/home_page.dart';
+import 'package:matchpoint/page/RealTimeMatch/inputLiveScoring_page.dart';
 import 'package:matchpoint/page/RealTimeMatch/settingMatchRealTime_page.dart';
+import 'package:matchpoint/page/home_page.dart';
 import 'package:matchpoint/page/teamTab_page.dart';
 
 class LiveScoringPage extends StatefulWidget {
@@ -11,26 +12,33 @@ class LiveScoringPage extends StatefulWidget {
   State<LiveScoringPage> createState() => _LiveScoringPageState();
 }
 
-class _LiveScoringPageState extends State<LiveScoringPage> {
+class _LiveScoringPageState extends State<LiveScoringPage>
+    with TickerProviderStateMixin {
   MatchInfo matchInfo = MatchInfo();
   Team teamA = Team();
   Team teamB = Team();
 
-  // update untuk match info
+  late TabController _tabController;
+  bool showInputTab = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
   void updateMatchInfo(MatchInfo newInfo) {
     setState(() {
       matchInfo = newInfo;
     });
   }
 
-  // update team A
   void updateTeamA(Team newTeam) {
     setState(() {
       teamA = newTeam;
     });
   }
 
-  // update team B
   void updateTeamB(Team newTeam) {
     setState(() {
       teamB = newTeam;
@@ -43,7 +51,6 @@ class _LiveScoringPageState extends State<LiveScoringPage> {
         (teamB.listTeam.isNotEmpty);
   }
 
-  // Buat mastiin aja
   void createMatch() {
     print('Match Info:');
     print('Sport Type: ${matchInfo.sportType}');
@@ -63,131 +70,161 @@ class _LiveScoringPageState extends State<LiveScoringPage> {
     print('Score: ${teamB.score}');
   }
 
+  void startMatch() {
+    createMatch();
+
+    setState(() {
+      showInputTab = true;
+      _tabController.dispose();
+      _tabController = TabController(length: 3, vsync: this);
+      _tabController.index = 2; // langsung ke tab inputLiveScoring
+    });
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-      length: 2,
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          elevation: 0, // hilangkan shadow bawaan
-          backgroundColor: const Color(0xFFF3FEFD),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => Navigator.pop(context),
-          ),
-          title: const Text(
-            "Live Scoring",
-            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
-          ),
-          foregroundColor: Colors.black,
-          bottom: PreferredSize(
-            preferredSize: const Size.fromHeight(50),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                const Divider(
-                  height: 1,
-                  thickness: 1,
-                  color: Colors.grey, // warna border bottom
-                ),
-                const TabBar(
-                  indicatorColor: Color(0xff40BBC4),
-                  indicatorSize: TabBarIndicatorSize.label,
-                  labelColor: Colors.black,
-                  unselectedLabelColor: Colors.grey,
-                  tabs: [
-                    Tab(icon: Icon(Icons.settings_outlined)),
-                    Tab(icon: Icon(Icons.group)),
-                  ],
-                ),
-              ],
-            ),
-          ),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(
+        elevation: 0,
+        backgroundColor: const Color(0xFFF3FEFD),
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          onPressed: () => Navigator.pop(context),
         ),
-        bottomNavigationBar: Container(
-          decoration: BoxDecoration(
-            color: Color(0xFFF3FEFD),
-            border: Border(
-              top: BorderSide(
-                color: Colors.grey,
-                width: 1,
-              ),
-            ),
-          ),
-          padding: const EdgeInsets.fromLTRB(16, 7, 12, 12),
-          child: Row(
+        title: const Text(
+          "Live Scoring",
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
+        ),
+        foregroundColor: Colors.black,
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(50),
+          child: Column(
             children: [
-              Expanded(
-                  child: Row(
-                children: [
-                  const Icon(
-                    Icons.warning_amber_outlined,
-                    color: Colors.red,
-                    size: 16, // sesuaikan ukuran icon
-                  ),
-                  const SizedBox(width: 6),
-                  Expanded(
-                    child: RichText(
-                      text: const TextSpan(
-                        style: TextStyle(
-                          color: Colors.red,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        children: [
-                          TextSpan(text: '* A Sports Type Must Be Selected\n'),
-                          TextSpan(
-                              text:
-                                  '* Both Teams Must Be Filled With At Least 1 Member'),
-                        ],
-                      ),
-                    ),
-                  )
+              const Divider(height: 1, thickness: 1, color: Colors.grey),
+              TabBar(
+                controller: _tabController,
+                indicatorColor: const Color(0xff40BBC4),
+                labelColor: Colors.black,
+                unselectedLabelColor: Colors.grey,
+                tabs: [
+                  const Tab(icon: Icon(Icons.settings_outlined)),
+                  const Tab(icon: Icon(Icons.group)),
+                  if (showInputTab) const Tab(icon: Icon(Icons.sports_score)),
                 ],
-              )),
-              SizedBox(width: 24),
-              ElevatedButton(
-                onPressed: canCreateMatch()
-                    ? () => {
-                          createMatch(),
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => const Home()))
-                        }
-                    : null,
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: canCreateMatch()
-                      ? Color(0xff40BBC4)
-                      : Colors.grey.shade300,
-                ),
-                child: Text(
-                  'Create Match',
-                  style: TextStyle(
-                      color: canCreateMatch() ? Colors.white : Colors.grey,
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold),
-                ),
               ),
             ],
           ),
         ),
-        body: TabBarView(
+      ),
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          color: Color(0xFFF3FEFD),
+          border: Border(
+            top: BorderSide(
+              color: Colors.grey,
+              width: 1,
+            ),
+          ),
+        ),
+        padding: const EdgeInsets.fromLTRB(16, 7, 12, 12),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            SettingsMatch(
-              matchInfo: matchInfo,
-              onMatchInfoChanged: updateMatchInfo,
-            ),
-            TeamPageWithTab(
-              teamA: teamA,
-              teamB: teamB,
-              onTeamAChanged: updateTeamA,
-              onTeamBChanged: updateTeamB,
-              matchType: 'RealTime',
-            ),
+            ...(showInputTab
+                ? [SizedBox(width: 10)]
+                : [
+                    Expanded(
+                      child: Row(
+                        children: [
+                          const Icon(Icons.warning_amber_outlined,
+                              color: Colors.red, size: 16),
+                          const SizedBox(width: 6),
+                          Expanded(
+                            child: RichText(
+                              text: TextSpan(
+                                style: TextStyle(
+                                  color: Colors.red,
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                children: [
+                                  TextSpan(
+                                      text:
+                                          '* A Sports Type Must Be Selected\n'),
+                                  TextSpan(
+                                      text:
+                                          '* Both Teams Must Be Filled With At Least 1 Member'),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    )
+                  ]),
+            const SizedBox(width: 24),
+            showInputTab
+                ? ElevatedButton(
+                    onPressed: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => Home()),
+                      );
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xff40BBC4),
+                    ),
+                    child: const Text(
+                      'Finish Match',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  )
+                : ElevatedButton(
+                    onPressed: canCreateMatch() ? startMatch : null,
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: canCreateMatch()
+                          ? const Color(0xff40BBC4)
+                          : Colors.grey.shade300,
+                    ),
+                    child: Text(
+                      'Start Match',
+                      style: TextStyle(
+                        color: canCreateMatch() ? Colors.white : Colors.grey,
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
           ],
         ),
+      ),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          SettingsMatch(
+            matchInfo: matchInfo,
+            onMatchInfoChanged: updateMatchInfo,
+          ),
+          TeamPageWithTab(
+            teamA: teamA,
+            teamB: teamB,
+            onTeamAChanged: updateTeamA,
+            onTeamBChanged: updateTeamB,
+            matchType: 'RealTime',
+          ),
+          if (showInputTab) const InputLiveScoring(),
+        ],
       ),
     );
   }
