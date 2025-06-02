@@ -171,24 +171,7 @@ class _CustomCarouselState extends State<CustomCarousel>
           children: List.generate(widget.imageUrls.length, (index) {
             final isSelected = _currentPage == index;
             return GestureDetector(
-              // onTap: () => _carouselController.animateToPage(index),
-              onTap: () {
-                // TODO: Ganti dengan data yang kamu mau kirim ke ViewMatchInfoPage
-                final yourMatchInfoObj = dummyMatchInfoList[1];
-                final yourTeamAObj = dummyTeamAList[1];
-                final yourTeamBObj = dummyTeamBList[1];
-
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (_) => ViewMatchInfoPage(
-                      matchInfo: yourMatchInfoObj,
-                      teamA: yourTeamAObj,
-                      teamB: yourTeamBObj,
-                    ),
-                  ),
-                );
-              },
+              onTap: () => _carouselController.animateToPage(index),
               child: AnimatedContainer(
                 width: widget.isInnerStyle
                     ? (isSelected ? 55 : 17)

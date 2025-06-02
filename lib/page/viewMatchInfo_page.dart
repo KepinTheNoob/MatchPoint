@@ -3,7 +3,6 @@ import 'package:intl/intl.dart';
 import 'package:matchpoint/model/match_model.dart';
 import 'package:matchpoint/page/home_page.dart';
 import 'package:matchpoint/widgets/deleteMatchDialog_widget.dart';
-import 'package:matchpoint/widgets/finishMatchDialog_widget.dart';
 
 class ViewMatchInfoPage extends StatelessWidget {
   final MatchInfo matchInfo;
@@ -112,25 +111,36 @@ class ViewMatchInfoPage extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Team section
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            Stack(
+              alignment: Alignment.topCenter,
               children: [
-                _buildTeamColumn(
-                  teamA.nameTeam ?? "Team A",
-                  "assets/profile/${teamA.picId}.png",
-                  isTeamAWinner ? "WIN" : "LOSE",
-                  teamA.score,
-                  isTeamAWinner ? Colors.green : Colors.red,
-                  teamA.listTeam,
+                Padding(
+                  padding: const EdgeInsets.only(top: 40),
+                  child: _buildScoreColumn(
+                      teamA.score, teamB.score, isTeamAWinner),
                 ),
-                _buildScoreColumn(teamA.score, teamB.score, isTeamAWinner),
-                _buildTeamColumn(
-                  teamB.nameTeam ?? "Team B",
-                  "assets/profile/${teamB.picId}.png",
-                  !isTeamAWinner ? "WIN" : "LOSE",
-                  teamB.score,
-                  !isTeamAWinner ? Colors.green : Colors.red,
-                  teamB.listTeam,
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    _buildTeamColumn(
+                      teamA.nameTeam ?? "Team A",
+                      "assets/profile/${teamA.picId}.png",
+                      isTeamAWinner ? "WIN" : "LOSE",
+                      teamA.score,
+                      isTeamAWinner ? Colors.green : Colors.red,
+                      teamA.listTeam,
+                    ),
+                    const SizedBox(width: 120),
+                    _buildTeamColumn(
+                      teamB.nameTeam ?? "Team B",
+                      "assets/profile/${teamB.picId}.png",
+                      !isTeamAWinner ? "WIN" : "LOSE",
+                      teamB.score,
+                      !isTeamAWinner ? Colors.green : Colors.red,
+                      teamB.listTeam,
+                    ),
+                  ],
                 ),
               ],
             ),

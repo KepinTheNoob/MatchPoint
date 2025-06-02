@@ -6,36 +6,46 @@ import 'package:matchpoint/page/viewMatchInfo_page.dart';
 import 'package:matchpoint/widgets/carousel_widget.dart';
 import 'package:matchpoint/widgets/matchCard_widget.dart';
 
-class FeatureMatchPage extends StatelessWidget {
+enum FilterType {
+  week,
+  month,
+  year,
+  all,
+}
+
+class FeatureMatchPage extends StatefulWidget {
+  const FeatureMatchPage({super.key});
+
+  @override
+  State<FeatureMatchPage> createState() => _FeatureMatchPageState();
+}
+
+class _FeatureMatchPageState extends State<FeatureMatchPage> {
   final MatchService _matchService = MatchService();
 
-  final MatchInfo dummyMatch = MatchInfo(
-    id: 'match001',
-    date: DateTime.now(),
-    location: 'Lapangan Futsal ABC',
-    duration: 90,
-    startingTime: const TimeOfDay(hour: 19, minute: 30),
-    sportType: 'Futsal',
-    createdBy: 'user123',
-  );
+  FilterType _selectedFilter = FilterType.all;
 
-// Dummy Team Kiri
-  final Team dummyTeamLeft = Team(
-    nameTeam: 'BNCC United',
-    picId: '3',
-    listTeam: ['Aldi', 'Budi', 'Citra', 'Dina', 'Eka'],
-    score: 3,
-  );
+  List<MatchWithTeams> _filterMatches(
+      List<MatchWithTeams> matches, FilterType filter) {
+    final now = DateTime.now();
 
-// Dummy Team Kanan
-  final Team dummyTeamRight = Team(
-    nameTeam: 'Komputek FC',
-    picId: '2',
-    listTeam: ['Faisal', 'Gina', 'Hendra'],
-    score: 2,
-  );
+    return matches.where((matchWithTeams) {
+      final matchDate = matchWithTeams.match.date;
+      if (matchDate == null) return false;
 
-  FeatureMatchPage({super.key});
+      switch (filter) {
+        case FilterType.week:
+          final oneWeekAgo = now.subtract(const Duration(days: 7));
+          return matchDate.isAfter(oneWeekAgo);
+        case FilterType.month:
+          return matchDate.month == now.month && matchDate.year == now.year;
+        case FilterType.year:
+          return matchDate.year == now.year;
+        case FilterType.all:
+          return true;
+      }
+    }).toList();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,27 +54,27 @@ class FeatureMatchPage extends StatelessWidget {
       body: SafeArea(
         child: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.only(left: 16, right: 16, top: 2, bottom: 2),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  "Featured Match",
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                ),
-              ),
-            ),
-            Divider(
-              thickness: 0.5,
-              color: Colors.black,
-              indent: MediaQuery.of(context).size.width * 0.03,
-              endIndent: MediaQuery.of(context).size.width * 0.03,
-            ),
-            SizedBox(height: 10),
-            CustomCarousel(
-              imageUrls: AppData.innerStyleImages,
-              isInnerStyle: true,
-            ),
+            // const Padding(
+            //   padding: EdgeInsets.only(left: 16, right: 16, top: 2, bottom: 2),
+            //   child: Align(
+            //     alignment: Alignment.centerLeft,
+            //     child: Text(
+            //       "Featured Match",
+            //       style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+            //     ),
+            //   ),
+            // ),
+            // Divider(
+            //   thickness: 0.5,
+            //   color: Colors.black,
+            //   indent: MediaQuery.of(context).size.width * 0.03,
+            //   endIndent: MediaQuery.of(context).size.width * 0.03,
+            // ),
+            // SizedBox(height: 10),
+            // CustomCarousel(
+            //   imageUrls: AppData.innerStyleImages,
+            //   isInnerStyle: true,
+            // ),
             const Padding(
               padding: EdgeInsets.only(left: 16, right: 16, top: 2, bottom: 2),
               child: Align(
@@ -81,6 +91,42 @@ class FeatureMatchPage extends StatelessWidget {
               indent: MediaQuery.of(context).size.width * 0.03,
               endIndent: MediaQuery.of(context).size.width * 0.03,
             ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: FilterType.values.map((filter) {
+                  return FilterChip(
+                    label: Text(
+                      filter.name.toUpperCase(),
+                      style: TextStyle(
+                        fontWeight: _selectedFilter == filter
+                            ? FontWeight.bold
+                            : FontWeight.normal,
+                      ),
+                    ),
+                    selected: _selectedFilter == filter,
+                    selectedColor: const Color(0xffD7F8FD),
+                    backgroundColor: Colors.grey[100]!.withOpacity(0.5),
+                    showCheckmark: true,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      side: BorderSide(
+                        color: _selectedFilter == filter
+                            ? Color(0xff40BBC4)
+                            : Colors.grey,
+                        width: _selectedFilter == filter ? 2 : 1,
+                      ),
+                    ),
+                    onSelected: (selected) {
+                      setState(() {
+                        _selectedFilter = filter;
+                      });
+                    },
+                  );
+                }).toList(),
+              ),
+            ),
             Expanded(
               child: FutureBuilder<List<MatchWithTeams>>(
                 future: _matchService.getMatches(),
@@ -94,15 +140,30 @@ class FeatureMatchPage extends StatelessWidget {
                   }
 
                   final matches = snapshot.data!;
+                  final filteredMatches =
+                      _filterMatches(matches, _selectedFilter);
+
                   return ListView.builder(
                     padding: const EdgeInsets.symmetric(vertical: 8),
-                    itemCount: matches.length,
+                    itemCount: filteredMatches.length,
                     itemBuilder: (context, index) {
-                      final match = matches[index];
+                      final match = filteredMatches[index];
                       return matchCard(
                         match: match.match,
                         teamLeft: match.teamA,
                         teamRight: match.teamB,
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ViewMatchInfoPage(
+                                matchInfo: match.match,
+                                teamA: match.teamA,
+                                teamB: match.teamB,
+                              ),
+                            ),
+                          );
+                        },
                       );
                     },
                   );

@@ -54,70 +54,75 @@ Widget matchCard({
             ],
           ),
           const SizedBox(height: 12),
-          Row(
+          Stack(
+            alignment: Alignment.center,
             children: [
-              // Tim kiri
-              _buildTeamColumn(teamLeft, isLeft: true),
-              Expanded(
-                child: Column(
-                  children: [
-                    const Text("VS",
-                        style: TextStyle(
-                            fontSize: 18, fontWeight: FontWeight.bold)),
-                    const SizedBox(height: 4),
-                    Text(
-                      "${teamLeft.score} - ${teamRight.score}",
-                      style: const TextStyle(
-                          fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
-                    const SizedBox(height: 4),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          teamLeft.score > teamRight.score
-                              ? "WIN"
-                              : teamLeft.score < teamRight.score
-                                  ? "LOSE"
-                                  : "DRAW",
-                          style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                              color: teamLeft.score > teamRight.score
-                                  ? Colors.green
-                                  : teamLeft.score < teamRight.score
-                                      ? Colors.red
-                                      : Colors.grey,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(width: 12),
-                        Text(
-                          teamRight.score > teamLeft.score
-                              ? "WIN"
-                              : teamRight.score < teamLeft.score
-                                  ? "LOSE"
-                                  : "DRAW",
-                          style: GoogleFonts.quicksand(
-                            textStyle: TextStyle(
-                              color: teamRight.score > teamLeft.score
-                                  ? Colors.green
-                                  : teamRight.score < teamLeft.score
-                                      ? Colors.red
-                                      : Colors.grey,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(child: _buildTeamColumn(teamLeft, isLeft: true)),
+                  const SizedBox(width: 16),
+                  Expanded(child: _buildTeamColumn(teamRight, isLeft: false)),
+                ],
               ),
-              // Tim kanan
-              _buildTeamColumn(teamRight, isLeft: false),
+              // Informasi tengah
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const Text("VS",
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
+                  const SizedBox(height: 4),
+                  Text(
+                    "${teamLeft.score} - ${teamRight.score}",
+                    style: const TextStyle(
+                        fontSize: 24, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 4),
+                  Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        teamLeft.score > teamRight.score
+                            ? "WIN"
+                            : teamLeft.score < teamRight.score
+                                ? "LOSE"
+                                : "DRAW",
+                        style: GoogleFonts.quicksand(
+                          textStyle: TextStyle(
+                            color: teamLeft.score > teamRight.score
+                                ? Colors.green
+                                : teamLeft.score < teamRight.score
+                                    ? Colors.red
+                                    : Colors.grey,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 12),
+                      Text(
+                        teamRight.score > teamLeft.score
+                            ? "WIN"
+                            : teamRight.score < teamLeft.score
+                                ? "LOSE"
+                                : "DRAW",
+                        style: GoogleFonts.quicksand(
+                          textStyle: TextStyle(
+                            color: teamRight.score > teamLeft.score
+                                ? Colors.green
+                                : teamRight.score < teamLeft.score
+                                    ? Colors.red
+                                    : Colors.grey,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 18,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              )
             ],
           ),
         ],
@@ -139,7 +144,9 @@ Widget _buildTeamColumn(Team team, {bool isLeft = true}) {
           isLeft ? CrossAxisAlignment.start : CrossAxisAlignment.end,
       children: [
         Text(
-          team.nameTeam ?? "?? Team",
+          (team.nameTeam ?? "?? Team").length > 14
+              ? '${team.nameTeam!.substring(0, 10)}...'
+              : team.nameTeam ?? "?? Team",
           style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
         ),
         const SizedBox(height: 8),
@@ -151,16 +158,12 @@ Widget _buildTeamColumn(Team team, {bool isLeft = true}) {
               ? [
                   buildTeamProfileImage(team.picId),
                   const SizedBox(width: 8),
-                  Flexible(
-                    child: _buildMembersColumn(displayedMembers,
-                        align: CrossAxisAlignment.start),
-                  ),
+                  _buildMembersColumn(displayedMembers,
+                      align: CrossAxisAlignment.start),
                 ]
               : [
-                  Flexible(
-                    child: _buildMembersColumn(displayedMembers,
-                        align: CrossAxisAlignment.end),
-                  ),
+                  _buildMembersColumn(displayedMembers,
+                      align: CrossAxisAlignment.end),
                   const SizedBox(width: 8),
                   buildTeamProfileImage(team.picId),
                 ],
@@ -198,10 +201,10 @@ Widget _buildMembersColumn(List<String> members,
     children: members
         .map(
           (member) => Text(
-            member,
+            member.length > 7 ? '${member.substring(0, 7)}...' : member,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
-              fontSize: 10,
+              fontSize: 9,
               fontWeight: FontWeight.bold,
             ),
           ),
