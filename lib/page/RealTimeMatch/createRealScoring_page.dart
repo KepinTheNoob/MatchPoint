@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:matchpoint/model/match_model.dart';
 import 'package:matchpoint/page/home_page.dart';
 import 'package:matchpoint/page/RealTimeMatch/settingMatchRealTime_page.dart';
-import 'package:matchpoint/page/teamTabHistory_page.dart';
+import 'package:matchpoint/page/teamTab_page.dart';
 
 class LiveScoringPage extends StatefulWidget {
   const LiveScoringPage({Key? key}) : super(key: key);
