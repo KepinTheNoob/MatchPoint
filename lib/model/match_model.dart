@@ -1,19 +1,55 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 class MatchInfo {
+  String? id;
   DateTime? date;
   String? location;
   int? duration; // dalam menit
   TimeOfDay? startingTime;
   String? sportType;
+  String? createdBy;
 
   MatchInfo({
+    this.id,
     this.date,
     this.location,
     this.duration,
     this.startingTime,
     this.sportType,
+    this.createdBy,
   });
+
+  factory MatchInfo.fromJson(Map<String, dynamic> json, {String? id}) {
+    final timeString = json['startingTime'] as String?;
+    final time = timeString != null ? TimeOfDay(
+      hour: int.parse(timeString.split(":")[0]),
+      minute: int.parse(timeString.split(":")[1]),
+    ) : null;
+
+    return MatchInfo(
+      id: id,
+      date: (json['date'] as Timestamp?)?.toDate(),
+      location: json['location'],
+      duration: json['duration'],
+      startingTime: time,
+      sportType: json['sportType'],
+      createdBy: json['createdBy'],
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'date': date,
+      'location': location,
+      'duration': duration,
+      'startingTime': startingTime != null
+          ? '${startingTime!.hour}:${startingTime!.minute}'
+          : null,
+      'sportType': sportType,
+      'createdBy': createdBy,
+    };
+  }
 }
 
 class Team {
