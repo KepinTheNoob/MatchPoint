@@ -127,7 +127,6 @@ Widget matchCard({
 }
 
 Widget _buildTeamColumn(Team team, {bool isLeft = true}) {
-  // Ambil maksimal 4 anggota, lalu tambahkan "..." jika masih ada sisa
   final displayedMembers = team.listTeam.length > 4
       ? [...team.listTeam.take(4), "..."]
       : team.listTeam.isNotEmpty
@@ -152,12 +151,16 @@ Widget _buildTeamColumn(Team team, {bool isLeft = true}) {
               ? [
                   buildTeamProfileImage(team.picId),
                   const SizedBox(width: 8),
-                  _buildMembersColumn(displayedMembers,
-                      align: CrossAxisAlignment.start),
+                  Flexible(
+                    child: _buildMembersColumn(displayedMembers,
+                        align: CrossAxisAlignment.start),
+                  ),
                 ]
               : [
-                  _buildMembersColumn(displayedMembers,
-                      align: CrossAxisAlignment.end),
+                  Flexible(
+                    child: _buildMembersColumn(displayedMembers,
+                        align: CrossAxisAlignment.end),
+                  ),
                   const SizedBox(width: 8),
                   buildTeamProfileImage(team.picId),
                 ],
@@ -176,12 +179,12 @@ Widget buildTeamProfileImage(String? picId, {double size = 60}) {
       shape: BoxShape.circle,
       border: Border.all(
         color: Colors.grey.shade400,
-        width: 2,
+        width: 1,
       ),
     ),
     padding: const EdgeInsets.all(4),
     child: CircleAvatar(
-      radius: 34,
+      radius: size / 2,
       backgroundImage: AssetImage(path),
     ),
   );
@@ -189,22 +192,20 @@ Widget buildTeamProfileImage(String? picId, {double size = 60}) {
 
 Widget _buildMembersColumn(List<String> members,
     {CrossAxisAlignment align = CrossAxisAlignment.start}) {
-  return Expanded(
-    child: Column(
-      crossAxisAlignment: align,
-      mainAxisSize: MainAxisSize.min,
-      children: members
-          .map(
-            (member) => Text(
-              member,
-              overflow: TextOverflow.ellipsis,
-              style: const TextStyle(
-                fontSize: 10,
-                fontWeight: FontWeight.bold,
-              ),
+  return Column(
+    crossAxisAlignment: align,
+    mainAxisSize: MainAxisSize.min,
+    children: members
+        .map(
+          (member) => Text(
+            member,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 10,
+              fontWeight: FontWeight.bold,
             ),
-          )
-          .toList(),
-    ),
+          ),
+        )
+        .toList(),
   );
 }

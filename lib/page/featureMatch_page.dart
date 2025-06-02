@@ -82,7 +82,7 @@ class FeatureMatchPage extends StatelessWidget {
               endIndent: MediaQuery.of(context).size.width * 0.03,
             ),
             Expanded(
-              child: FutureBuilder<List<MatchInfo>>(
+              child: FutureBuilder<List<MatchWithTeams>>(
                 future: _matchService.getMatches(),
                 builder: (context, snapshot) {
                   if (snapshot.connectionState == ConnectionState.waiting) {
@@ -98,26 +98,11 @@ class FeatureMatchPage extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(vertical: 8),
                     itemCount: matches.length,
                     itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                          matchCard(
-                            match: matches[index],
-                            teamLeft: dummyTeamLeft,
-                            teamRight: dummyTeamRight,
-                            onTap: () {
-                              Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => ViewMatchInfoPage(
-                                    matchInfo: matches[index],
-                                    teamA: dummyTeamLeft,
-                                    teamB: dummyTeamRight,
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                        ],
+                      final match = matches[index];
+                      return matchCard(
+                        match: match.match,
+                        teamLeft: match.teamA,
+                        teamRight: match.teamB,
                       );
                     },
                   );

@@ -48,26 +48,6 @@ class _CreateHistoryState extends State<CreateHistory> {
         (teamB.listTeam.isNotEmpty);
   }
 
-  // Buat mastiin aja
-  createMatch() {
-    print('Match Info:');
-    print('Sport Type: ${matchInfo.sportType}');
-    print('Date: ${matchInfo.date}');
-    print('Location: ${matchInfo.location}');
-    print('Duration: ${matchInfo.duration}');
-    print('Starting Time: ${matchInfo.startingTime}');
-
-    print('Team 1: ${teamA.nameTeam}');
-    print('Pic ID: ${teamA.picId}');
-    print('Members: ${teamA.listTeam}');
-    print('Score: ${teamA.score}');
-
-    print('Team 2: ${teamB.nameTeam}');
-    print('Pic ID: ${teamB.picId}');
-    print('Members: ${teamB.listTeam}');
-    print('Score: ${teamB.score}');
-  }
-
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -160,13 +140,12 @@ class _CreateHistoryState extends State<CreateHistory> {
                           print("User not logged in");
                           return;
                         }
-                        final isConfirmed =
-                            await showFinishMatchDialog(context, 'History');
+                        final isConfirmed = await showFinishMatchDialog(context, 'History');
 
                         if (isConfirmed == true) {
                           matchInfo.createdBy = currentUser.uid;
 
-                          await _match.createMatch(matchInfo);
+                          await _match.createMatch(matchInfo, teamA, teamB);
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(builder: (context) => Home()),
