@@ -124,22 +124,28 @@ class ViewMatchInfoPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _buildTeamColumn(
-                      teamA.nameTeam ?? "Team A",
-                      "assets/profile/${teamA.picId}.png",
-                      isTeamAWinner ? "WIN" : "LOSE",
-                      teamA.score,
-                      isTeamAWinner ? Colors.green : Colors.red,
-                      teamA.listTeam,
+                    Expanded(
+                      child: _buildTeamColumn(
+                        teamA.nameTeam ?? "Team A",
+                        "assets/profile/${teamA.picId}.png",
+                        isTeamAWinner ? "WIN" : "LOSE",
+                        teamA.score,
+                        isTeamAWinner ? Colors.green : Colors.red,
+                        teamA.listTeam,
+                        CrossAxisAlignment.start, // NEW PARAM
+                      ),
                     ),
-                    const SizedBox(width: 120),
-                    _buildTeamColumn(
-                      teamB.nameTeam ?? "Team B",
-                      "assets/profile/${teamB.picId}.png",
-                      !isTeamAWinner ? "WIN" : "LOSE",
-                      teamB.score,
-                      !isTeamAWinner ? Colors.green : Colors.red,
-                      teamB.listTeam,
+                    const SizedBox(width: 16), // smaller gap
+                    Expanded(
+                      child: _buildTeamColumn(
+                        teamB.nameTeam ?? "Team B",
+                        "assets/profile/${teamB.picId}.png",
+                        !isTeamAWinner ? "WIN" : "LOSE",
+                        teamB.score,
+                        !isTeamAWinner ? Colors.green : Colors.red,
+                        teamB.listTeam,
+                        CrossAxisAlignment.end, // NEW PARAM
+                      ),
                     ),
                   ],
                 ),
@@ -175,19 +181,27 @@ class ViewMatchInfoPage extends StatelessWidget {
     int score,
     Color color,
     List<String> members,
+    CrossAxisAlignment alignment, // NEW PARAM
   ) {
+    // Set text alignment based on column alignment
+    final textAlign = alignment == CrossAxisAlignment.end ? TextAlign.right : TextAlign.left;
+
     return Column(
+      crossAxisAlignment: alignment,
       children: [
         Text(
-            (name ?? "?? Team").length > 14
-                ? '${name!.substring(0, 10)}...'
-                : name ?? "?? Team",
-            style: TextStyle(
-                foreground: Paint()
-                  ..style = PaintingStyle.stroke
-                  ..strokeWidth = 1
-                  ..color = Colors.black,
-                fontSize: 18)),
+          (name ?? "?? Team").length > 14
+              ? '${name!.substring(0, 10)}...'
+              : name ?? "?? Team",
+          textAlign: textAlign,
+          style: TextStyle(
+            foreground: Paint()
+              ..style = PaintingStyle.stroke
+              ..strokeWidth = 1
+              ..color = Colors.black,
+            fontSize: 18,
+          ),
+        ),
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
@@ -206,8 +220,9 @@ class ViewMatchInfoPage extends StatelessWidget {
         const SizedBox(height: 8),
         for (var member in members) ...[
           Text(
-            member.length > 10 ? '${member.substring(0, 10)}...' : member,
-            overflow: TextOverflow.ellipsis,
+            _wrapByWords(member, 3),
+            softWrap: true,
+            textAlign: textAlign,
             style: const TextStyle(
               fontSize: 16,
               fontWeight: FontWeight.bold,
@@ -340,5 +355,19 @@ class ViewMatchInfoPage extends StatelessWidget {
         ),
       );
     }
+  }
+
+  String _wrapByWords(String text, int wordsPerLine) {
+    final words = text.split(' ');
+    final buffer = StringBuffer();
+    for (int i = 0; i < words.length; i++) {
+      buffer.write(words[i]);
+      if ((i + 1) % wordsPerLine == 0 && i != words.length - 1) {
+        buffer.write('\n');
+      } else if (i != words.length - 1) {
+        buffer.write(' ');
+      }
+    }
+    return buffer.toString();
   }
 }
