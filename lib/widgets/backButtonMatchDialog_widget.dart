@@ -37,7 +37,7 @@ void backButtonMatchDialog(BuildContext context, String type) {
                 const SizedBox(height: 16),
                 const Center(
                   child: Text(
-                    'Warning: This will delete all current records of the match (Names, Scores)',
+                    'This action cannot be undone. All match data, including team names and scores, will be permanently lost.',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                       fontWeight: FontWeight.normal,
@@ -77,12 +77,14 @@ void backButtonMatchDialog(BuildContext context, String type) {
                 ),
               ),
               TextButton(
-                onPressed: () {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => Home()),
-                  );
-                },
+                onPressed: isChecked
+                    ? () {
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => Home()),
+                        );
+                      }
+                    : null, // Disable if not checked
                 style: TextButton.styleFrom(
                   foregroundColor: isChecked ? Colors.red : Colors.grey,
                 ),
