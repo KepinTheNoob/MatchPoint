@@ -125,10 +125,8 @@ class _CreateHistoryState extends State<CreateHistory> {
                           fontWeight: FontWeight.w500,
                         ),
                         children: [
-                          TextSpan(text: '* All Input Type Must Be Filled\n'),
-                          TextSpan(
-                              text:
-                                  '* Both Teams Must Be Filled With At Least 1 Member'),
+                          TextSpan(text: '* All Fields Must Be Filled\n'),
+                          TextSpan(text: '* At Least 1 Member in Each Team is Required'),
                         ],
                       ),
                     ),
