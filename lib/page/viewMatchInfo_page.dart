@@ -124,43 +124,29 @@ class ViewMatchInfoPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-<<<<<<< HEAD
                     Flexible(
                       child: _buildTeamColumn(
-=======
-                    _buildTeamColumn(
->>>>>>> db47cbc33abdb1706e91ed9e4f569bf389ed18ec
                         teamA.nameTeam ?? "Team A",
                         "assets/profile/${teamA.picId}.png",
                         isTeamAWinner ? "WIN" : "LOSE",
                         teamA.score,
                         isTeamAWinner ? Colors.green : Colors.red,
                         teamA.listTeam,
-<<<<<<< HEAD
                         CrossAxisAlignment.start, // NEW PARAM
                       ),
                     ),
                     const SizedBox(width: 16), // smaller gap
                     Flexible(
                       child: _buildTeamColumn(
-=======
-                        true),
-                    const SizedBox(width: 120),
-                    _buildTeamColumn(
->>>>>>> db47cbc33abdb1706e91ed9e4f569bf389ed18ec
                         teamB.nameTeam ?? "Team B",
                         "assets/profile/${teamB.picId}.png",
                         !isTeamAWinner ? "WIN" : "LOSE",
                         teamB.score,
                         !isTeamAWinner ? Colors.green : Colors.red,
                         teamB.listTeam,
-<<<<<<< HEAD
                         CrossAxisAlignment.end, // NEW PARAM
                       ),
                     ),
-=======
-                        false),
->>>>>>> db47cbc33abdb1706e91ed9e4f569bf389ed18ec
                   ],
                 ),
               ],
@@ -188,7 +174,6 @@ class ViewMatchInfoPage extends StatelessWidget {
     );
   }
 
-<<<<<<< HEAD
   Widget _buildTeamColumn(
     String name,
     String imageAsset,
@@ -219,24 +204,6 @@ class ViewMatchInfoPage extends StatelessWidget {
             fontSize: 18,
           ),
         ),
-=======
-  Widget _buildTeamColumn(String name, String imageAsset, String result,
-      int score, Color color, List<String> members, bool direction) {
-    return Column(
-      crossAxisAlignment:
-          direction ? CrossAxisAlignment.start : CrossAxisAlignment.end,
-      children: [
-        Text(
-            (name ?? "?? Team").length > 14
-                ? '${name!.substring(0, 14)}...'
-                : name ?? "?? Team",
-            style: TextStyle(
-                foreground: Paint()
-                  ..style = PaintingStyle.stroke
-                  ..strokeWidth = 1
-                  ..color = Colors.black,
-                fontSize: 16)),
->>>>>>> db47cbc33abdb1706e91ed9e4f569bf389ed18ec
         const SizedBox(height: 8),
         Container(
           decoration: BoxDecoration(
@@ -255,15 +222,10 @@ class ViewMatchInfoPage extends StatelessWidget {
         const SizedBox(height: 8),
         for (var member in members) ...[
           Text(
-<<<<<<< HEAD
             member,
             // _wrapByWords(member, 3),
             softWrap: true,
             textAlign: textAlign,
-=======
-            member.length > 18 ? '${member.substring(0, 18)}...' : member,
-            overflow: TextOverflow.ellipsis,
->>>>>>> db47cbc33abdb1706e91ed9e4f569bf389ed18ec
             style: const TextStyle(
               fontSize: 14,
               fontWeight: FontWeight.bold,
