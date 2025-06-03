@@ -60,7 +60,6 @@ class ViewMatchInfoPage extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.end,
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TextButton(
               onPressed: () async {
