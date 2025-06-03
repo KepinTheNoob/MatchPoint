@@ -40,7 +40,7 @@ dependencies:
   provider: ^6.1.2
   google_fonts: ^6.2.1
   flutter_svg: ^2.0.7
-  flutter_native_splash: ^2.4.6
+  flutter_native_splash: 2.4.4
   flutter_launcher_icons: ^0.14.3
   delightful_toast: ^1.1.0
   loading_icon_button: ^0.0.7
@@ -48,7 +48,6 @@ dependencies:
   motion_tab_bar: ^2.0.4
   carousel_slider: ^5.0.0
   intl: ^0.20.2
-  dropdown_search: ^6.0.2
   dropdown_button2: ^2.3.9
 
 flutter_native_splash:
@@ -62,6 +61,11 @@ flutter_native_splash:
     color: "#F8FFFE"
     image: assets/logos/logo.png
     branding: assets/logos/MatchPoint.png
+
+flutter_icons:
+  image_path: "assets/logos/logo.png"
+  android: true
+  ios: true
 
 dev_dependencies:
   flutter_test:
@@ -89,7 +93,6 @@ flutter:
     - assets/google-logo.png
     - assets/logo.png
     - assets/logos/logo.png
-    - assets/jeremy.png
     - assets/profile/1.png
     - assets/profile/2.png
     - assets/profile/3.png
@@ -102,7 +105,7 @@ flutter:
     - assets/profile/10.png
     - assets/background/basketball.png
     - assets/background/custom.png
-    - assets/background/tennis_table.png
+    - assets/background/table_tennis.png
     - assets/background/football.png
     - assets/background/boxing.png
     - assets/background/tennis.png
@@ -136,3 +139,5 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package
+
+  

@@ -1,11 +1,14 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:matchpoint/model/match_model.dart';
+import 'package:matchpoint/model/match_service.dart';
 import 'package:matchpoint/page/RealTimeMatch/inputLiveScoring_page.dart';
 import 'package:matchpoint/page/RealTimeMatch/settingMatchRealTime_page.dart';
 import 'package:matchpoint/page/home_page.dart';
 import 'package:matchpoint/page/teamTab_page.dart';
 import 'package:matchpoint/widgets/backButtonMatchDialog_widget.dart';
 import 'package:matchpoint/widgets/finishMatchDialog_widget.dart';
+import 'package:matchpoint/widgets/toast_widget.dart';
 
 class LiveScoringPage extends StatefulWidget {
   const LiveScoringPage({Key? key}) : super(key: key);
@@ -17,6 +20,7 @@ class LiveScoringPage extends StatefulWidget {
 class _LiveScoringPageState extends State<LiveScoringPage>
     with TickerProviderStateMixin {
   MatchInfo matchInfo = MatchInfo();
+  MatchService _match = MatchService();
   Team teamA = Team();
   Team teamB = Team();
 
@@ -70,7 +74,8 @@ class _LiveScoringPageState extends State<LiveScoringPage>
         (teamA.listTeam.isNotEmpty) &&
         (teamB.listTeam.isNotEmpty) &&
         (teamA.nameTeam != null) &&
-        (teamB.nameTeam != null);
+        (teamB.nameTeam != null) &&
+        (matchInfo.location != null);
   }
 
   void createMatch() {
@@ -179,7 +184,7 @@ class _LiveScoringPageState extends State<LiveScoringPage>
                                 children: [
                                   TextSpan(
                                       text:
-                                          '* A Sports Type Must Be Selected\n'),
+                                          '* All Input Type Must Be Filled\n'),
                                   TextSpan(
                                       text:
                                           '* Both Teams Must Be Filled With At Least 1 Member'),
@@ -195,11 +200,20 @@ class _LiveScoringPageState extends State<LiveScoringPage>
             showInputTab
                 ? ElevatedButton(
                     onPressed: () async {
+                      final currentUser = FirebaseAuth.instance.currentUser;
+                      if (currentUser == null) {
+                        print("User not logged in");
+                        return;
+                      }
+
                       final isConfirmed =
                           await showFinishMatchDialog(context, 'RealTime');
 
                       if (isConfirmed == true) {
-                        createMatch();
+                        matchInfo.createdBy = currentUser.uid;
+
+                        await _match.createMatch(matchInfo, teamA, teamB);
+                        toastBool("Successfully create real time match", true);
                         Navigator.pushReplacement(
                           context,
                           MaterialPageRoute(builder: (context) => Home()),

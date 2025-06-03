@@ -7,6 +7,7 @@ import 'package:matchpoint/page/HistoryMatch/settingMatchHistory_page.dart';
 import 'package:matchpoint/page/teamTab_page.dart';
 import 'package:matchpoint/widgets/backButtonMatchDialog_widget.dart';
 import 'package:matchpoint/widgets/finishMatchDialog_widget.dart';
+import 'package:matchpoint/widgets/toast_widget.dart';
 
 class CreateHistory extends StatefulWidget {
   const CreateHistory({Key? key}) : super(key: key);
@@ -45,29 +46,12 @@ class _CreateHistoryState extends State<CreateHistory> {
   bool canCreateMatch() {
     return (matchInfo.sportType != null && matchInfo.sportType!.isNotEmpty) &&
         (teamA.listTeam.isNotEmpty) &&
-        (teamB.listTeam.isNotEmpty);
+        (teamB.listTeam.isNotEmpty) &&
+        (teamA.nameTeam != null && teamA.nameTeam!.length > 16) &&
+        (teamB.nameTeam != null && teamB.nameTeam!.length > 16) &&
+        (matchInfo.location != null || matchInfo.location!.trim() != '');
   }
-
-  // Buat mastiin aja
-  createMatch() {
-    print('Match Info:');
-    print('Sport Type: ${matchInfo.sportType}');
-    print('Date: ${matchInfo.date}');
-    print('Location: ${matchInfo.location}');
-    print('Duration: ${matchInfo.duration}');
-    print('Starting Time: ${matchInfo.startingTime}');
-
-    print('Team 1: ${teamA.nameTeam}');
-    print('Pic ID: ${teamA.picId}');
-    print('Members: ${teamA.listTeam}');
-    print('Score: ${teamA.score}');
-
-    print('Team 2: ${teamB.nameTeam}');
-    print('Pic ID: ${teamB.picId}');
-    print('Members: ${teamB.listTeam}');
-    print('Score: ${teamB.score}');
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
@@ -75,7 +59,7 @@ class _CreateHistoryState extends State<CreateHistory> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          elevation: 0, // hilangkan shadow bawaan
+          elevation: 0,
           backgroundColor: const Color(0xFFF3FEFD),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.black),
@@ -83,7 +67,7 @@ class _CreateHistoryState extends State<CreateHistory> {
           ),
           title: const Text(
             "Historical Record",
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
           foregroundColor: Colors.black,
           bottom: PreferredSize(
@@ -141,10 +125,8 @@ class _CreateHistoryState extends State<CreateHistory> {
                           fontWeight: FontWeight.w500,
                         ),
                         children: [
-                          TextSpan(text: '* A Sports Type Must Be Selected\n'),
-                          TextSpan(
-                              text:
-                                  '* Both Teams Must Be Filled With At Least 1 Member'),
+                          TextSpan(text: '* All Fields Must Be Filled\n'),
+                          TextSpan(text: '* At Least 1 Member in Each Team is Required'),
                         ],
                       ),
                     ),
@@ -155,11 +137,21 @@ class _CreateHistoryState extends State<CreateHistory> {
               ElevatedButton(
                 onPressed: canCreateMatch()
                     ? () async {
+                        final currentUser = FirebaseAuth.instance.currentUser;
+                        if (currentUser == null) {
+                          print("User not logged in");
+                          return;
+                        }
                         final isConfirmed =
                             await showFinishMatchDialog(context, 'History');
 
                         if (isConfirmed == true) {
-                          createMatch();
+                          matchInfo.createdBy = currentUser.uid;
+
+                          await _match.createMatch(matchInfo, teamA, teamB);
+
+                          toastBool(
+                              "Successfully create historical match", true);
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(builder: (context) => Home()),

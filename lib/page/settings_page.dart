@@ -39,6 +39,7 @@ class _SettingsPageState extends State<SettingsPage> {
 
   Widget build(BuildContext context) {
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       backgroundColor: const Color(0xFFF8FFFE),
       appBar: AppBar(
         elevation: 0.5,
@@ -49,7 +50,7 @@ class _SettingsPageState extends State<SettingsPage> {
         ),
         title: const Text(
           "Settings",
-          style: TextStyle(color: Colors.black),
+          style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         centerTitle: false,
         bottom: PreferredSize(
@@ -169,7 +170,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
         ),
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
         child: SizedBox(
           width: double.infinity,
           height: 50,

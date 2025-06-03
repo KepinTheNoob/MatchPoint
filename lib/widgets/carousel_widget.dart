@@ -1,5 +1,7 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
+import 'package:matchpoint/model/match_model.dart';
+import 'package:matchpoint/page/viewMatchInfo_page.dart';
 import 'package:matchpoint/utils/image_viewer_helper.dart';
 import 'package:motion_tab_bar/MotionTabBarController.dart';
 
@@ -26,6 +28,57 @@ class _CustomCarouselState extends State<CustomCarousel>
   MotionTabBarController? _motionTabBarController;
   late CarouselSliderController _carouselController;
   int _currentPage = 0;
+
+  final List<MatchInfo> dummyMatchInfoList = [
+    MatchInfo(
+      id: 'match1',
+      date: DateTime(2025, 6, 15),
+      location: 'Stadium A',
+      duration: 90,
+      startingTime: TimeOfDay(hour: 15, minute: 30),
+      sportType: 'Football',
+      createdBy: 'user123',
+    ),
+    MatchInfo(
+      id: 'match2',
+      date: DateTime(2025, 6, 20),
+      location: 'Court B',
+      duration: 60,
+      startingTime: TimeOfDay(hour: 18, minute: 0),
+      sportType: 'Basketball',
+      createdBy: 'user456',
+    ),
+  ];
+
+  final List<Team> dummyTeamAList = [
+    Team(
+      nameTeam: 'Red Warriors',
+      picId: '1',
+      listTeam: ['Alice', 'Bob', 'Charlie'],
+      score: 3,
+    ),
+    Team(
+      nameTeam: 'Blue Sharks',
+      picId: '2',
+      listTeam: ['Dave', 'Eve', 'Frank'],
+      score: 7,
+    ),
+  ];
+
+  final List<Team> dummyTeamBList = [
+    Team(
+      nameTeam: 'Green Giants',
+      picId: '3',
+      listTeam: ['Grace', 'Hank', 'Ivy'],
+      score: 2,
+    ),
+    Team(
+      nameTeam: 'Yellow Tigers',
+      picId: '4',
+      listTeam: ['Jack', 'Karen', 'Leo'],
+      score: 8,
+    ),
+  ];
 
   @override
   void initState() {
