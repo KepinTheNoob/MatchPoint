@@ -148,6 +148,13 @@ class ViewMatchInfoPage extends StatelessWidget {
             ),
             const SizedBox(height: 20),
 
+            Divider(
+              thickness: 0.5,
+              color: Colors.black,
+              indent: MediaQuery.of(context).size.width * 0.001,
+              endIndent: MediaQuery.of(context).size.width * 0.001,
+            ),
+
             // Info section
             _buildMatchInfo("Sport", matchInfo.sportType ?? "-"),
             _buildMatchInfo("Date", dateFormatted),
@@ -172,7 +179,10 @@ class ViewMatchInfoPage extends StatelessWidget {
   ) {
     return Column(
       children: [
-        Text(name,
+        Text(
+            (name ?? "?? Team").length > 14
+                ? '${name!.substring(0, 10)}...'
+                : name ?? "?? Team",
             style: TextStyle(
                 foreground: Paint()
                   ..style = PaintingStyle.stroke
@@ -195,10 +205,14 @@ class ViewMatchInfoPage extends StatelessWidget {
           ),
         ),
         const SizedBox(height: 8),
-        for (var member in members.take(4)) ...[
+        for (var member in members) ...[
           Text(
-            member,
-            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            member.length > 7 ? '${member.substring(0, 7)}...' : member,
+            overflow: TextOverflow.ellipsis,
+            style: const TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
           ),
           const SizedBox(height: 8)
         ],
