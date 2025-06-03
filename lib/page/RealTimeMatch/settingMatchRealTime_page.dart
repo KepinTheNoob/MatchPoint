@@ -87,11 +87,14 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
   }
 
   Future<void> _selectDate() async {
+    final today = DateTime.now();
+    final onlyToday = DateTime(today.year, today.month, today.day);
+
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: selectedDate,
+      initialDate: onlyToday,
       firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
+      lastDate: onlyToday,
       builder: (BuildContext context, Widget? child) {
         return Theme(
           data: Theme.of(context).copyWith(
@@ -112,6 +115,7 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
         );
       },
     );
+
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
@@ -163,27 +167,26 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
       backgroundColor: Color(0xffF8FFFE),
       body: Stack(
         children: [
-          // Positioned(
-          //   bottom: -60,
-          //   left: 0,
-          //   right: 0,
-          //   child: SizedBox(
-          //     child:
-          //     MediaQuery.of(context).size.height > 750
-          //         ? Positioned(
-          //             bottom: -60,
-          //             left: 0,
-          //             right: 0,
-          //             child: SizedBox(
-          //               child: Image.asset(
-          //                 'assets/background/${((selectedSportType ?? '').isEmpty ? 'custom' : selectedSportType!.toLowerCase().replaceAll(' ', '_'))}.png',
-          //                 fit: BoxFit.cover,
-          //               ),
-          //             ),
-          //           )
-          //         : const SizedBox.shrink(),
-          //   ),
-          // ),
+          Positioned(
+            bottom: -70,
+            left: 0,
+            right: 0,
+            child: SizedBox(
+              child: MediaQuery.of(context).size.height > 750
+                  ? Positioned(
+                      bottom: -60,
+                      left: 0,
+                      right: 0,
+                      child: SizedBox(
+                        child: Image.asset(
+                          'assets/background/${((selectedSportType ?? '').isEmpty ? 'custom' : selectedSportType!.toLowerCase().replaceAll(' ', '_'))}.png',
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    )
+                  : const SizedBox.shrink(),
+            ),
+          ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 7, 20, 7),
             child: Column(

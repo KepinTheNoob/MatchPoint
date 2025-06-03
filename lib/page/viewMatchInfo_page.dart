@@ -179,8 +179,8 @@ class ViewMatchInfoPage extends StatelessWidget {
     return Column(
       children: [
         Text(
-            (name ?? "?? Team").length > 14
-                ? '${name!.substring(0, 10)}...'
+            (name ?? "?? Team").length > 8
+                ? '${name!.substring(0, 8)}...'
                 : name ?? "?? Team",
             style: TextStyle(
                 foreground: Paint()

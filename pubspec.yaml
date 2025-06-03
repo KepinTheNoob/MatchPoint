@@ -88,7 +88,7 @@ flutter:
     - assets/google-logo.png
     - assets/logo.png
     - assets/logos/logo.png
-    - assets/jeremy.png
+    # - assets/jeremy.png
     - assets/profile/1.png
     - assets/profile/2.png
     - assets/profile/3.png
