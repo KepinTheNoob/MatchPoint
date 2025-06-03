@@ -60,11 +60,10 @@ class ViewMatchInfoPage extends StatelessWidget {
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.end,
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             TextButton(
               onPressed: () async {
-                final isConfirmed = await deleteMatchDialog(context);
+                final isConfirmed = await deleteMatchDialog(context, matchInfo);
 
                 if (isConfirmed == true) {
                   Navigator.pushReplacement(
