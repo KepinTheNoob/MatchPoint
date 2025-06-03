@@ -93,7 +93,7 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
     final DateTime? picked = await showDatePicker(
       context: context,
       initialDate: onlyToday,
-      firstDate: DateTime(2000),
+      firstDate: onlyToday,
       lastDate: onlyToday,
       builder: (BuildContext context, Widget? child) {
         return Theme(

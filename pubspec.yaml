@@ -139,5 +139,5 @@ flutter_icons:
   android: true
   ios: true
   image_path: assets/logos/logo.png
-  adaptive_icon_background: "#F8FFFE" # Background color for adaptive icons
+  adaptive_icon_background: "#F8FFFE"
   adaptive_icon_foreground: assets/logos/logo.png
