@@ -60,7 +60,7 @@ class _FeatureMatchPageState extends State<FeatureMatchPage> {
     'Basketball',
     'Tennis',
     'Badminton',
-    'Tennis Table',
+    'Table Tennis',
     'Volleyball',
     'Boxing'
   ];
