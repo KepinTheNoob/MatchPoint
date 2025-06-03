@@ -12,6 +12,7 @@ import 'package:matchpoint/page/settings_page.dart';
 import 'firebase_options.dart';
 import 'page/register_page.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter/services.dart';
 
 final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 void main() async {
@@ -19,6 +20,18 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  // Set System UI Overlay Style (Android)
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    systemStatusBarContrastEnforced: true,
+    systemNavigationBarColor: Colors.lightBlueAccent[100],
+    systemNavigationBarDividerColor: Colors.lightBlue[700],
+    systemNavigationBarIconBrightness: Brightness.dark,
+    statusBarIconBrightness: Brightness.dark,
+  ));
+
+  // Set System UI Mode for Edge-to-Edge (Full Screen)
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: []);
+
   // Biar bisa dijalanin
   runApp(const MyApp());
 }
