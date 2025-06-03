@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:matchpoint/model/match_model.dart';
+import 'package:matchpoint/model/match_service.dart';
 
-Future<bool?> deleteMatchDialog(BuildContext context) {
+Future<bool?> deleteMatchDialog(BuildContext context, MatchInfo matchInfo) {
   bool isChecked = false;
   bool isLoading = false;
 
@@ -93,9 +95,16 @@ Future<bool?> deleteMatchDialog(BuildContext context) {
                     ),
                     TextButton(
                       onPressed: isChecked
-                          ? () {
+                          ? () async {
+                            try {
+                              final matchService = MatchService();
+                              await matchService.deleteMatch(matchInfo.id.toString());
+
                               Navigator.pop(context, true);
+                            } catch (e) {
+                              Navigator.pop(context);
                             }
+                          }
                           : null,
                       style: TextButton.styleFrom(
                         foregroundColor: isChecked ? Colors.red : Colors.grey,

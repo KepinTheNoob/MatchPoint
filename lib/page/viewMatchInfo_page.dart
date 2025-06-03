@@ -64,7 +64,7 @@ class ViewMatchInfoPage extends StatelessWidget {
           children: [
             TextButton(
               onPressed: () async {
-                final isConfirmed = await deleteMatchDialog(context);
+                final isConfirmed = await deleteMatchDialog(context, matchInfo);
 
                 if (isConfirmed == true) {
                   Navigator.pushReplacement(

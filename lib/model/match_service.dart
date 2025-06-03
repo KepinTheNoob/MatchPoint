@@ -31,8 +31,11 @@ class MatchService {
       'teamB': teamB.toJson(),
     };
 
-    await _firestore.add(combinedData);
+    final docRef = await _firestore.add(combinedData);
+
+    await docRef.update({'id': docRef.id});
   }
+
 
   // Future<List<MatchInfo>> getMatches() async {
   //   final user = FirebaseAuth.instance.currentUser;
