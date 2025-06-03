@@ -1,0 +1,2 @@
+C:/Users/Evaldo Raynardi/OneDrive/Desktop/Kuilah/Semester 4/Software Engineer/Project/MatchPoint/android/app/.cxx/RelWithDebInfo/4e586i2w/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/Users/Evaldo Raynardi/OneDrive/Desktop/Kuilah/Semester 4/Software Engineer/Project/MatchPoint/android/app/.cxx/RelWithDebInfo/4e586i2w/arm64-v8a/CMakeFiles/rebuild_cache.dir

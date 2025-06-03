@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:matchpoint/page/home_page.dart';
 import 'package:matchpoint/page/register_page.dart';
+import 'package:matchpoint/page/signInWithGoogle.dart';
 import 'package:matchpoint/widgets/matchPoint_logo_widget.dart';
 import 'package:matchpoint/widgets/loginRegisterField_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -20,6 +21,7 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final AuthService _authService = AuthService();
 
   bool _isLoading = false;
 
@@ -129,11 +131,32 @@ class _LoginPageState extends State<LoginPage> {
               ),
 
               ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const Home()),
-                  );
+                onPressed: () async {
+                  setState(() => _isLoading = true);
+                  try {
+                    final result = await _authService.signInWithGoogle();
+                    if (result != null) {
+                      if (context.mounted) {
+                        toastBool("Google Sign-in Success", true);
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => const Home()),
+                        );
+                      }
+                    } else {
+                      if (context.mounted) {
+                        toastBool("Google Sign-in Failed", false);
+                      }
+                    }
+                  } catch (e) {
+                    if (context.mounted) {
+                      toastBool("Error: $e", false);
+                    }
+                  } finally {
+                    if (mounted) {
+                      setState(() => _isLoading = false);
+                    }
+                  }
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,

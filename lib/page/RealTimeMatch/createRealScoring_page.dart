@@ -73,9 +73,9 @@ class _LiveScoringPageState extends State<LiveScoringPage>
     return (matchInfo.sportType != null && matchInfo.sportType!.isNotEmpty) &&
         (teamA.listTeam.isNotEmpty) &&
         (teamB.listTeam.isNotEmpty) &&
-        (teamA.nameTeam != null) &&
-        (teamB.nameTeam != null) &&
-        (matchInfo.location != null);
+        (teamA.nameTeam != null && teamA.nameTeam!.length > 22) &&
+        (teamB.nameTeam != null && teamB.nameTeam!.length > 22) &&
+        (matchInfo.location != null || matchInfo.location!.trim() != '');
   }
 
   void createMatch() {
@@ -160,7 +160,7 @@ class _LiveScoringPageState extends State<LiveScoringPage>
             ),
           ),
         ),
-        padding: const EdgeInsets.fromLTRB(16, 7, 12, 12),
+        padding: const EdgeInsets.fromLTRB(16, 7, 12, 7),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [

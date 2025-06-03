@@ -31,7 +31,7 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
     'Basketball',
     'Tennis',
     'Badminton',
-    'Tennis Table',
+    'Table Tennis',
     'Volleyball',
     'Boxing'
   ];
@@ -87,11 +87,14 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
   }
 
   Future<void> _selectDate() async {
+    final today = DateTime.now();
+    final onlyToday = DateTime(today.year, today.month, today.day);
+
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: selectedDate,
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2101),
+      initialDate: onlyToday,
+      firstDate: onlyToday,
+      lastDate: onlyToday,
       builder: (BuildContext context, Widget? child) {
         return Theme(
           data: Theme.of(context).copyWith(
@@ -112,6 +115,7 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
         );
       },
     );
+
     if (picked != null && picked != selectedDate) {
       setState(() {
         selectedDate = picked;
@@ -164,7 +168,7 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
       body: Stack(
         children: [
           Positioned(
-            bottom: -60,
+            bottom: -70,
             left: 0,
             right: 0,
             child: SizedBox(
@@ -184,7 +188,7 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+            padding: const EdgeInsets.fromLTRB(20, 7, 20, 7),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
