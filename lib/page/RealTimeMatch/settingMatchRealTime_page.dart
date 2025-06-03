@@ -31,7 +31,7 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
     'Basketball',
     'Tennis',
     'Badminton',
-    'Tennis Table',
+    'Table Tennis',
     'Volleyball',
     'Boxing'
   ];
