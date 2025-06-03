@@ -171,21 +171,12 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
             bottom: -70,
             left: 0,
             right: 0,
-            child: SizedBox(
-              child: MediaQuery.of(context).size.height > 750
-                  ? Positioned(
-                      bottom: -60,
-                      left: 0,
-                      right: 0,
-                      child: SizedBox(
-                        child: Image.asset(
-                          'assets/background/${((selectedSportType ?? '').isEmpty ? 'custom' : selectedSportType!.toLowerCase().replaceAll(' ', '_'))}.png',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    )
-                  : const SizedBox.shrink(),
-            ),
+            child: MediaQuery.of(context).size.height > 750
+                ? Image.asset(
+                    'assets/background/${((selectedSportType ?? '').isEmpty ? 'custom' : selectedSportType!.toLowerCase().replaceAll(' ', '_'))}.png',
+                    fit: BoxFit.cover,
+                  )
+                : const SizedBox.shrink(),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 7, 20, 7),
