@@ -207,7 +207,7 @@ class ViewMatchInfoPage extends StatelessWidget {
         const SizedBox(height: 8),
         for (var member in members) ...[
           Text(
-            member.length > 7 ? '${member.substring(0, 7)}...' : member,
+            member.length > 10 ? '${member.substring(0, 10)}...' : member,
             overflow: TextOverflow.ellipsis,
             style: const TextStyle(
               fontSize: 16,
