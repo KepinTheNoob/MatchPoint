@@ -123,13 +123,12 @@ class DeleteAccountPage extends StatelessWidget {
         decoration: const BoxDecoration(
           border: Border(
             top: BorderSide(
-              color: Colors.black, // Warna border top
-              width: 0.3, // Ketebalan border
+              color: Colors.black,
+              width: 0.3,
             ),
           ),
         ),
-        padding: const EdgeInsets.fromLTRB(
-            20, 0, 20, 20), // padding agar tidak mentok ke pinggir dan bawah
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
         child: SizedBox(
           width: double.infinity,
           height: 50,
