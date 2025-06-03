@@ -130,10 +130,7 @@ class _LoginPageState extends State<LoginPage> {
 
               ElevatedButton(
                 onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const Home()),
-                  );
+                  toastBool('Under Maintenance', false);
                 },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Colors.white,

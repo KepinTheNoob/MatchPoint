@@ -5,6 +5,7 @@ import 'package:matchpoint/page/login_page.dart';
 import 'package:matchpoint/widgets/editUsernameDialog_widget.dart';
 import 'package:matchpoint/widgets/logoutDialog_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:matchpoint/widgets/toast_widget.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -108,10 +109,7 @@ class _SettingsPageState extends State<SettingsPage> {
                 leading: const Icon(Icons.key),
                 title: const Text("Change Password"),
                 onTap: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()),
-                  );
+                  toastBool('Under Maintenance', false);
                 },
                 // subtitle: const Text("johndoe@example.com"),
               ),
@@ -170,7 +168,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
         ),
-        padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
+        padding: const EdgeInsets.fromLTRB(20, 0, 20, 0),
         child: SizedBox(
           width: double.infinity,
           height: 50,

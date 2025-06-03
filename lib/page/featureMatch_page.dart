@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:matchpoint/data.dart';
-import 'package:matchpoint/model/match_model.dart';
 import 'package:matchpoint/model/match_service.dart';
 import 'package:matchpoint/page/viewMatchInfo_page.dart';
-import 'package:matchpoint/widgets/carousel_widget.dart';
 import 'package:matchpoint/widgets/matchCard_widget.dart';
 
 enum FilterType {
@@ -241,6 +238,16 @@ class _FeatureMatchPageState extends State<FeatureMatchPage> {
                     final matches = snapshot.data!;
                     final filteredMatches =
                         _filterMatches(matches, _selectedFilter);
+
+                    filteredMatches.sort((a, b) {
+                      final dateA = a.match.date;
+                      final dateB = b.match.date;
+
+                      if (dateA == null && dateB == null) return 0;
+                      if (dateA == null) return 1;
+                      if (dateB == null) return -1;
+                      return dateB.compareTo(dateA);
+                    });
 
                     return ListView.builder(
                       controller: _scrollController,

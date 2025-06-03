@@ -263,7 +263,9 @@ class _RegisterPageState extends State<RegisterPage>
 
                 // Tombol Google
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: () {
+                    toastBool('Under Maintenance', false);
+                  },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.white,
                     minimumSize: const Size(double.infinity, 50),

@@ -104,7 +104,7 @@ class _CreateHistoryState extends State<CreateHistory> {
               ),
             ),
           ),
-          padding: const EdgeInsets.fromLTRB(16, 7, 12, 12),
+          padding: const EdgeInsets.fromLTRB(16, 7, 12, 7),
           child: Row(
             children: [
               Expanded(

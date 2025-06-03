@@ -56,7 +56,7 @@ class ViewMatchInfoPage extends StatelessWidget {
             top: BorderSide(color: Colors.grey, width: 1),
           ),
         ),
-        padding: const EdgeInsets.fromLTRB(16, 7, 12, 12),
+        padding: const EdgeInsets.fromLTRB(16, 7, 12, 7),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.end,
           mainAxisAlignment: MainAxisAlignment.end,

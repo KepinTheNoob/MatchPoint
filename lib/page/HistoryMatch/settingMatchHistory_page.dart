@@ -162,28 +162,28 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
       backgroundColor: Color(0xffF8FFFE),
       body: Stack(
         children: [
-          Positioned(
-            bottom: -60,
-            left: 0,
-            right: 0,
-            child: SizedBox(
-              child: MediaQuery.of(context).size.height > 750
-                  ? Positioned(
-                      bottom: -60,
-                      left: 0,
-                      right: 0,
-                      child: SizedBox(
-                        child: Image.asset(
-                          'assets/background/${((selectedSportType ?? '').isEmpty ? 'custom' : selectedSportType!.toLowerCase().replaceAll(' ', '_'))}.png',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    )
-                  : const SizedBox.shrink(),
-            ),
-          ),
+          // Positioned(
+          //   bottom: -60,
+          //   left: 0,
+          //   right: 0,
+          //   child: SizedBox(
+          //     child: MediaQuery.of(context).size.height > 750
+          //         ? Positioned(
+          //             bottom: -60,
+          //             left: 0,
+          //             right: 0,
+          //             child: SizedBox(
+          //               child: Image.asset(
+          //                 'assets/background/${((selectedSportType ?? '').isEmpty ? 'custom' : selectedSportType!.toLowerCase().replaceAll(' ', '_'))}.png',
+          //                 fit: BoxFit.cover,
+          //               ),
+          //             ),
+          //           )
+          //         : const SizedBox.shrink(),
+          //   ),
+          // ),
           Padding(
-            padding: const EdgeInsets.fromLTRB(20, 10, 20, 0),
+            padding: const EdgeInsets.fromLTRB(20, 7, 20, 7),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
