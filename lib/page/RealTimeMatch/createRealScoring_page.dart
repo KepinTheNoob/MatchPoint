@@ -184,7 +184,7 @@ class _LiveScoringPageState extends State<LiveScoringPage>
                                 children: [
                                   TextSpan(
                                       text:
-                                          '* A Sports Type Must Be Selected\n'),
+                                          '* All Input Type Must Be Filled\n'),
                                   TextSpan(
                                       text:
                                           '* Both Teams Must Be Filled With At Least 1 Member'),

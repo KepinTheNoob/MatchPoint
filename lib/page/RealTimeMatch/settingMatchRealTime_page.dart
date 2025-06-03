@@ -91,7 +91,26 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
       context: context,
       initialDate: selectedDate,
       firstDate: DateTime(2000),
-      lastDate: DateTime(2120),
+      lastDate: DateTime(2101),
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            timePickerTheme: TimePickerThemeData(
+              backgroundColor: Color(0xFFE0E9E9),
+            ),
+            colorScheme: ColorScheme.light(
+              primary: Colors.teal,
+              onSurface: Colors.black,
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.teal,
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
     if (picked != null && picked != selectedDate) {
       setState(() {
@@ -105,7 +124,27 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
       initialTime: selectedTime,
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            timePickerTheme: TimePickerThemeData(
+              backgroundColor: Color(0xFFF2F9FA),
+            ),
+            colorScheme: ColorScheme.light(
+              primary: Colors.teal,
+              onSurface: Colors.black,
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.teal,
+              ),
+            ),
+          ),
+          child: child!,
+        );
+      },
     );
+
     if (picked != null && picked != selectedTime) {
       setState(() {
         selectedTime = picked;

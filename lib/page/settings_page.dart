@@ -170,7 +170,7 @@ class _SettingsPageState extends State<SettingsPage> {
             ),
           ),
         ),
-        padding: const EdgeInsets.fromLTRB(20, 0, 20, 20),
+        padding: const EdgeInsets.fromLTRB(20, 8, 20, 8),
         child: SizedBox(
           width: double.infinity,
           height: 50,
