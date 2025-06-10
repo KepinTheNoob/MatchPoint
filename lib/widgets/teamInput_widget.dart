@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:matchpoint/model/match_model.dart';
 import 'package:matchpoint/widgets/selectProfileBottomSheets_widget.dart';
+import 'package:matchpoint/page/HistoryMatch/createHistory_page.dart';
 
 class TeamInputSection extends StatefulWidget {
   final Team initialData;
@@ -177,7 +178,15 @@ class _TeamTabState extends State<TeamInputSection> {
                             border: UnderlineInputBorder(),
                             isDense: true,
                             contentPadding: EdgeInsets.symmetric(vertical: 8),
+                            errorText: teamNameController.text.length > 22
+                                ? 'Team name must be 22 characters or less'
+                                : null,
                           ),
+                          maxLength: 22, // This will show a character counter
+                          onChanged: (value) {
+                            setState(() {}); // To trigger error text update
+                            _triggerOnChanged();
+                          },
                         ),
                       ),
                       IconButton(
@@ -193,7 +202,7 @@ class _TeamTabState extends State<TeamInputSection> {
                     "Team Members",
                     style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
                   ),
-                  Flexible(
+                  Expanded(
                     child: ListView.builder(
                       itemCount: members.length,
                       itemBuilder: (context, index) {

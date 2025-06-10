@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:matchpoint/model/match_service.dart';
+import 'package:matchpoint/page/matchDetail_page.dart';
 import 'package:matchpoint/page/viewMatchInfo_page.dart';
 import 'package:matchpoint/widgets/matchCard_widget.dart';
 
@@ -57,7 +58,7 @@ class _FeatureMatchPageState extends State<FeatureMatchPage> {
     'Basketball',
     'Tennis',
     'Badminton',
-    'Tennis Table',
+    'Table Tennis',
     'Volleyball',
     'Boxing'
   ];
@@ -224,81 +225,93 @@ class _FeatureMatchPageState extends State<FeatureMatchPage> {
                 ),
               ),
               Expanded(
-                child: FutureBuilder<List<MatchWithTeams>>(
-                  future: _matchesFuture,
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (snapshot.hasError) {
-                      return Center(child: Text("Error: ${snapshot.error}"));
-                    } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(child: Text("No matches found."));
-                    }
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    return FutureBuilder<List<MatchWithTeams>>(
+                        future: _matchesFuture,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const Center(
+                                child: CircularProgressIndicator());
+                          } else if (snapshot.hasError) {
+                            return Center(
+                                child: Text("Error: ${snapshot.error}"));
+                          } else if (!snapshot.hasData ||
+                              snapshot.data!.isEmpty) {
+                            return const Center(
+                                child: Text("No matches found."));
+                          }
 
-                    final matches = snapshot.data!;
-                    final filteredMatches =
-                        _filterMatches(matches, _selectedFilter);
+                          final matches = snapshot.data!;
+                          final filteredMatches =
+                              _filterMatches(matches, _selectedFilter);
 
-                    filteredMatches.sort((a, b) {
-                      final dateA = a.match.date;
-                      final dateB = b.match.date;
+                          filteredMatches.sort((a, b) {
+                            final dateA = a.match.date;
+                            final dateB = b.match.date;
 
-                      if (dateA == null && dateB == null) return 0;
-                      if (dateA == null) return 1;
-                      if (dateB == null) return -1;
-                      return dateB.compareTo(dateA);
-                    });
+                            if (dateA == null && dateB == null) return 0;
+                            if (dateA == null) return 1;
+                            if (dateB == null) return -1;
+                            return dateB.compareTo(dateA);
+                          });
 
-                    return ListView.builder(
-                      controller: _scrollController,
-                      padding: const EdgeInsets.symmetric(vertical: 8),
-                      itemCount: filteredMatches.length,
-                      itemBuilder: (context, index) {
-                        final match = filteredMatches[index];
-                        return matchCard(
-                          match: match.match,
-                          teamLeft: match.teamA,
-                          teamRight: match.teamB,
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ViewMatchInfoPage(
-                                  matchInfo: match.match,
-                                  teamA: match.teamA,
-                                  teamB: match.teamB,
-                                ),
-                              ),
-                            );
-                          },
-                        );
-                      },
-                    );
+                          return ListView.builder(
+                            key: ValueKey(_selectedFilter),
+                            controller: _scrollController,
+                            padding: const EdgeInsets.symmetric(vertical: 8),
+                            itemCount: filteredMatches.length,
+                            itemBuilder: (context, index) {
+                              final match = filteredMatches[index];
+                              return matchCard(
+                                match: match.match,
+                                teamLeft: match.teamA,
+                                teamRight: match.teamB,
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => MatchDetail(
+                                        matchInfo: match.match,
+                                        teamA: match.teamA,
+                                        teamB: match.teamB,
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          );
+                        });
                   },
                 ),
               ),
             ],
           ),
-          if (_scrollProgress > 0.05)
-            Positioned(
-              bottom: 16,
-              right: 16,
-              child: ElevatedButton(
-                onPressed: () {
-                  _scrollController.animateTo(
-                    0,
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.easeOut,
-                  );
-                },
-                style: ElevatedButton.styleFrom(
-                  shape: const CircleBorder(),
-                  padding: const EdgeInsets.all(14),
-                  backgroundColor: Color(0xff40BBC4),
+          if (_scrollProgress > 0.05) ...[
+            Align(
+              alignment: Alignment.bottomRight,
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: ElevatedButton(
+                  onPressed: () {
+                    _scrollController.animateTo(
+                      0,
+                      duration: const Duration(milliseconds: 500),
+                      curve: Curves.easeOut,
+                    );
+                  },
+                  style: ElevatedButton.styleFrom(
+                    shape: const CircleBorder(),
+                    padding: const EdgeInsets.all(14),
+                    backgroundColor: const Color(0xff40BBC4),
+                  ),
+                  child: const Icon(Icons.arrow_upward, color: Colors.black),
                 ),
-                child: const Icon(Icons.arrow_upward, color: Colors.black),
               ),
-            ),
+            )
+          ],
         ],
       )),
     );

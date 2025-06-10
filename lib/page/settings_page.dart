@@ -105,14 +105,14 @@ class _SettingsPageState extends State<SettingsPage> {
                 title: const Text("Email"),
                 subtitle: Text(user?.email ?? 'johndoe@gmail.com'),
               ),
-              ListTile(
-                leading: const Icon(Icons.key),
-                title: const Text("Change Password"),
-                onTap: () {
-                  toastBool('Under Maintenance', false);
-                },
-                // subtitle: const Text("johndoe@example.com"),
-              ),
+              // ListTile(
+              //   leading: const Icon(Icons.key),
+              //   title: const Text("Change Password"),
+              //   onTap: () {
+              //     toastBool('Under Maintenance', false);
+              //   },
+              //   // subtitle: const Text("johndoe@example.com"),
+              // ),
               CheckboxListTile(
                 secondary: const Icon(Icons.login),
                 title: const Text("Sign in with Google"),

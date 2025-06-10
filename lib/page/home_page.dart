@@ -24,15 +24,19 @@ class _HomeState extends State<Home> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: PageStorage(bucket: bucket, child: currentScreen),
-      floatingActionButton: FloatingActionButton(
-        backgroundColor: Color(0xff81D8E0),
-        child: Icon(
-          Icons.add,
-          size: 28,
+      floatingActionButton: Container(
+        height: 80.0, 
+        width: 80.0,
+        child: FloatingActionButton(
+          backgroundColor: Color(0xff81D8E0),
+          child: Icon(
+            Icons.add,
+            size: 38,
+          ),
+          onPressed: () {
+            showCreateMatchHistoryDialog(context);
+          },
         ),
-        onPressed: () {
-          showCreateMatchHistoryDialog(context);
-        },
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: Container(
@@ -109,11 +113,11 @@ class _HomeState extends State<Home> {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             Icon(
-                              Icons.home,
+                              Icons.history,
                               color:
                                   currentTab == 0 ? Colors.black : Colors.black,
                             ),
-                            Text('Home',
+                            Text('History',
                                 style: TextStyle(
                                     color: currentTab == 0
                                         ? Colors.black

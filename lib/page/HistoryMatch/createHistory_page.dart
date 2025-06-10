@@ -47,8 +47,8 @@ class _CreateHistoryState extends State<CreateHistory> {
     return (matchInfo.sportType != null && matchInfo.sportType!.isNotEmpty) &&
         (teamA.listTeam.isNotEmpty) &&
         (teamB.listTeam.isNotEmpty) &&
-        (teamA.nameTeam != null && teamA.nameTeam!.length > 22) &&
-        (teamB.nameTeam != null && teamB.nameTeam!.length > 22) &&
+        (teamA.nameTeam != null) &&
+        (teamB.nameTeam != null) &&
         (matchInfo.location != null || matchInfo.location!.trim() != '');
   }
 
@@ -125,10 +125,10 @@ class _CreateHistoryState extends State<CreateHistory> {
                           fontWeight: FontWeight.w500,
                         ),
                         children: [
-                          TextSpan(text: '* All Input Type Must Be Filled\n'),
+                          TextSpan(text: '* All Fields Must Be Filled\n'),
                           TextSpan(
                               text:
-                                  '* Both Teams Must Be Filled With At Least 1 Member'),
+                                  '* At Least 1 Member in Each Team is Required'),
                         ],
                       ),
                     ),

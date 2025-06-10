@@ -124,23 +124,28 @@ class ViewMatchInfoPage extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _buildTeamColumn(
+                    Flexible(
+                      child: _buildTeamColumn(
                         teamA.nameTeam ?? "Team A",
                         "assets/profile/${teamA.picId}.png",
                         isTeamAWinner ? "WIN" : "LOSE",
                         teamA.score,
                         isTeamAWinner ? Colors.green : Colors.red,
                         teamA.listTeam,
-                        true),
-                    const SizedBox(width: 120),
-                    _buildTeamColumn(
-                        teamB.nameTeam ?? "Team B",
-                        "assets/profile/${teamB.picId}.png",
-                        !isTeamAWinner ? "WIN" : "LOSE",
-                        teamB.score,
-                        !isTeamAWinner ? Colors.green : Colors.red,
-                        teamB.listTeam,
-                        false),
+                        true,
+                      ),
+                    ),
+                    const SizedBox(width: 16), // smaller gap
+                    Flexible(
+                      child: _buildTeamColumn(
+                          teamB.nameTeam ?? "Team B",
+                          "assets/profile/${teamB.picId}.png",
+                          !isTeamAWinner ? "WIN" : "LOSE",
+                          teamB.score,
+                          !isTeamAWinner ? Colors.green : Colors.red,
+                          teamB.listTeam,
+                          false),
+                    ),
                   ],
                 ),
               ],
@@ -337,4 +342,18 @@ class ViewMatchInfoPage extends StatelessWidget {
       );
     }
   }
+
+//   String _wrapByWords(String text, int wordsPerLine) {
+//     final words = text.split(' ');
+//     final buffer = StringBuffer();
+//     for (int i = 0; i < words.length; i++) {
+//       buffer.write(words[i]);
+//       if ((i + 1) % wordsPerLine == 0 && i != words.length - 1) {
+//         buffer.write('\n');
+//       } else if (i != words.length - 1) {
+//         buffer.write(' ');
+//       }
+//     }
+//     return buffer.toString();
+//   }
 }

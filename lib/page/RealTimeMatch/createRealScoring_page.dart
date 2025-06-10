@@ -73,8 +73,8 @@ class _LiveScoringPageState extends State<LiveScoringPage>
     return (matchInfo.sportType != null && matchInfo.sportType!.isNotEmpty) &&
         (teamA.listTeam.isNotEmpty) &&
         (teamB.listTeam.isNotEmpty) &&
-        (teamA.nameTeam != null && teamA.nameTeam!.length > 22) &&
-        (teamB.nameTeam != null && teamB.nameTeam!.length > 22) &&
+        (teamA.nameTeam != null) &&
+        (teamB.nameTeam != null) &&
         (matchInfo.location != null || matchInfo.location!.trim() != '');
   }
 

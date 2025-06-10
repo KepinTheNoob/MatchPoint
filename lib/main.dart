@@ -23,14 +23,15 @@ void main() async {
   // Set System UI Overlay Style (Android)
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
     systemStatusBarContrastEnforced: true,
-    systemNavigationBarColor: Colors.lightBlueAccent[100],
-    systemNavigationBarDividerColor: Colors.lightBlue[700],
+    systemNavigationBarColor: Color(0xFFF3FEFD),
+    systemNavigationBarDividerColor: Colors.grey,
     systemNavigationBarIconBrightness: Brightness.dark,
     statusBarIconBrightness: Brightness.dark,
   ));
 
   // Set System UI Mode for Edge-to-Edge (Full Screen)
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge, overlays: []);
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky,
+      overlays: SystemUiOverlay.values);
 
   // Biar bisa dijalanin
   runApp(const MyApp());
