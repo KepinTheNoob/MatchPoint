@@ -27,7 +27,11 @@ void backButtonMatchDialog(BuildContext context, String type) {
                 const SizedBox(height: 16),
                 Center(
                   child: Text(
-                    (type == 'RealTime') ? 'End Match' : 'Delete Match',
+                    (type == 'RealTime')
+                        ? 'End Match'
+                        : (type == 'History')
+                            ? 'Delete Match'
+                            : 'Delete Edit',
                     style: TextStyle(
                       fontSize: 20,
                       fontWeight: FontWeight.bold,

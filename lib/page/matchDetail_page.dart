@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:matchpoint/model/match_model.dart';
+import 'package:matchpoint/page/editHistory_page.dart';
 import 'package:matchpoint/page/home_page.dart';
 import 'package:matchpoint/widgets/deleteMatchDialog_widget.dart';
 
@@ -115,7 +116,14 @@ class _MatchDetailState extends State<MatchDetail>
             ),
             TextButton(
               onPressed: () {
-                // Navigasi ke halaman edit match (belum diimplementasikan)
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => EditHistory(
+                              matchInfo: matchInfo,
+                              teamA: teamA,
+                              teamB: teamB,
+                            )));
               },
               child: const Row(
                 children: [

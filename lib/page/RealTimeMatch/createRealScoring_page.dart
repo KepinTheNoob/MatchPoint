@@ -170,25 +170,38 @@ class _LiveScoringPageState extends State<LiveScoringPage>
                     Expanded(
                       child: Row(
                         children: [
-                          const Icon(Icons.warning_amber_outlined,
-                              color: Colors.red, size: 16),
+                          Icon(
+                            canCreateMatch()
+                                ? Icons.check_circle_outline
+                                : Icons.warning_amber_outlined,
+                            color: canCreateMatch() ? Colors.green : Colors.red,
+                            size: 16,
+                          ),
                           const SizedBox(width: 6),
                           Expanded(
                             child: RichText(
                               text: TextSpan(
                                 style: TextStyle(
-                                  color: Colors.red,
+                                  color: canCreateMatch()
+                                      ? Colors.green
+                                      : Colors.red,
                                   fontSize: 10,
                                   fontWeight: FontWeight.w500,
                                 ),
-                                children: [
-                                  TextSpan(
-                                      text:
-                                          '* All Input Type Must Be Filled\n'),
-                                  TextSpan(
-                                      text:
-                                          '* Both Teams Must Be Filled With At Least 1 Member'),
-                                ],
+                                children: canCreateMatch()
+                                    ? [
+                                        TextSpan(
+                                            text:
+                                                '* All requirements fullfilled'),
+                                      ]
+                                    : [
+                                        TextSpan(
+                                            text:
+                                                '* All Fields Must Be Filled\n'),
+                                        TextSpan(
+                                            text:
+                                                '* Both Teams Must Be Filled With At Least 1 Member'),
+                                      ],
                               ),
                             ),
                           )

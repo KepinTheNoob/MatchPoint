@@ -9,14 +9,23 @@ import 'package:matchpoint/widgets/backButtonMatchDialog_widget.dart';
 import 'package:matchpoint/widgets/finishMatchDialog_widget.dart';
 import 'package:matchpoint/widgets/toast_widget.dart';
 
-class CreateHistory extends StatefulWidget {
-  const CreateHistory({Key? key}) : super(key: key);
+class EditHistory extends StatefulWidget {
+  final MatchInfo matchInfo;
+  final Team teamA;
+  final Team teamB;
+
+  const EditHistory({
+    super.key,
+    required this.matchInfo,
+    required this.teamA,
+    required this.teamB,
+  });
 
   @override
-  State<CreateHistory> createState() => _CreateHistoryState();
+  State<EditHistory> createState() => _EditHistoryState();
 }
 
-class _CreateHistoryState extends State<CreateHistory> {
+class _EditHistoryState extends State<EditHistory> {
   MatchInfo matchInfo = MatchInfo();
   MatchService _match = MatchService();
   Team teamA = Team();
@@ -43,17 +52,32 @@ class _CreateHistoryState extends State<CreateHistory> {
     });
   }
 
-  bool canCreateMatch() {
+  @override
+  void initState() {
+    super.initState();
+    matchInfo = widget.matchInfo;
+    teamA = widget.teamA;
+    teamB = widget.teamB;
+  }
+
+  bool canEditMatch() {
     return (matchInfo.sportType != null && matchInfo.sportType!.isNotEmpty) &&
         (teamA.listTeam.isNotEmpty) &&
         (teamB.listTeam.isNotEmpty) &&
         (teamA.nameTeam != null) &&
         (teamB.nameTeam != null) &&
-        (matchInfo.location != null || matchInfo.location!.trim() != '');
+        (matchInfo.location != null || matchInfo.location!.trim() != '') &&
+        (teamA != widget.teamA ||
+            teamB != widget.teamB ||
+            matchInfo != widget.matchInfo);
   }
 
   @override
   Widget build(BuildContext context) {
+    final teamA = widget.teamA;
+    final teamB = widget.teamB;
+    final matchInfo = widget.matchInfo;
+
     return DefaultTabController(
       length: 2,
       child: Scaffold(
@@ -63,10 +87,10 @@ class _CreateHistoryState extends State<CreateHistory> {
           backgroundColor: const Color(0xFFF3FEFD),
           leading: IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.black),
-            onPressed: () => backButtonMatchDialog(context, 'History'),
+            onPressed: () => backButtonMatchDialog(context, 'Edit'),
           ),
           title: const Text(
-            "Historical Record",
+            "Edit Match",
             style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
           ),
           foregroundColor: Colors.black,
@@ -78,7 +102,7 @@ class _CreateHistoryState extends State<CreateHistory> {
                 const Divider(
                   height: 1,
                   thickness: 1,
-                  color: Colors.grey, // warna border bottom
+                  color: Colors.grey,
                 ),
                 const TabBar(
                   indicatorColor: Color(0xff40BBC4),
@@ -111,10 +135,10 @@ class _CreateHistoryState extends State<CreateHistory> {
                   child: Row(
                 children: [
                   Icon(
-                    canCreateMatch()
+                    canEditMatch()
                         ? Icons.check_circle_outline
                         : Icons.warning_amber_outlined,
-                    color: canCreateMatch() ? Colors.green : Colors.red,
+                    color: canEditMatch() ? Colors.green : Colors.red,
                     size: 16,
                   ),
                   const SizedBox(width: 6),
@@ -122,11 +146,11 @@ class _CreateHistoryState extends State<CreateHistory> {
                     child: RichText(
                       text: TextSpan(
                         style: TextStyle(
-                          color: canCreateMatch() ? Colors.green : Colors.red,
+                          color: canEditMatch() ? Colors.green : Colors.red,
                           fontSize: 10,
                           fontWeight: FontWeight.w500,
                         ),
-                        children: canCreateMatch()
+                        children: canEditMatch()
                             ? [
                                 TextSpan(text: '* All requirements fullfilled'),
                               ]
@@ -134,7 +158,7 @@ class _CreateHistoryState extends State<CreateHistory> {
                                 TextSpan(text: '* All Fields Must Be Filled\n'),
                                 TextSpan(
                                     text:
-                                        '* Both Teams Must Be Filled With At Least 1 Member'),
+                                        '* There is need something different from before'),
                               ],
                       ),
                     ),
@@ -143,23 +167,19 @@ class _CreateHistoryState extends State<CreateHistory> {
               )),
               SizedBox(width: 24),
               ElevatedButton(
-                onPressed: canCreateMatch()
+                onPressed: canEditMatch()
                     ? () async {
-                        final currentUser = FirebaseAuth.instance.currentUser;
-                        if (currentUser == null) {
-                          print("User not logged in");
-                          return;
-                        }
+                        // BE Here
+
                         final isConfirmed =
-                            await showFinishMatchDialog(context, 'History');
+                            await showFinishMatchDialog(context, 'Edit');
 
                         if (isConfirmed == true) {
-                          matchInfo.createdBy = currentUser.uid;
+                          // matchInfo.createdBy = currentUser.uid;
 
                           await _match.createMatch(matchInfo, teamA, teamB);
 
-                          toastBool(
-                              "Successfully create historical match", true);
+                          toastBool("Successfully edit match", true);
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(builder: (context) => Home()),
@@ -168,14 +188,13 @@ class _CreateHistoryState extends State<CreateHistory> {
                       }
                     : null,
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: canCreateMatch()
-                      ? Color(0xff40BBC4)
-                      : Colors.grey.shade300,
+                  backgroundColor:
+                      canEditMatch() ? Color(0xff40BBC4) : Colors.grey.shade300,
                 ),
                 child: Text(
-                  'Create Match',
+                  'Edit Match',
                   style: TextStyle(
-                      color: canCreateMatch() ? Colors.white : Colors.grey,
+                      color: canEditMatch() ? Colors.white : Colors.grey,
                       fontSize: 16,
                       fontWeight: FontWeight.bold),
                 ),
