@@ -280,9 +280,10 @@ class _LiveScoringPageState extends State<LiveScoringPage>
           ),
           if (showInputTab)
             InputLiveScoring(
-                teamA: teamA.nameTeam ?? 'Team 1',
-                teamB: teamB.nameTeam ?? 'Team 2',
+                teamA: teamA,
+                teamB: teamB,
                 matchType: 'RealTime',
+                sportType: matchInfo.sportType ?? "Custom",
                 onUpdateScoreTeamA: (newScore) => updateScoreTeamA(newScore),
                 onUpdateScoreTeamB: (newScore) => updateScoreTeamB(newScore),
                 onUpdateDuration: (timer) => updateDuration(timer)),

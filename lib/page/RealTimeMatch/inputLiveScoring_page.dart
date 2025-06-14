@@ -1,9 +1,11 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:matchpoint/model/match_model.dart';
 
 class InputLiveScoring extends StatefulWidget {
-  final String teamA;
-  final String teamB;
+  final Team teamA;
+  final Team teamB;
+  final String sportType;
   final String matchType;
 
   final Function(int) onUpdateScoreTeamA;
@@ -14,6 +16,7 @@ class InputLiveScoring extends StatefulWidget {
     Key? key,
     required this.teamA,
     required this.teamB,
+    required this.sportType,
     required this.matchType,
     required this.onUpdateScoreTeamA,
     required this.onUpdateScoreTeamB,
@@ -32,6 +35,12 @@ class _InputLiveScoringState extends State<InputLiveScoring>
   Timer? _timer;
   int _lastUpdatedMinute = 0;
   bool isRunning = true;
+
+  int? _pressedAreaIndexRed;
+  bool? _pressedIsRightRed;
+
+  int? _pressedAreaIndexBlue;
+  bool? _pressedIsRightBlue;
 
   @override
   void initState() {
@@ -66,17 +75,15 @@ class _InputLiveScoringState extends State<InputLiveScoring>
     });
   }
 
-  void _updateScore(bool isRedTeam, bool isIncrement) {
+  void _updateScore(bool isRedTeam, int incrementAmount) {
     setState(() {
       if (isRedTeam) {
-        scoreRed += isIncrement ? 1 : -1;
+        scoreRed += incrementAmount;
         if (scoreRed < 0) scoreRed = 0;
-
         widget.onUpdateScoreTeamA(scoreRed);
       } else {
-        scoreBlue += isIncrement ? 1 : -1;
+        scoreBlue += incrementAmount;
         if (scoreBlue < 0) scoreBlue = 0;
-
         widget.onUpdateScoreTeamB(scoreBlue);
       }
     });
@@ -99,9 +106,14 @@ class _InputLiveScoringState extends State<InputLiveScoring>
     required Color color,
     required String teamName,
     required int score,
-    required Function(bool) onUpdateScore,
     required bool isTop,
+    required bool isRedTeam,
+    required int? pressedAreaIndex,
+    required bool? pressedIsRight,
+    required Function(int, bool) onPressArea,
   }) {
+    final bool isBasketball = widget.sportType.toLowerCase() == "basketball";
+
     return Expanded(
       child: LayoutBuilder(
         builder: (context, constraints) {
@@ -109,50 +121,199 @@ class _InputLiveScoringState extends State<InputLiveScoring>
             behavior: HitTestBehavior.opaque,
             onTapUp: (details) {
               final width = constraints.maxWidth;
-              final isRight = details.localPosition.dx > width / 2;
-              onUpdateScore(isRight);
+              final height = constraints.maxHeight;
+              final localX = details.localPosition.dx;
+              final localY = details.localPosition.dy;
+
+              final isRight = localX > width / 2;
+
+              if (isBasketball) {
+                final thirdHeight = height / 3;
+                int amount = 1;
+
+                if (localY < thirdHeight) {
+                  amount = 1;
+                } else if (localY < 2 * thirdHeight) {
+                  amount = 2;
+                } else {
+                  amount = 3;
+                }
+
+                onPressArea(amount, isRight); // Pemisahan state tiap tim
+                _updateScore(isRedTeam, isRight ? amount : -amount);
+              } else {
+                _updateScore(isRedTeam, isRight ? 1 : -1);
+              }
             },
-            child: Container(
-              color: color,
-              width: double.infinity,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  if (isTop)
-                    Padding(
-                      padding: const EdgeInsets.only(top: 16.0),
-                      child: Text(
-                        teamName,
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
+            child: Stack(
+              children: [
+                Container(
+                  color: color,
+                  width: double.infinity,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      if (isTop)
+                        Padding(
+                          padding: const EdgeInsets.only(top: 16.0),
+                          child: Text(
+                            teamName,
+                            style: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      Expanded(
+                        child: Center(
+                          child: Text(
+                            score.toString(),
+                            style: const TextStyle(
+                                fontSize: 80, fontWeight: FontWeight.bold),
+                          ),
+                        ),
                       ),
+                      if (!isTop)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 16.0),
+                          child: Text(
+                            teamName,
+                            style: const TextStyle(
+                                fontSize: 20, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+
+                // Left side indicators (-1, -2, -3)
+                if (isBasketball) ...[
+                  Positioned(
+                    top: 16,
+                    left: 8,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: pressedAreaIndex == 1 && pressedIsRight == false
+                            ? Colors.black.withOpacity(0.1)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: const Text('-1',
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold)),
                     ),
-                  Expanded(
+                  ),
+                  Positioned(
+                    top: constraints.maxHeight / 2 - 10,
+                    left: 8,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: pressedAreaIndex == 2 && pressedIsRight == false
+                            ? Colors.black.withOpacity(0.1)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: const Text('-2',
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 16,
+                    left: 8,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: pressedAreaIndex == 3 && pressedIsRight == false
+                            ? Colors.black.withOpacity(0.1)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: const Text('-3',
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+
+                  // Right side indicators (+1, +2, +3)
+                  Positioned(
+                    top: 16,
+                    right: 8,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: pressedAreaIndex == 1 && pressedIsRight == true
+                            ? Colors.black.withOpacity(0.1)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: const Text('+1',
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                  Positioned(
+                    top: constraints.maxHeight / 2 - 10,
+                    right: 8,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: pressedAreaIndex == 2 && pressedIsRight == true
+                            ? Colors.black.withOpacity(0.1)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: const Text('+2',
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 16,
+                    right: 8,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: pressedAreaIndex == 3 && pressedIsRight == true
+                            ? Colors.black.withOpacity(0.1)
+                            : Colors.transparent,
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      child: const Text('+3',
+                          style: TextStyle(
+                              fontSize: 18,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold)),
+                    ),
+                  ),
+                ],
+                if (!isBasketball)
+                  Positioned.fill(
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        const Icon(Icons.remove,
-                            size: 40, color: Colors.black54),
-                        Text(
-                          score.toString(),
-                          style: const TextStyle(
-                              fontSize: 80, fontWeight: FontWeight.bold),
+                        IconButton(
+                          icon: const Icon(Icons.remove, size: 40),
+                          onPressed: () => _updateScore(isRedTeam, -1),
                         ),
-                        const Icon(Icons.add, size: 40, color: Colors.black54),
+                        IconButton(
+                          icon: const Icon(Icons.add, size: 40),
+                          onPressed: () => _updateScore(isRedTeam, 1),
+                        ),
                       ],
                     ),
                   ),
-                  if (!isTop)
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 16.0),
-                      child: Text(
-                        teamName,
-                        style: const TextStyle(
-                            fontSize: 20, fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                ],
-              ),
+              ],
             ),
           );
         },
@@ -171,18 +332,47 @@ class _InputLiveScoringState extends State<InputLiveScoring>
             children: [
               buildScorePanel(
                 color: const Color(0xff68E8FF),
-                teamName: widget.teamA,
+                teamName: widget.teamA.nameTeam ?? "Team A",
                 score: scoreRed,
-                onUpdateScore: (isIncrement) => _updateScore(true, isIncrement),
                 isTop: true,
+                isRedTeam: true,
+                pressedAreaIndex: _pressedAreaIndexRed,
+                pressedIsRight: _pressedIsRightRed,
+                onPressArea: (area, isRight) {
+                  setState(() {
+                    _pressedAreaIndexRed = area;
+                    _pressedIsRightRed = isRight;
+                  });
+                  Future.delayed(const Duration(milliseconds: 300), () {
+                    if (mounted) {
+                      setState(() {
+                        _pressedAreaIndexRed = null;
+                      });
+                    }
+                  });
+                },
               ),
               buildScorePanel(
                 color: const Color(0xffFF6868),
-                teamName: widget.teamB,
+                teamName: widget.teamB.nameTeam ?? "Team B",
                 score: scoreBlue,
-                onUpdateScore: (isIncrement) =>
-                    _updateScore(false, isIncrement),
                 isTop: false,
+                isRedTeam: false,
+                pressedAreaIndex: _pressedAreaIndexBlue,
+                pressedIsRight: _pressedIsRightBlue,
+                onPressArea: (area, isRight) {
+                  setState(() {
+                    _pressedAreaIndexBlue = area;
+                    _pressedIsRightBlue = isRight;
+                  });
+                  Future.delayed(const Duration(milliseconds: 300), () {
+                    if (mounted) {
+                      setState(() {
+                        _pressedAreaIndexBlue = null;
+                      });
+                    }
+                  });
+                },
               ),
             ],
           ),

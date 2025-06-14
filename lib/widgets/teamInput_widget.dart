@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:matchpoint/model/match_model.dart';
 import 'package:matchpoint/widgets/selectProfileBottomSheets_widget.dart';
-import 'package:matchpoint/page/HistoryMatch/createHistory_page.dart';
 
 class TeamInputSection extends StatefulWidget {
   final Team initialData;
@@ -30,6 +29,11 @@ class _TeamTabState extends State<TeamInputSection> {
 
   bool isEditingScore = false;
   int score = 0;
+
+  int? activeIndex;
+  String activeText = '';
+
+  FocusNode focusNode = FocusNode();
 
   @override
   void initState() {
@@ -104,6 +108,12 @@ class _TeamTabState extends State<TeamInputSection> {
       });
       _triggerOnChanged();
     });
+  }
+
+  String _truncateInput(String input) {
+    String trimmed = input.trim();
+    if (trimmed.length <= 12) return trimmed;
+    return '...${trimmed.substring(trimmed.length - 12)}';
   }
 
   @override
@@ -182,9 +192,9 @@ class _TeamTabState extends State<TeamInputSection> {
                                 ? 'Team name must be 22 characters or less'
                                 : null,
                           ),
-                          maxLength: 22, // This will show a character counter
+                          maxLength: 22,
                           onChanged: (value) {
-                            setState(() {}); // To trigger error text update
+                            setState(() {});
                             _triggerOnChanged();
                           },
                         ),
@@ -198,9 +208,28 @@ class _TeamTabState extends State<TeamInputSection> {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  const Text(
-                    "Team Members",
-                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 20),
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      const Text(
+                        "Team Members",
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 20),
+                      ),
+                      SizedBox(width: 14),
+                      if (activeIndex != null && activeText.trim().isNotEmpty)
+                        Flexible(
+                          child: Text(
+                            'Current name: ${_truncateInput(activeText)}',
+                            style: const TextStyle(
+                              fontSize: 14,
+                              color: Colors.grey,
+                              fontStyle: FontStyle.italic,
+                            ),
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ),
+                    ],
                   ),
                   Expanded(
                     child: ListView.builder(
@@ -209,41 +238,73 @@ class _TeamTabState extends State<TeamInputSection> {
                         return Row(
                           children: [
                             Expanded(
-                              child: TextField(
-                                controller: memberControllers[index],
-                                decoration: const InputDecoration(
-                                  hintText: 'Input member name',
-                                  border: UnderlineInputBorder(),
-                                  isDense: true,
-                                  contentPadding:
-                                      EdgeInsets.symmetric(vertical: 6),
-                                ),
-                                onChanged: (value) {
-                                  setState(() {
-                                    members[index] = value;
-
-                                    // Cek apakah index ini adalah yang terakhir
-                                    bool isLast = index == members.length - 1;
-
-                                    // Jika ini terakhir dan tidak kosong, tambahkan satu lagi kosong
-                                    if (isLast && value.trim().isNotEmpty) {
-                                      members.add('');
-                                      memberControllers
-                                          .add(TextEditingController());
-                                    }
-                                  });
-                                  _triggerOnChanged();
+                              child: Focus(
+                                onFocusChange: (hasFocus) {
+                                  if (hasFocus) {
+                                    setState(() {
+                                      activeIndex = index;
+                                      activeText =
+                                          memberControllers[index].text;
+                                    });
+                                  } else {
+                                    activeIndex = null;
+                                    activeText = '';
+                                  }
                                 },
+                                child: TextField(
+                                    controller: memberControllers[index],
+                                    decoration: const InputDecoration(
+                                      hintText: 'Input member name',
+                                      border: UnderlineInputBorder(),
+                                      isDense: true,
+                                      contentPadding:
+                                          EdgeInsets.symmetric(vertical: 6),
+                                    ),
+                                    maxLength: 35,
+                                    onChanged: (value) {
+                                      if (value.trim().isEmpty &&
+                                          members.length > 1) {
+                                        setState(() {
+                                          if (activeIndex == index) {
+                                            activeIndex = null;
+                                            activeText = '';
+                                          }
+                                          members.removeAt(index);
+                                          memberControllers.removeAt(index);
+                                        });
+
+                                        _triggerOnChanged();
+                                        return;
+                                      }
+
+                                      setState(() {
+                                        members[index] = value;
+                                        activeIndex = index;
+                                        activeText = value;
+
+                                        bool isLast =
+                                            index == members.length - 1;
+                                        if (isLast && value.trim().isNotEmpty) {
+                                          members.add('');
+                                          memberControllers
+                                              .add(TextEditingController());
+                                        }
+                                      });
+
+                                      _triggerOnChanged();
+                                    }),
                               ),
                             ),
                             IconButton(
                               icon: Icon(
                                 Icons.delete_outline,
-                                color: members.length > 1
+                                color: (members.length > 1 &&
+                                        members[index].trim().isNotEmpty)
                                     ? Colors.red
                                     : Colors.grey,
                               ),
-                              onPressed: members.length > 1
+                              onPressed: (members.length > 1 &&
+                                      members[index].trim().isNotEmpty)
                                   ? () => _removeMember(index)
                                   : null,
                             ),
@@ -395,7 +456,7 @@ class _TeamTabState extends State<TeamInputSection> {
                   if (matchType != 'history' &&
                       (MediaQuery.of(context).size.height > 700))
                     SizedBox(
-                      height: MediaQuery.of(context).size.height * 0.27,
+                      height: MediaQuery.of(context).size.height * 0.05,
                     )
                 ],
               ),
