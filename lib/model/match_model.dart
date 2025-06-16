@@ -9,6 +9,9 @@ class MatchInfo {
   TimeOfDay? startingTime;
   String? sportType;
   String? createdBy;
+  String? matchNotes;
+  String? teamANotes;
+  String? teamBNotes;
 
   MatchInfo({
     this.id,
@@ -18,6 +21,9 @@ class MatchInfo {
     this.startingTime,
     this.sportType,
     this.createdBy,
+    this.matchNotes,
+    this.teamANotes,
+    this.teamBNotes,
   });
 
   factory MatchInfo.fromJson(Map<String, dynamic> json, {String? id}) {
@@ -37,6 +43,9 @@ class MatchInfo {
       startingTime: time,
       sportType: json['sportType'],
       createdBy: json['createdBy'],
+      matchNotes: json['matchNotes'],
+      teamANotes: json['teamANotes'],
+      teamBNotes: json['teamBNotes'],
     );
   }
 
@@ -50,6 +59,9 @@ class MatchInfo {
           : null,
       'sportType': sportType,
       'createdBy': createdBy,
+      'matchNotes': matchNotes,
+      'teamANotes': teamANotes,
+      'teamBNotes': teamBNotes,
     };
   }
 }

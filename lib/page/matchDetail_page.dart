@@ -61,6 +61,8 @@ class _MatchDetailState extends State<MatchDetail>
         ? DateFormat('EEEE, dd MMM yyyy').format(matchInfo.date!)
         : "N/A";
 
+    bool isExpanded = false;
+
     return Scaffold(
       backgroundColor: const Color(0xffF8FFFE),
       appBar: AppBar(
@@ -252,7 +254,88 @@ class _MatchDetailState extends State<MatchDetail>
                     _buildMatchInfo("Match Duration",
                         "${matchInfo.duration ?? '-'} Minutes"),
                     _buildMatchInfo("Location", matchInfo.location ?? "-"),
-                    const SizedBox(height: 20),
+                    Card(
+                      margin: const EdgeInsets.symmetric(vertical: 8),
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        side: const BorderSide(color: Colors.black12),
+                      ),
+                      child: StatefulBuilder(
+                        builder: (context, setState) {
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.stretch,
+                            children: [
+                              InkWell(
+                                onTap: () =>
+                                    setState(() => isExpanded = !isExpanded),
+                                child: Container(
+                                  padding: const EdgeInsets.symmetric(
+                                      horizontal: 12, vertical: 10),
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.vertical(
+                                        top: Radius.circular(10)),
+                                    color: isExpanded
+                                        ? const Color(0xFFE0F7F7)
+                                        : const Color(0xFFF3FEFD),
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      const Icon(Icons.note_alt_outlined,
+                                          color: Colors.black54),
+                                      const SizedBox(width: 6),
+                                      const Text(
+                                        'Match Notes',
+                                        style: TextStyle(
+                                            fontWeight: FontWeight.bold,
+                                            fontSize: 15),
+                                      ),
+                                      const Spacer(),
+                                      AnimatedRotation(
+                                        duration:
+                                            const Duration(milliseconds: 200),
+                                        turns: isExpanded ? 0.5 : 0,
+                                        child: const Icon(
+                                            Icons.keyboard_arrow_down,
+                                            color: Colors.black54),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+
+                              // Animated content with AnimatedSize
+                              AnimatedSize(
+                                duration: const Duration(milliseconds: 250),
+                                curve: Curves.easeInOut,
+                                child: Visibility(
+                                  visible: isExpanded,
+                                  maintainState: true,
+                                  maintainAnimation: true,
+                                  child: Container(
+                                    width: double.infinity,
+                                    padding: const EdgeInsets.fromLTRB(
+                                        14, 8, 14, 12),
+                                    decoration: const BoxDecoration(
+                                      color: Color(0xFFF9FFFF),
+                                      borderRadius: BorderRadius.vertical(
+                                          bottom: Radius.circular(10)),
+                                    ),
+                                    child: Text(
+                                      matchInfo.matchNotes?.isNotEmpty == true
+                                          ? matchInfo.matchNotes!
+                                          : 'No notes available.',
+                                      style: const TextStyle(
+                                          fontSize: 14, height: 1.4),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
+                    ),
                   ],
                 ),
               ),
@@ -269,7 +352,14 @@ class _MatchDetailState extends State<MatchDetail>
                   labelColor: Colors.black,
                   unselectedLabelColor: Colors.grey,
                   indicatorSize: TabBarIndicatorSize.tab,
-                  labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+                  labelStyle: const TextStyle(
+                    fontFamily: 'Quicksand',
+                    fontWeight: FontWeight.bold,
+                  ),
+                  unselectedLabelStyle: const TextStyle(
+                    fontFamily: 'Quicksand',
+                    fontWeight: FontWeight.w400,
+                  ),
                   tabs: const [
                     Tab(text: "Team 1"),
                     Tab(text: "Team 2"),
@@ -279,14 +369,14 @@ class _MatchDetailState extends State<MatchDetail>
 
               // Team Details
               SizedBox(
-                height: 370, // atau sesuaikan jika overflow masih terjadi
+                height: 370,
                 child: TabBarView(
                   controller: _tabController,
                   children: [
-                    _buildTeamDetail(
-                        teamA, teamB.score, _scrollControllerTeam1),
-                    _buildTeamDetail(
-                        teamB, teamA.score, _scrollControllerTeam2),
+                    _buildTeamDetail(matchInfo, teamA, teamA.nameTeam ?? '',
+                        teamB.score, _scrollControllerTeam1),
+                    _buildTeamDetail(matchInfo, teamB, teamA.nameTeam ?? '',
+                        teamA.score, _scrollControllerTeam2),
                   ],
                 ),
               ),
@@ -321,8 +411,8 @@ class _MatchDetailState extends State<MatchDetail>
     );
   }
 
-  Widget _buildTeamDetail(
-      Team team, int rivalScore, ScrollController controller) {
+  Widget _buildTeamDetail(MatchInfo matchInfo, Team team, String nameTeamA,
+      int rivalScore, ScrollController controller) {
     return Container(
       margin: EdgeInsets.fromLTRB(8, 8, 8, 0),
       child: Column(
@@ -478,6 +568,56 @@ class _MatchDetailState extends State<MatchDetail>
               ),
             ],
           ),
+          const SizedBox(height: 10),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Row(
+                children: [
+                  const Icon(Icons.note_alt_outlined, color: Colors.black54),
+                  const SizedBox(width: 6),
+                  Text(
+                    '${(team.nameTeam != null && team.nameTeam!.length > 14) ? team.nameTeam!.substring(0, 14) + '...' : team.nameTeam ?? '-'} Notes',
+                    style: const TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16,
+                    ),
+                  )
+                ],
+              ),
+              const SizedBox(height: 8),
+              ElevatedButton.icon(
+                style: ElevatedButton.styleFrom(
+                  foregroundColor: Colors.white,
+                  backgroundColor: matchInfo.matchNotes?.isNotEmpty == true
+                      ? const Color(0xFF40BBC4)
+                      : Colors.grey[400],
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(8)),
+                ),
+                onPressed: () {
+                  showNotesDialog(
+                    context,
+                    '${team.nameTeam ?? '-'} Notes',
+                    matchInfo.matchNotes?.isNotEmpty == true
+                        ? matchInfo.matchNotes!
+                        : '',
+                  );
+                },
+                icon: const Icon(Icons.visibility),
+                label: Text(
+                  matchInfo.matchNotes?.isNotEmpty == true
+                      ? "View Notes"
+                      : "No Notes",
+                  style: const TextStyle(
+                      fontSize: 14, fontWeight: FontWeight.w600),
+                ),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -496,6 +636,86 @@ class _MatchDetailState extends State<MatchDetail>
       child: CircleAvatar(
         radius: 42,
         backgroundImage: AssetImage("assets/profile/${team.picId}.png"),
+      ),
+    );
+  }
+
+  void showNotesDialog(BuildContext context, String title, String content) {
+    bool isEmpty = content.trim().isEmpty;
+
+    showDialog(
+      context: context,
+      builder: (context) => Dialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        backgroundColor: const Color(0xFFFAFEFD),
+        child: FractionallySizedBox(
+          heightFactor: 0.6,
+          child: Column(
+            children: [
+              // Header
+              Container(
+                padding: const EdgeInsets.all(14),
+                decoration: const BoxDecoration(
+                  color: Color(0xFF40BBC4),
+                  borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
+                ),
+                width: double.infinity,
+                child: Row(
+                  children: [
+                    const Icon(Icons.notes, color: Colors.white),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: Text(
+                        title,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () => Navigator.pop(context),
+                      child: const Icon(Icons.close, color: Colors.white),
+                    ),
+                  ],
+                ),
+              ),
+
+              // Content
+              Expanded(
+                child: isEmpty
+                    ? Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(Icons.info_outline,
+                                size: 48, color: Colors.grey),
+                            SizedBox(height: 12),
+                            Text(
+                              "No notes available.",
+                              style: TextStyle(
+                                fontSize: 16,
+                                color: Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    : Align(
+                        alignment: Alignment.topLeft,
+                        child: SingleChildScrollView(
+                          padding: const EdgeInsets.all(16),
+                          child: Text(
+                            content,
+                            style: const TextStyle(fontSize: 15, height: 1.4),
+                          ),
+                        ),
+                      ),
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

@@ -270,6 +270,8 @@ class _LiveScoringPageState extends State<LiveScoringPage>
           SettingsMatch(
             matchInfo: matchInfo,
             onMatchInfoChanged: updateMatchInfo,
+            teamA: teamA,
+            teamB: teamB,
           ),
           TeamPageWithTab(
             teamA: teamA,

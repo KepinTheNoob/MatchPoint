@@ -260,7 +260,7 @@ class _TeamTabState extends State<TeamInputSection> {
                                       contentPadding:
                                           EdgeInsets.symmetric(vertical: 6),
                                     ),
-                                    maxLength: 35,
+                                    maxLength: 38,
                                     onChanged: (value) {
                                       if (value.trim().isEmpty &&
                                           members.length > 1) {

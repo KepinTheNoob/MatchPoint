@@ -2,14 +2,19 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:matchpoint/model/match_model.dart';
+import 'package:matchpoint/widgets/inputNotes_widget.dart';
 
 class SettingsMatch extends StatefulWidget {
   final MatchInfo matchInfo;
+  final Team teamA;
+  final Team teamB;
   final Function(MatchInfo) onMatchInfoChanged;
 
   const SettingsMatch({
     Key? key,
     required this.matchInfo,
+    required this.teamA,
+    required this.teamB,
     required this.onMatchInfoChanged,
   }) : super(key: key);
 
@@ -22,6 +27,10 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
   TimeOfDay selectedTime = TimeOfDay.now();
   TextEditingController locationController = TextEditingController();
   TextEditingController durationController = TextEditingController(text: '90');
+  TextEditingController matchNotesController = TextEditingController(text: '');
+  TextEditingController teamANotesController = TextEditingController(text: '');
+  TextEditingController teamBNotesController = TextEditingController(text: '');
+
   String? selectedSportType;
 
   final List<String> sportTypes = [
@@ -42,15 +51,17 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
   void initState() {
     super.initState();
 
-    // Initialize fields from widget.matchInfo
     selectedDate = widget.matchInfo.date ?? DateTime.now();
 
-    // MatchInfo.startingTime bisa jadi TimeOfDay atau tak tau lah tapi makenya TimeOfDay
     selectedTime = widget.matchInfo.startingTime ?? TimeOfDay.now();
 
     locationController.text = widget.matchInfo.location ?? '';
     durationController.text = widget.matchInfo.duration?.toString() ?? '90';
     selectedSportType = widget.matchInfo.sportType ?? '';
+
+    matchNotesController.text = widget.matchInfo.matchNotes ?? '';
+    teamANotesController.text = widget.matchInfo.teamANotes ?? '';
+    teamBNotesController.text = widget.matchInfo.teamBNotes ?? '';
 
     filteredSportTypes = List.from(sportTypes);
 
@@ -74,6 +85,9 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
       sportType: selectedSportType,
       startingTime: selectedTime,
       date: selectedDate,
+      matchNotes: matchNotesController.text,
+      teamANotes: teamANotesController.text,
+      teamBNotes: teamBNotesController.text,
     ));
   }
 
@@ -82,13 +96,15 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
     searchController.dispose();
     locationController.dispose();
     durationController.dispose();
+    matchNotesController.dispose();
+    teamANotesController.dispose();
+    teamBNotesController.dispose();
     super.dispose();
   }
 
   Future<void> _selectDate() async {
     final today = DateTime.now();
-    final onlyToday =
-        DateTime(today.year, today.month, today.day); // buang jam-menit
+    final onlyToday = DateTime(today.year, today.month, today.day);
 
     final DateTime? picked = await showDatePicker(
       context: context,
@@ -415,7 +431,6 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
                           ),
                           onMenuStateChange: (isOpen) {
                             if (!isOpen) {
-                              // Bersihkan search saat dropdown ditutup
                               searchController.clear();
                               setState(() {
                                 filteredSportTypes = List.from(sportTypes);
@@ -425,6 +440,83 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
                         ),
                       ),
                     )
+                  ],
+                ),
+                const SizedBox(height: 16),
+                Row(
+                  children: [
+                    const Spacer(),
+                    Container(
+                      width: (MediaQuery.of(context).size.width - 40 - 16) / 2,
+                      decoration: BoxDecoration(
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.1),
+                            offset: const Offset(0, 4),
+                            blurRadius: 6,
+                            spreadRadius: 0,
+                          ),
+                        ],
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: ElevatedButton(
+                        onPressed: () async {
+                          final result = await showMatchNotesDialog(
+                            context,
+                            teamAName: widget.teamA.nameTeam,
+                            teamBName: widget.teamB.nameTeam,
+                            initialMatchNote: matchNotesController.text,
+                            initialTeamANote: teamANotesController.text,
+                            initialTeamBNote: teamBNotesController.text,
+                          );
+
+                          if (result != null) {
+                            setState(() {
+                              matchNotesController.text =
+                                  result['matchNotes'] ?? '';
+                              teamANotesController.text =
+                                  result['teamANotes'] ?? '';
+                              teamBNotesController.text =
+                                  result['teamBNotes'] ?? '';
+                            });
+
+                            updateParent();
+                          }
+                        },
+                        style: ElevatedButton.styleFrom(
+                          elevation: 0,
+                          backgroundColor:
+                              const Color.fromARGB(255, 189, 253, 247),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 8, horizontal: 12),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                            side: const BorderSide(
+                              color: Colors.black,
+                              width: 0.8,
+                            ),
+                          ),
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: const [
+                            Expanded(
+                              child: Text(
+                                'Match Notes',
+                                style: TextStyle(
+                                  color: Colors.black87,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                                textAlign: TextAlign.start,
+                              ),
+                            ),
+                            Icon(Icons.sticky_note_2_outlined,
+                                color: Colors.black, size: 20),
+                          ],
+                        ),
+                      ),
+                    ),
                   ],
                 ),
                 const SizedBox(height: 24),

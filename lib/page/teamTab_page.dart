@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:matchpoint/model/match_model.dart';
-import 'package:matchpoint/widgets/teamInput_widget.dart';
+import 'package:matchpoint/widgets/inputTeam_widget.dart';
 
 class TeamPageWithTab extends StatefulWidget {
   final Team teamA;

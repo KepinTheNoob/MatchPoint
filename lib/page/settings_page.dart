@@ -137,9 +137,9 @@ class _SettingsPageState extends State<SettingsPage> {
           ),
           const Divider(height: 1, color: Colors.black12),
           ListTile(
-            title: const Text("Sync Data"),
+            title: const Text("Account Created"),
             trailing: const Text(
-              "Last Sync: 28 Aug 2021",
+              "Created at: 27 Aug 2025",
               style: TextStyle(color: Colors.grey),
             ),
             onTap: () {
