@@ -10,7 +10,7 @@ class MatchPointLogoName extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Image.asset(
-          'assets/logos/logo.png',
+          'assets/logos/icon.png',
           height: 65,
           width: 80,
           fit: BoxFit.contain,
