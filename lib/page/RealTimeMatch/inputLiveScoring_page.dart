@@ -28,13 +28,16 @@ class InputLiveScoring extends StatefulWidget {
 }
 
 class _InputLiveScoringState extends State<InputLiveScoring>
-    with AutomaticKeepAliveClientMixin {
+    with AutomaticKeepAliveClientMixin, TickerProviderStateMixin {
   int scoreRed = 0;
   int scoreBlue = 0;
   Duration matchDuration = Duration.zero;
   Timer? _timer;
   int _lastUpdatedMinute = 0;
   bool isRunning = true;
+
+  late AnimationController _blinkController;
+  late Animation<double> _blinkAnimation;
 
   int? _pressedAreaIndexRed;
   bool? _pressedIsRightRed;
@@ -45,6 +48,19 @@ class _InputLiveScoringState extends State<InputLiveScoring>
   @override
   void initState() {
     super.initState();
+
+    _blinkController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    );
+
+    _blinkAnimation = Tween<double>(begin: 0, end: 1).animate(
+      CurvedAnimation(
+        parent: _blinkController,
+        curve: Curves.easeInOut,
+      ),
+    );
+
     _startTimer();
   }
 
@@ -58,7 +74,7 @@ class _InputLiveScoringState extends State<InputLiveScoring>
       setState(() {
         matchDuration += const Duration(seconds: 1);
 
-        // Hitung menit yang sedang berjalan
+        // Calculate current minute
         int currentMinute = matchDuration.inMinutes;
 
         if (currentMinute != _lastUpdatedMinute) {
@@ -72,6 +88,11 @@ class _InputLiveScoringState extends State<InputLiveScoring>
   void _toggleTimer() {
     setState(() {
       isRunning = !isRunning;
+      if (isRunning) {
+        _blinkController.stop();
+      } else {
+        _blinkController.repeat(reverse: true);
+      }
     });
   }
 
@@ -91,13 +112,16 @@ class _InputLiveScoringState extends State<InputLiveScoring>
 
   String _formatDuration(Duration d) {
     String twoDigits(int n) => n.toString().padLeft(2, '0');
+    final hours = d.inHours;
     final minutes = twoDigits(d.inMinutes.remainder(60));
     final seconds = twoDigits(d.inSeconds.remainder(60));
-    return '$minutes:$seconds';
+
+    return hours > 0 ? '$hours:$minutes:$seconds' : '$minutes:$seconds';
   }
 
   @override
   void dispose() {
+    _blinkController.dispose();
     _timer?.cancel();
     super.dispose();
   }
@@ -139,7 +163,7 @@ class _InputLiveScoringState extends State<InputLiveScoring>
                   amount = 3;
                 }
 
-                onPressArea(amount, isRight); // Pemisahan state tiap tim
+                onPressArea(amount, isRight);
                 _updateScore(isRedTeam, isRight ? amount : -amount);
               } else {
                 _updateScore(isRedTeam, isRight ? 1 : -1);
@@ -191,15 +215,17 @@ class _InputLiveScoringState extends State<InputLiveScoring>
                     left: 8,
                     child: Container(
                       decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black, width: 1),
+                        borderRadius: BorderRadius.circular(4),
                         color: pressedAreaIndex == 1 && pressedIsRight == false
                             ? Colors.black.withOpacity(0.1)
                             : Colors.transparent,
-                        borderRadius: BorderRadius.circular(4),
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
                       child: const Text('-1',
                           style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 16,
                               color: Colors.black,
                               fontWeight: FontWeight.bold)),
                     ),
@@ -209,15 +235,17 @@ class _InputLiveScoringState extends State<InputLiveScoring>
                     left: 8,
                     child: Container(
                       decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black, width: 1),
+                        borderRadius: BorderRadius.circular(4),
                         color: pressedAreaIndex == 2 && pressedIsRight == false
                             ? Colors.black.withOpacity(0.1)
                             : Colors.transparent,
-                        borderRadius: BorderRadius.circular(4),
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
                       child: const Text('-2',
                           style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 16,
                               color: Colors.black,
                               fontWeight: FontWeight.bold)),
                     ),
@@ -227,35 +255,39 @@ class _InputLiveScoringState extends State<InputLiveScoring>
                     left: 8,
                     child: Container(
                       decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black, width: 1),
+                        borderRadius: BorderRadius.circular(4),
                         color: pressedAreaIndex == 3 && pressedIsRight == false
                             ? Colors.black.withOpacity(0.1)
                             : Colors.transparent,
-                        borderRadius: BorderRadius.circular(4),
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
                       child: const Text('-3',
                           style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 16,
                               color: Colors.black,
                               fontWeight: FontWeight.bold)),
                     ),
                   ),
 
-                  // Right side indicators (+1, +2, +3)
+                  // For the positive (+) buttons on right side
                   Positioned(
                     top: 16,
                     right: 8,
                     child: Container(
                       decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black, width: 1),
+                        borderRadius: BorderRadius.circular(4),
                         color: pressedAreaIndex == 1 && pressedIsRight == true
                             ? Colors.black.withOpacity(0.1)
                             : Colors.transparent,
-                        borderRadius: BorderRadius.circular(4),
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
                       child: const Text('+1',
                           style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 16,
                               color: Colors.black,
                               fontWeight: FontWeight.bold)),
                     ),
@@ -265,15 +297,17 @@ class _InputLiveScoringState extends State<InputLiveScoring>
                     right: 8,
                     child: Container(
                       decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black, width: 1),
+                        borderRadius: BorderRadius.circular(4),
                         color: pressedAreaIndex == 2 && pressedIsRight == true
                             ? Colors.black.withOpacity(0.1)
                             : Colors.transparent,
-                        borderRadius: BorderRadius.circular(4),
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
                       child: const Text('+2',
                           style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 16,
                               color: Colors.black,
                               fontWeight: FontWeight.bold)),
                     ),
@@ -283,15 +317,17 @@ class _InputLiveScoringState extends State<InputLiveScoring>
                     right: 8,
                     child: Container(
                       decoration: BoxDecoration(
+                        border: Border.all(color: Colors.black, width: 1),
+                        borderRadius: BorderRadius.circular(4),
                         color: pressedAreaIndex == 3 && pressedIsRight == true
                             ? Colors.black.withOpacity(0.1)
                             : Colors.transparent,
-                        borderRadius: BorderRadius.circular(4),
                       ),
-                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
                       child: const Text('+3',
                           style: TextStyle(
-                              fontSize: 18,
+                              fontSize: 16,
                               color: Colors.black,
                               fontWeight: FontWeight.bold)),
                     ),
@@ -394,11 +430,58 @@ class _InputLiveScoringState extends State<InputLiveScoring>
                   mainAxisSize: MainAxisSize.min,
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      _formatDuration(matchDuration),
-                      style: const TextStyle(
-                          fontSize: 24, fontWeight: FontWeight.bold),
-                    ),
+                    if (!isRunning)
+                      AnimatedBuilder(
+                        animation: _blinkAnimation,
+                        builder: (context, child) {
+                          return Stack(
+                            children: [
+                              Text(
+                                _formatDuration(matchDuration),
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                  shadows: [
+                                    Shadow(
+                                        color: Colors.black,
+                                        blurRadius: 3,
+                                        offset: Offset.zero),
+                                    Shadow(
+                                        color: Colors.black,
+                                        blurRadius: 3 * _blinkAnimation.value,
+                                        offset: Offset.zero),
+                                  ],
+                                ),
+                              ),
+                              // Black outline text
+                              Text(
+                                _formatDuration(matchDuration),
+                                style: TextStyle(
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.transparent,
+                                  shadows: [
+                                    Shadow(
+                                      color: Colors.black,
+                                      blurRadius: 0,
+                                      offset: Offset.zero,
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
+                          );
+                        },
+                      )
+                    else
+                      Text(
+                        _formatDuration(matchDuration),
+                        style: const TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
                     IconButton(
                       padding: EdgeInsets.zero,
                       constraints: const BoxConstraints(),
@@ -419,53 +502,4 @@ class _InputLiveScoringState extends State<InputLiveScoring>
       ),
     );
   }
-  // bottomNavigationBar: Container(
-  //   decoration: const BoxDecoration(
-  //     color: Color(0xFFF3FEFD),
-  //     border: Border(
-  //       top: BorderSide(color: Colors.grey, width: 1),
-  //     ),
-  //   ),
-  //   padding: const EdgeInsets.fromLTRB(16, 7, 12, 12),
-  //   child: Row(
-  //     crossAxisAlignment: CrossAxisAlignment.end,
-  //     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-  //     children: [
-  //       TextButton(
-  //         onPressed: () {
-  //           // Bisa diarahkan ke pengaturan match
-  //         },
-  //         child: const Row(
-  //           children: [
-  //             Icon(Icons.settings_outlined, size: 26, color: Colors.black),
-  //             SizedBox(width: 4),
-  //             Text(
-  //               'Match Settings',
-  //               style: TextStyle(
-  //                   color: Colors.black,
-  //                   fontSize: 16,
-  //                   fontWeight: FontWeight.bold),
-  //             ),
-  //           ],
-  //         ),
-  //       ),
-  //       TextButton(
-  //         onPressed: _showFinishConfirmation,
-  //         child: const Row(
-  //           children: [
-  //             Text(
-  //               'Finish Early',
-  //               style: TextStyle(
-  //                   color: Colors.black,
-  //                   fontSize: 16,
-  //                   fontWeight: FontWeight.bold),
-  //             ),
-  //             SizedBox(width: 4),
-  //             Icon(Icons.sports_score, size: 26, color: Colors.black),
-  //           ],
-  //         ),
-  //       ),
-  //     ],
-  //   ),
-  // ),
 }

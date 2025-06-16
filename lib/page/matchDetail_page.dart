@@ -146,7 +146,6 @@ class _MatchDetailState extends State<MatchDetail>
       ),
       body: Column(
         children: [
-          // Winner Section
           Expanded(
             child: ListView(padding: EdgeInsets.zero, children: [
               Padding(
@@ -413,8 +412,13 @@ class _MatchDetailState extends State<MatchDetail>
 
   Widget _buildTeamDetail(MatchInfo matchInfo, Team team, String nameTeamA,
       int rivalScore, ScrollController controller) {
+    final members = team.listTeam;
+    final itemHeight = 40.0;
+    final visibleCount = members.length >= 4 ? 4 : members.length;
+    final listHeight = itemHeight * visibleCount;
+
     return Container(
-      margin: EdgeInsets.fromLTRB(8, 8, 8, 0),
+      margin: const EdgeInsets.fromLTRB(8, 8, 8, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -462,9 +466,6 @@ class _MatchDetailState extends State<MatchDetail>
               ),
             ],
           ),
-          const SizedBox(height: 12),
-
-          // Label
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -521,52 +522,65 @@ class _MatchDetailState extends State<MatchDetail>
               ),
             ],
           ),
-
           const SizedBox(height: 4),
-
-          // Scrollable List Member
-          Column(
-            children: [
-              // List member scrollable
-              Container(
-                height: 130, // Atur sesuai kebutuhan
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(
-                    color: Colors.black26,
-                    width: 1,
-                  ),
-                ),
-                child: Scrollbar(
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 8),
+            padding: const EdgeInsets.symmetric(vertical: 4),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border.all(color: Colors.grey.shade300),
+              borderRadius: BorderRadius.circular(12),
+            ),
+            child: SizedBox(
+              height: listHeight,
+              child: Scrollbar(
+                controller: controller,
+                thumbVisibility: members.length > 4,
+                child: ListView.separated(
                   controller: controller,
-                  thumbVisibility: true,
-                  child: ListView.builder(
-                    controller: controller,
-                    itemCount: team.listTeam.length,
-                    itemBuilder: (context, index) {
-                      final member = team.listTeam[index];
-                      return Container(
-                        // margin: const EdgeInsets.symmetric(vertical: 4),
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border(
-                                bottom: BorderSide(
-                              color: Colors.black26, // warna border
-                              width: 1.0,
-                            ))
-                            // borderRadius: BorderRadius.circular(6),
+                  physics: members.length > 4
+                      ? const AlwaysScrollableScrollPhysics()
+                      : const NeverScrollableScrollPhysics(),
+                  itemCount: members.length,
+                  itemBuilder: (context, index) {
+                    final member = members[index];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 6),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            backgroundColor:
+                                const Color(0xFF40BBC4).withOpacity(0.2),
+                            radius: 14,
+                            child: Text(
+                              "${index + 1}",
+                              style: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 14,
+                                color: Color(0xFF40BBC4),
+                              ),
                             ),
-                        child: Text(
-                          member,
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                      );
-                    },
-                  ),
+                          ),
+                          const SizedBox(width: 12),
+                          Expanded(
+                            child: Text(
+                              member,
+                              style: const TextStyle(
+                                fontSize: 14,
+                              ),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        ],
+                      ),
+                    );
+                  },
+                  separatorBuilder: (context, index) =>
+                      const SizedBox(height: 4),
                 ),
               ),
-            ],
+            ),
           ),
           const SizedBox(height: 10),
           Row(
@@ -590,7 +604,9 @@ class _MatchDetailState extends State<MatchDetail>
               ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
                   foregroundColor: Colors.white,
-                  backgroundColor: matchInfo.matchNotes?.isNotEmpty == true
+                  backgroundColor: (team.nameTeam == nameTeamA
+                          ? (matchInfo.teamANotes?.isNotEmpty == true)
+                          : (matchInfo.teamBNotes?.isNotEmpty == true))
                       ? const Color(0xFF40BBC4)
                       : Colors.grey[400],
                   padding:
@@ -602,18 +618,26 @@ class _MatchDetailState extends State<MatchDetail>
                   showNotesDialog(
                     context,
                     '${team.nameTeam ?? '-'} Notes',
-                    matchInfo.matchNotes?.isNotEmpty == true
-                        ? matchInfo.matchNotes!
-                        : '',
+                    team.nameTeam == nameTeamA
+                        ? (matchInfo.teamANotes?.isNotEmpty == true
+                            ? matchInfo.teamANotes!
+                            : '')
+                        : (matchInfo.teamBNotes?.isNotEmpty == true
+                            ? matchInfo.teamBNotes!
+                            : ''),
                   );
                 },
                 icon: const Icon(Icons.visibility),
                 label: Text(
-                  matchInfo.matchNotes?.isNotEmpty == true
+                  (team.nameTeam == nameTeamA
+                          ? (matchInfo.teamANotes?.isNotEmpty == true)
+                          : (matchInfo.teamBNotes?.isNotEmpty == true))
                       ? "View Notes"
                       : "No Notes",
                   style: const TextStyle(
-                      fontSize: 14, fontWeight: FontWeight.w600),
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ],

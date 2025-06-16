@@ -2,7 +2,6 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:matchpoint/model/match_model.dart';
-import 'package:matchpoint/widgets/inputNotes_widget.dart';
 
 class SettingsMatch extends StatefulWidget {
   final MatchInfo matchInfo;
@@ -434,83 +433,7 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
                     )
                   ],
                 ),
-                const SizedBox(height: 16),
-                Row(
-                  children: [
-                    const Spacer(),
-                    Container(
-                      width: (MediaQuery.of(context).size.width - 40 - 16) / 2,
-                      decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withValues(alpha: 0.1),
-                            offset: const Offset(0, 4),
-                            blurRadius: 6,
-                            spreadRadius: 0,
-                          ),
-                        ],
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: ElevatedButton(
-                        onPressed: () async {
-                          final result = await showMatchNotesDialog(
-                            context,
-                            teamAName: widget.teamA.nameTeam,
-                            teamBName: widget.teamB.nameTeam,
-                            initialMatchNote: matchNotesController.text,
-                            initialTeamANote: teamANotesController.text,
-                            initialTeamBNote: teamBNotesController.text,
-                          );
 
-                          if (result != null) {
-                            setState(() {
-                              matchNotesController.text =
-                                  result['matchNotes'] ?? '';
-                              teamANotesController.text =
-                                  result['teamANotes'] ?? '';
-                              teamBNotesController.text =
-                                  result['teamBNotes'] ?? '';
-                            });
-
-                            updateParent();
-                          }
-                        },
-                        style: ElevatedButton.styleFrom(
-                          elevation: 0,
-                          backgroundColor:
-                              const Color.fromARGB(255, 189, 253, 247),
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 8, horizontal: 12),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10),
-                            side: const BorderSide(
-                              color: Colors.black,
-                              width: 0.8,
-                            ),
-                          ),
-                        ),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: const [
-                            Expanded(
-                              child: Text(
-                                'Match Notes',
-                                style: TextStyle(
-                                  color: Colors.black87,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                                textAlign: TextAlign.start,
-                              ),
-                            ),
-                            Icon(Icons.sticky_note_2_outlined,
-                                color: Colors.black, size: 20),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
                 const SizedBox(height: 24),
                 Center(
                   child: Text(

@@ -110,8 +110,8 @@ Future<Map<String, String?>?> showMatchNotesDialog(
 Widget _buildNoteInput(TextEditingController controller) {
   return TextField(
     controller: controller,
-    minLines: 5,
-    maxLines: 5,
+    minLines: 8,
+    maxLines: 8,
     keyboardType: TextInputType.multiline,
     decoration: InputDecoration(
       hintText: 'Write your notes here...',

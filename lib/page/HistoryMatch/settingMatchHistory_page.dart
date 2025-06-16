@@ -184,13 +184,13 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
       body: Stack(
         children: [
           Positioned(
-            bottom: -70,
+            bottom: -120,
             left: 0,
             right: 0,
             child: SizedBox(
               child: MediaQuery.of(context).size.height > 750
                   ? Positioned(
-                      bottom: -60,
+                      bottom: -90,
                       left: 0,
                       right: 0,
                       child: SizedBox(

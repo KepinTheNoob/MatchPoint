@@ -59,7 +59,6 @@ class _TeamTabState extends State<TeamInputSection> {
     }
 
     teamNameController.addListener(_triggerOnChanged);
-    // Trigger onChanged untuk initial data
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _triggerOnChanged();
     });
@@ -112,8 +111,8 @@ class _TeamTabState extends State<TeamInputSection> {
 
   String _truncateInput(String input) {
     String trimmed = input.trim();
-    if (trimmed.length <= 12) return trimmed;
-    return '...${trimmed.substring(trimmed.length - 12)}';
+    if (trimmed.length <= 15) return trimmed;
+    return '...${trimmed.substring(trimmed.length - 15)}';
   }
 
   @override

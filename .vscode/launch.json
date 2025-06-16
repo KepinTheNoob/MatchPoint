@@ -6,13 +6,17 @@
     "configurations": [
         
         {
-            "name": "Launch Edge",
+            "name": "Launch Chrome",
             "request": "launch",
-            "type": "msedge",
+            "type": "chrome",
             "url": "http://localhost:8080",
             "webRoot": "${workspaceFolder}"
         },
-
+        {
+            "name": "Flutter: Attach to Device",
+            "type": "dart",
+            "request": "attach"
+        },
         {
             "name": "matchpoint",
             "request": "launch",
