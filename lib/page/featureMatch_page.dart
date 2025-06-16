@@ -23,28 +23,26 @@ class _FeatureMatchPageState extends State<FeatureMatchPage> {
 
   FilterType _selectedFilter = FilterType.all;
 
-  List<MatchWithTeams> _filterMatches(
-      List<MatchWithTeams> matches, FilterType filter) {
-    final now = DateTime.now();
+  DateTime? _startDate;
+  DateTime? _endDate;
 
+  List<MatchWithTeams> _filterMatches(List<MatchWithTeams> matches) {
     return matches.where((matchWithTeams) {
       final matchDate = matchWithTeams.match.date;
       final sportType = matchWithTeams.match.sportType;
+
       if (matchDate == null) return false;
 
-      final matchIsInFilterRange = switch (filter) {
-        FilterType.week =>
-          matchDate.isAfter(now.subtract(const Duration(days: 7))),
-        FilterType.month =>
-          matchDate.month == now.month && matchDate.year == now.year,
-        FilterType.year => matchDate.year == now.year,
-        FilterType.all => true,
-      };
+      final inDateRange = (_startDate == null ||
+              matchDate
+                  .isAfter(_startDate!.subtract(const Duration(days: 1)))) &&
+          (_endDate == null ||
+              matchDate.isBefore(_endDate!.add(const Duration(days: 1))));
 
       final matchIsInSelectedSport =
           _selectedSports.isEmpty || _selectedSports.contains(sportType);
 
-      return matchIsInFilterRange && matchIsInSelectedSport;
+      return inDateRange && matchIsInSelectedSport;
     }).toList();
   }
 
@@ -88,6 +86,50 @@ class _FeatureMatchPageState extends State<FeatureMatchPage> {
         _scrollProgress = progress.isNaN ? 0.0 : progress;
       });
     });
+  }
+
+  String _formatDate(DateTime date) {
+    return "${date.year}-${date.month.toString().padLeft(2, '0')}-${date.day.toString().padLeft(2, '0')}";
+  }
+
+  Future<void> _selectDate({
+    required bool isStart,
+  }) async {
+    final onlyToday = DateTime.now();
+    final DateTime? picked = await showDatePicker(
+      context: context,
+      initialDate:
+          isStart ? (_startDate ?? onlyToday) : (_endDate ?? onlyToday),
+      firstDate: DateTime(2000),
+      lastDate: onlyToday,
+      builder: (BuildContext context, Widget? child) {
+        return Theme(
+          data: Theme.of(context).copyWith(
+            colorScheme: const ColorScheme.light(
+              primary: Colors.teal,
+              onSurface: Colors.black,
+            ),
+            textButtonTheme: TextButtonThemeData(
+              style: TextButton.styleFrom(
+                foregroundColor: Colors.teal,
+              ),
+            ),
+            dialogBackgroundColor: const Color(0xFFE0E9E9),
+          ),
+          child: child!,
+        );
+      },
+    );
+
+    if (picked != null) {
+      setState(() {
+        if (isStart) {
+          _startDate = picked;
+        } else {
+          _endDate = picked;
+        }
+      });
+    }
   }
 
   @override
@@ -189,39 +231,103 @@ class _FeatureMatchPageState extends State<FeatureMatchPage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
                 child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: FilterType.values.map((filter) {
-                    return FilterChip(
-                      label: Text(
-                        filter.name.toUpperCase(),
-                        style: TextStyle(
-                          fontWeight: _selectedFilter == filter
-                              ? FontWeight.bold
-                              : FontWeight.normal,
+                  children: [
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () async {
+                          _selectDate(isStart: true);
+                        },
+                        icon:
+                            const Icon(Icons.calendar_today_outlined, size: 18),
+                        label: Text(
+                          _startDate != null
+                              ? "From: ${_formatDate(_startDate!)}"
+                              : "Start Date",
+                          style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          elevation: 1,
+                          side: const BorderSide(color: Color(0xff40BBC4)),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 8),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6),
+                          ),
                         ),
                       ),
-                      selected: _selectedFilter == filter,
-                      selectedColor: const Color(0xffD7F8FD),
-                      backgroundColor: const Color(0xffF3FEFD),
-                      showCheckmark: true,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(12),
-                        side: BorderSide(
-                          color: _selectedFilter == filter
-                              ? Color(0xff40BBC4)
-                              : Colors.grey,
-                          width: _selectedFilter == filter ? 2 : 1,
+                    ),
+                    const SizedBox(width: 8),
+                    Expanded(
+                      child: ElevatedButton.icon(
+                        onPressed: () async {
+                          _selectDate(isStart: false);
+                        },
+                        icon:
+                            const Icon(Icons.calendar_today_outlined, size: 18),
+                        label: Text(
+                          _endDate != null
+                              ? "To: ${_formatDate(_endDate!)}"
+                              : "End Date",
+                          style: const TextStyle(
+                              fontSize: 12,
+                              color: Colors.black,
+                              fontWeight: FontWeight.bold),
+                        ),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.white,
+                          elevation: 1,
+                          side: const BorderSide(color: Color(0xff40BBC4)),
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10, horizontal: 8),
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6),
+                          ),
                         ),
                       ),
-                      onSelected: (selected) {
-                        setState(() {
-                          _selectedFilter = filter;
-                        });
-                      },
-                    );
-                  }).toList(),
+                    ),
+                    const SizedBox(width: 8),
+                    SizedBox(
+                      height: 42,
+                      width: 50,
+                      child: ElevatedButton(
+                        onPressed: () {
+                          setState(() {
+                            _startDate = null;
+                            _endDate = null;
+                          });
+                        },
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: const Color(0xffE0F7FA),
+                          elevation: 0,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          padding: EdgeInsets.zero,
+                        ),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: const [
+                            Icon(Icons.refresh,
+                                size: 16, color: Color(0xff40BBC4)),
+                            SizedBox(height: 2),
+                            Text(
+                              'Reset',
+                              style: TextStyle(
+                                  fontSize: 10,
+                                  color: Color(0xff40BBC4),
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
               ),
               Expanded(
@@ -244,8 +350,7 @@ class _FeatureMatchPageState extends State<FeatureMatchPage> {
                           }
 
                           final matches = snapshot.data!;
-                          final filteredMatches =
-                              _filterMatches(matches, _selectedFilter);
+                          final filteredMatches = _filterMatches(matches);
 
                           filteredMatches.sort((a, b) {
                             final dateA = a.match.date;

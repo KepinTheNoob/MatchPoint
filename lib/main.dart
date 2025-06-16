@@ -30,7 +30,7 @@ void main() async {
   ));
 
   // Set System UI Mode for Edge-to-Edge (Full Screen)
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.immersiveSticky,
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge,
       overlays: SystemUiOverlay.values);
 
   // Biar bisa dijalanin
