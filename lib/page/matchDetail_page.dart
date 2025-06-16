@@ -321,10 +321,11 @@ class _MatchDetailState extends State<MatchDetail>
     );
   }
 
-  Widget _buildTeamDetail(
-      Team team, int rivalScore, ScrollController controller) {
-    return Container(
-      margin: EdgeInsets.fromLTRB(8, 8, 8, 0),
+ Widget _buildTeamDetail(Team team, int rivalScore, ScrollController controller) {
+  return SizedBox(
+    height: 370,
+    child: Container(
+      margin: const EdgeInsets.fromLTRB(8, 8, 8, 0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -341,8 +342,7 @@ class _MatchDetailState extends State<MatchDetail>
                 padding: const EdgeInsets.all(4),
                 child: CircleAvatar(
                   radius: 38,
-                  backgroundImage:
-                      AssetImage("assets/profile/${team.picId}.png"),
+                  backgroundImage: AssetImage("assets/profile/${team.picId}.png"),
                 ),
               ),
               const SizedBox(width: 12),
@@ -373,8 +373,7 @@ class _MatchDetailState extends State<MatchDetail>
             ],
           ),
           const SizedBox(height: 12),
-
-          // Label
+          // Label and arrow scroll Row
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -431,57 +430,42 @@ class _MatchDetailState extends State<MatchDetail>
               ),
             ],
           ),
-
           const SizedBox(height: 4),
-
-          // Scrollable List Member
-          Column(
-            children: [
-              // List member scrollable
-              Container(
-                height: 130, // Atur sesuai kebutuhan
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  border: Border.all(
+          Expanded(
+            child: Scrollbar(
+              controller: controller,
+              thumbVisibility: true,
+              child: ListView.separated(
+                controller: controller,
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemCount: team.listTeam.length,
+                itemBuilder: (context, index) {
+                  final member = team.listTeam[index];
+                  return Padding(
+                    padding:
+                        const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    child: Text(
+                      member,
+                      style: const TextStyle(fontSize: 14),
+                    ),
+                  );
+                },
+                separatorBuilder: (context, index) => const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 12),
+                  child: Divider(
+                    height: 1,
+                    thickness: 1,
                     color: Colors.black26,
-                    width: 1,
-                  ),
-                ),
-                child: Scrollbar(
-                  controller: controller,
-                  thumbVisibility: true,
-                  child: ListView.builder(
-                    controller: controller,
-                    itemCount: team.listTeam.length,
-                    itemBuilder: (context, index) {
-                      final member = team.listTeam[index];
-                      return Container(
-                        // margin: const EdgeInsets.symmetric(vertical: 4),
-                        padding: const EdgeInsets.all(8),
-                        decoration: BoxDecoration(
-                            color: Colors.white,
-                            border: Border(
-                                bottom: BorderSide(
-                              color: Colors.black26, // warna border
-                              width: 1.0,
-                            ))
-                            // borderRadius: BorderRadius.circular(6),
-                            ),
-                        child: Text(
-                          member,
-                          style: const TextStyle(fontSize: 14),
-                        ),
-                      );
-                    },
                   ),
                 ),
               ),
-            ],
+            ),
           ),
         ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildTeamCircle(Team team) {
     return Container(

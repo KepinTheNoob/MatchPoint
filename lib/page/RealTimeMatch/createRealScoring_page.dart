@@ -26,6 +26,7 @@ class _LiveScoringPageState extends State<LiveScoringPage>
 
   late TabController _tabController;
   bool showInputTab = false;
+  bool showMatchSettings = false;
 
   @override
   void initState() {
@@ -102,9 +103,15 @@ class _LiveScoringPageState extends State<LiveScoringPage>
 
     setState(() {
       showInputTab = true;
-      _tabController.dispose();
-      _tabController = TabController(length: 3, vsync: this);
-      _tabController.index = 2;
+      // _tabController.dispose();
+      // _tabController = TabController(length: 2, vsync: this);
+      // _tabController.index = 2;
+    });
+  }
+
+  void toggleMatchSettings() {
+    setState(() {
+      showMatchSettings = !showMatchSettings;
     });
   }
 
@@ -130,25 +137,133 @@ class _LiveScoringPageState extends State<LiveScoringPage>
           style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold),
         ),
         foregroundColor: Colors.black,
-        bottom: PreferredSize(
-          preferredSize: const Size.fromHeight(50),
-          child: Column(
-            children: [
-              const Divider(height: 1, thickness: 1, color: Colors.grey),
-              TabBar(
-                controller: _tabController,
-                indicatorColor: const Color(0xff40BBC4),
-                labelColor: Colors.black,
-                unselectedLabelColor: Colors.grey,
-                tabs: [
-                  const Tab(icon: Icon(Icons.settings_outlined)),
-                  const Tab(icon: Icon(Icons.group)),
-                  if (showInputTab) const Tab(icon: Icon(Icons.sports_score)),
-                ],
-              ),
-            ],
+       bottom: !showInputTab || showMatchSettings
+            ? PreferredSize(
+                preferredSize: const Size.fromHeight(50),
+                child: Column(
+                  children: [
+                    const Divider(height: 1, thickness: 1, color: Colors.grey),
+                    TabBar(
+                      controller: _tabController,
+                      indicatorColor: const Color(0xff40BBC4),
+                      labelColor: Colors.black,
+                      unselectedLabelColor: Colors.grey,
+                      tabs: const [
+                        Tab(icon: Icon(Icons.settings_outlined)),
+                        Tab(icon: Icon(Icons.group)),
+                      ],
+                    ),
+                  ],
+                ),
+              )
+            : null,
+      ),
+      body: Stack(
+  children: [
+    // Always show the live scoring (timer keeps running in background)
+    if (showInputTab)
+      Opacity(
+        opacity: showMatchSettings ? 0 : 1, // Hide visually but keep in tree 
+        child: IgnorePointer(
+          ignoring: showMatchSettings,
+          child: DefaultTabController(
+            length: 2,
+            child: Column(
+              children: [
+                // Tab Bar for scoring and notes
+                Container(
+                  color: Color(0xFFF3FEFD),
+                  child: TabBar(
+                    indicatorColor: const Color(0xff40BBC4),
+                    labelColor: Colors.black,
+                    unselectedLabelColor: Colors.grey,
+                    tabs: const [
+                      Tab(icon: Icon(Icons.scoreboard_outlined)),
+                      Tab(icon: Icon(Icons.article_outlined)),
+                    ],
+                  ),
+                ),
+                Expanded(
+                  child: TabBarView(
+                    children: [
+                      InputLiveScoring(
+                        teamA: teamA,
+                        teamB: teamB,
+                        matchType: 'RealTime',
+                        sportType: matchInfo.sportType ?? "Custom",
+                        onUpdateScoreTeamA: (newScore) => updateScoreTeamA(newScore),
+                        onUpdateScoreTeamB: (newScore) => updateScoreTeamB(newScore),
+                        onUpdateDuration: (timer) => updateDuration(timer)
+                      ),
+                      // Notes page
+                      Container(
+                        color: Color(0xFFF3FEFD),
+                        padding: const EdgeInsets.all(16),
+                        child: TextField(
+                          maxLines: null,
+                          expands: true,
+                          decoration: InputDecoration(
+                            hintText: 'Enter match notes...',
+                            border: InputBorder.none,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
+      ),
+
+      // Show settings tabs when enabled
+      if (showMatchSettings || !showInputTab)
+      Container(
+        color: Color(0xFFF3FEFD),
+        child: Column(
+          children: [
+            Expanded(
+              child: TabBarView(
+                controller: _tabController,
+                children: [
+                  SettingsMatch(
+                    matchInfo: matchInfo,
+                    onMatchInfoChanged: updateMatchInfo,
+                  ),
+                  TeamPageWithTab(
+                    teamA: teamA,
+                    teamB: teamB,
+                    onTeamAChanged: updateTeamA,
+                    onTeamBChanged: updateTeamB,
+                    matchType: 'RealTime',
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+
+      // Show initial tabs before match starts
+      if (!showInputTab && !showMatchSettings)
+            TabBarView(
+              controller: _tabController,
+              children: [
+                SettingsMatch(
+                  matchInfo: matchInfo,
+                  onMatchInfoChanged: updateMatchInfo,
+                ),
+                TeamPageWithTab(
+                  teamA: teamA,
+                  teamB: teamB,
+                  onTeamAChanged: updateTeamA,
+                  onTeamBChanged: updateTeamB,
+                  matchType: 'RealTime',
+                ),
+              ],
+            ),
+        ],
       ),
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
@@ -164,131 +279,131 @@ class _LiveScoringPageState extends State<LiveScoringPage>
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            ...(showInputTab
-                ? [SizedBox(width: 10)]
-                : [
+            if (showInputTab && !showMatchSettings)
+              TextButton.icon(
+                icon: const Icon(Icons.settings, color: Colors.black),
+                label: const Text('Match Settings', 
+                  style: TextStyle(color: Colors.black)),
+                onPressed: () => setState(() => showMatchSettings = true),
+              )
+            else if (!showInputTab)
+              Expanded(
+                child: Row(
+                  children: [
+                    Icon(
+                      canCreateMatch() ? Icons.check_circle_outline : Icons.warning_amber_outlined,
+                      color: canCreateMatch() ? Colors.green : Colors.red,
+                      size: 16,
+                    ),
+                    const SizedBox(width: 6),
                     Expanded(
-                      child: Row(
-                        children: [
-                          Icon(
-                            canCreateMatch()
-                                ? Icons.check_circle_outline
-                                : Icons.warning_amber_outlined,
+                      child: RichText(
+                        text: TextSpan(
+                          style: TextStyle(
                             color: canCreateMatch() ? Colors.green : Colors.red,
-                            size: 16,
+                            fontSize: 10,
+                            fontWeight: FontWeight.w500,
                           ),
-                          const SizedBox(width: 6),
-                          Expanded(
-                            child: RichText(
-                              text: TextSpan(
-                                style: TextStyle(
-                                  color: canCreateMatch()
-                                      ? Colors.green
-                                      : Colors.red,
-                                  fontSize: 10,
-                                  fontWeight: FontWeight.w500,
-                                ),
-                                children: canCreateMatch()
-                                    ? [
-                                        TextSpan(
-                                            text:
-                                                '* All requirements fullfilled'),
-                                      ]
-                                    : [
-                                        TextSpan(
-                                            text:
-                                                '* All Fields Must Be Filled\n'),
-                                        TextSpan(
-                                            text:
-                                                '* Both Teams Must Be Filled With At Least 1 Member'),
-                                      ],
-                              ),
-                            ),
-                          )
-                        ],
-                      ),
-                    )
-                  ]),
-            const SizedBox(width: 24),
-            showInputTab
-                ? ElevatedButton(
-                    onPressed: () async {
-                      final currentUser = FirebaseAuth.instance.currentUser;
-                      if (currentUser == null) {
-                        print("User not logged in");
-                        return;
-                      }
-
-                      final isConfirmed =
-                          await showFinishMatchDialog(context, 'RealTime');
-
-                      if (isConfirmed == true) {
-                        matchInfo.createdBy = currentUser.uid;
-
-                        await _match.createMatch(matchInfo, teamA, teamB);
-                        toastBool("Successfully create real time match", true);
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => Home()),
-                        );
-                      }
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xff40BBC4),
-                    ),
-                    child: const Text(
-                      'Finish Match',
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
+                          children: canCreateMatch()
+                              ? [const TextSpan(text: '* All requirements fulfilled')]
+                              : [
+                                  const TextSpan(text: '* All Fields Must Be Filled\n'),
+                                  const TextSpan(text: '* Both Teams Must Be Filled With At Least 1 Member'),
+                                ],
+                        ),
                       ),
                     ),
-                  )
-                : ElevatedButton(
-                    onPressed: canCreateMatch() ? startMatch : null,
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: canCreateMatch()
-                          ? const Color(0xff40BBC4)
-                          : Colors.grey.shade300,
-                    ),
-                    child: Text(
-                      'Start Match',
-                      style: TextStyle(
-                        color: canCreateMatch() ? Colors.white : Colors.grey,
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
+                  ],
+                ),
+              )
+             else
+              const SizedBox(width: 10),
+
+            // Right side action button
+            if (!showInputTab)
+              ElevatedButton(
+                onPressed: canCreateMatch() ? startMatch : null,
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: canCreateMatch()
+                      ? const Color(0xff40BBC4)
+                      : Colors.grey.shade300,
+                ),
+                child: Text(
+                  'Start Match',
+                  style: TextStyle(
+                    color: canCreateMatch() ? Colors.white : Colors.grey,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
                   ),
+                ),
+              )
+            else
+              ElevatedButton(
+                onPressed: () async {
+                  if (showMatchSettings) {
+                    setState(() => showMatchSettings = false);
+                  } else {
+                    final currentUser = FirebaseAuth.instance.currentUser;
+                    if (currentUser == null) return;
+                    
+                    final isConfirmed = await showFinishMatchDialog(context, 'RealTime');
+                    if (isConfirmed == true) {
+                      matchInfo.createdBy = currentUser.uid;
+                      await _match.createMatch(matchInfo, teamA, teamB);
+                      toastBool("Successfully create real time match", true);
+                      Navigator.pushReplacement(
+                        context,
+                        MaterialPageRoute(builder: (context) => Home()),
+                      );
+                    }
+                  }
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xff40BBC4),
+                ),
+                child: Text(
+                  showMatchSettings ? 'Back to Match' : 'Finish Match',
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
           ],
         ),
       ),
-      body: TabBarView(
-        controller: _tabController,
-        children: [
-          SettingsMatch(
-            matchInfo: matchInfo,
-            onMatchInfoChanged: updateMatchInfo,
-          ),
-          TeamPageWithTab(
-            teamA: teamA,
-            teamB: teamB,
-            onTeamAChanged: updateTeamA,
-            onTeamBChanged: updateTeamB,
-            matchType: 'RealTime',
-          ),
-          if (showInputTab)
-            InputLiveScoring(
-                teamA: teamA,
-                teamB: teamB,
-                matchType: 'RealTime',
-                sportType: matchInfo.sportType ?? "Custom",
-                onUpdateScoreTeamA: (newScore) => updateScoreTeamA(newScore),
-                onUpdateScoreTeamB: (newScore) => updateScoreTeamB(newScore),
-                onUpdateDuration: (timer) => updateDuration(timer)),
-        ],
-      ),
+  //    Old Implementation
+  //     body: TabBarView(
+  //       controller: _tabController,
+  //       children: [
+  //         SettingsMatch(
+  //           matchInfo: matchInfo,
+  //           onMatchInfoChanged: updateMatchInfo,
+  //         ),
+  //         TeamPageWithTab(
+  //           teamA: teamA,
+  //           teamB: teamB,
+  //           onTeamAChanged: updateTeamA,
+  //           onTeamBChanged: updateTeamB,
+  //           matchType: 'RealTime',
+  //         ),
+  //         if (showInputTab)
+  //           InputLiveScoring(
+  //               teamA: teamA,
+  //               teamB: teamB,
+  //               matchType: 'RealTime',
+  //               sportType: matchInfo.sportType ?? "Custom",
+  //               onUpdateScoreTeamA: (newScore) => updateScoreTeamA(newScore),
+  //               onUpdateScoreTeamB: (newScore) => updateScoreTeamB(newScore),
+  //               onUpdateDuration: (timer) => updateDuration(timer)
+  //         ),
+
+  //       ],
+  //     ),
+          
+
+
     );
   }
 }
