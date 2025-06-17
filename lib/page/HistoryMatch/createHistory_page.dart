@@ -145,25 +145,29 @@ class _CreateHistoryState extends State<CreateHistory> {
               ElevatedButton(
                 onPressed: canCreateMatch()
                     ? () async {
-                        final currentUser = FirebaseAuth.instance.currentUser;
-                        if (currentUser == null) {
-                          print("User not logged in");
+                        try {
+                          final currentUser = FirebaseAuth.instance.currentUser;
+                          if (currentUser == null) {
+                            toastBool("User not logged in", true);
+                            return;
+                          }
+                          final isConfirmed =
+                              await showFinishMatchDialog(context, 'History');
+
+                          if (isConfirmed == true) {
+                            matchInfo.createdBy = currentUser.uid;
+
+                            await _match.createMatch(matchInfo, teamA, teamB);
+
+                            toastBool("Successfully create historical match", true);
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => Home()),
+                            );
+                          }
+                        } catch (e) {
+                          toastBool("Internal Server Error", true);
                           return;
-                        }
-                        final isConfirmed =
-                            await showFinishMatchDialog(context, 'History');
-
-                        if (isConfirmed == true) {
-                          matchInfo.createdBy = currentUser.uid;
-
-                          await _match.createMatch(matchInfo, teamA, teamB);
-
-                          toastBool(
-                              "Successfully create historical match", true);
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => Home()),
-                          );
                         }
                       }
                     : null,

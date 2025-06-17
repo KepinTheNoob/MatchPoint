@@ -27,14 +27,16 @@ class EditHistory extends StatefulWidget {
 
 class _EditHistoryState extends State<EditHistory> {
   MatchInfo matchInfo = MatchInfo();
-  MatchService _match = MatchService();
+  final MatchService _match = MatchService();
   Team teamA = Team();
   Team teamB = Team();
 
   // update untuk match info
   void updateMatchInfo(MatchInfo newInfo) {
     setState(() {
-      matchInfo = newInfo;
+      matchInfo = newInfo
+        ..id = matchInfo.id
+        ..createdBy = matchInfo.createdBy;
     });
   }
 
@@ -66,7 +68,7 @@ class _EditHistoryState extends State<EditHistory> {
         (teamB.listTeam.isNotEmpty) &&
         (teamA.nameTeam != null) &&
         (teamB.nameTeam != null) &&
-        (matchInfo.location != null || matchInfo.location!.trim() != '') &&
+        (matchInfo.location != null && matchInfo.location!.trim() != '') &&
         (teamA != widget.teamA ||
             teamB != widget.teamB ||
             matchInfo != widget.matchInfo);
@@ -74,9 +76,6 @@ class _EditHistoryState extends State<EditHistory> {
 
   @override
   Widget build(BuildContext context) {
-    final teamA = widget.teamA;
-    final teamB = widget.teamB;
-    final matchInfo = widget.matchInfo;
 
     return DefaultTabController(
       length: 2,
@@ -169,23 +168,22 @@ class _EditHistoryState extends State<EditHistory> {
               ElevatedButton(
                 onPressed: canEditMatch()
                     ? () async {
-                        // BE Here
+                     try {
+                      final isConfirmed = await showFinishMatchDialog(context, 'Edit');
 
-                        final isConfirmed =
-                            await showFinishMatchDialog(context, 'Edit');
+                      if (isConfirmed == true) {
+                        await _match.updateMatch(matchInfo.id.toString(), matchInfo, teamA, teamB);
 
-                        if (isConfirmed == true) {
-                          // matchInfo.createdBy = currentUser.uid;
-
-                          await _match.createMatch(matchInfo, teamA, teamB);
-
-                          toastBool("Successfully edit match", true);
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => Home()),
-                          );
-                        }
+                        // toastBool("Successfully edit match", true);
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(builder: (context) => Home()),
+                        );
                       }
+                     } catch (e) {
+                       toastBool("Internal Server Error", true);
+                     }   
+                    }
                     : null,
                 style: ElevatedButton.styleFrom(
                   backgroundColor:

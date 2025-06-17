@@ -1,9 +1,12 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:matchpoint/model/match_model.dart';
+import 'package:matchpoint/model/match_service.dart';
 import 'package:matchpoint/page/editHistory_page.dart';
 import 'package:matchpoint/page/home_page.dart';
 import 'package:matchpoint/widgets/deleteMatchDialog_widget.dart';
+import 'package:matchpoint/widgets/toast_widget.dart';
 
 class MatchDetail extends StatefulWidget {
   final MatchInfo matchInfo;
@@ -131,14 +134,20 @@ class _MatchDetailState extends State<MatchDetail>
             ),
             TextButton(
               onPressed: () {
-                Navigator.push(
+                try {
+                  Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => EditHistory(
-                              matchInfo: matchInfo,
-                              teamA: teamA,
-                              teamB: teamB,
-                            )));
+                      builder: (context) => EditHistory(
+                        matchInfo: matchInfo,
+                        teamA: teamA,
+                        teamB: teamB,
+                      )
+                    )
+                  );
+                } catch (e) {
+                  toastBool("Internal Server Error", true);
+                }
               },
               child: const Row(
                 children: [

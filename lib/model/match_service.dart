@@ -10,7 +10,6 @@ class MatchWithTeams {
   MatchWithTeams({required this.match, required this.teamA, required this.teamB});
 }
 
-
 class MatchService {
   final _firestore = FirebaseFirestore.instance.collection("match");
   final FirebaseAuth _auth = FirebaseAuth.instance;
@@ -36,19 +35,6 @@ class MatchService {
     await docRef.update({'id': docRef.id});
   }
 
-
-  // Future<List<MatchInfo>> getMatches() async {
-  //   final user = FirebaseAuth.instance.currentUser;
-  //   final getUserMatch = await FirebaseFirestore.instance
-  //     .collection("match")
-  //     .where("createdBy", isEqualTo: user?.uid)
-  //     .get();
-
-  //   return getUserMatch.docs.map((doc) {
-  //     return MatchInfo.fromJson(doc.data(), id: doc.id);
-  //   }).toList();
-  // }
-
   Future<List<MatchWithTeams>> getMatches() async {
     final uid = _auth.currentUser?.uid;
     if (uid == null) throw Exception("User not logged in");
@@ -69,8 +55,23 @@ class MatchService {
     }).toList();
   }
 
-  Future<void> updateMatch(String id, MatchInfo match) async {
-    await _firestore.doc(id).update(match.toJson());
+  Future<void> updateMatch(String id, MatchInfo match, Team teamA, Team teamB) async {
+    try {
+      final combinedData = {
+      ...match.toJson(),
+      'teamA': teamA.toJson(),
+      'teamB': teamB.toJson(),
+    };
+
+    // combinedData.remove('createdBy');
+
+    print("id: ${id}");
+    print(combinedData);
+
+    await _firestore.doc(id).update(combinedData);
+    } catch (e) {
+      print(e);
+    }
   }
 
   Future<void> deleteMatch(String id) async {

@@ -76,21 +76,22 @@ class _HomeState extends State<Home> {
                                 builder: (context) => const SettingsPage()));
                       },
                       child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Icon(
-                              Icons.settings,
-                              color:
-                                  currentTab == 0 ? Colors.black : Colors.black,
-                            ),
-                            Text('Settings',
-                                style: TextStyle(
-                                    color: currentTab == 0
-                                        ? Colors.black
-                                        : Colors.black,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.bold))
-                          ]),
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Icon(
+                            Icons.settings,
+                            color:
+                                currentTab == 0 ? Colors.black : Colors.black,
+                          ),
+                          Text('Settings',
+                              style: TextStyle(
+                                  color: currentTab == 0
+                                      ? Colors.black
+                                      : Colors.black,
+                                  fontSize: 14,
+                                  fontWeight: FontWeight.bold))
+                        ]
+                      ),
                     )
                   ],
                 ),
