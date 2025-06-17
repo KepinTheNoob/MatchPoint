@@ -336,14 +336,27 @@ class _MatchDetailState extends State<MatchDetail>
                                 decoration: const BoxDecoration(
                                   color: Color(0xFFF9FFFF),
                                   borderRadius: BorderRadius.vertical(
-                                      bottom: Radius.circular(10)),
+                                    bottom: Radius.circular(10),
+                                  ),
                                 ),
-                                child: Text(
-                                  matchInfo.matchNotes?.isNotEmpty == true
-                                      ? matchInfo.matchNotes!
-                                      : 'No notes available.',
-                                  style: const TextStyle(
-                                      fontSize: 14, height: 1.4),
+                                // 1. Batasi tinggi maksimal container.
+                                // Nilai 250.0 ini adalah perkiraan untuk 12-14 baris teks.
+                                // Anda bisa menyesuaikannya sesuai kebutuhan.
+                                constraints: const BoxConstraints(
+                                  maxHeight: 250.0,
+                                ),
+                                child: Scrollbar(
+                                  // 2. (Opsional) Tambahkan Scrollbar untuk UX yang lebih baik
+                                  child: SingleChildScrollView(
+                                    // 3. Bungkus Text dengan ini agar bisa di-scroll
+                                    child: Text(
+                                      matchInfo.matchNotes?.isNotEmpty == true
+                                          ? matchInfo.matchNotes!
+                                          : 'No notes available.',
+                                      style: const TextStyle(
+                                          fontSize: 14, height: 1.4),
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -710,6 +723,8 @@ class _MatchDetailState extends State<MatchDetail>
     showDialog(
       context: context,
       builder: (context) => Dialog(
+        insetPadding:
+            const EdgeInsets.symmetric(horizontal: 20.0, vertical: 24.0),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         backgroundColor: const Color(0xFFFAFEFD),
         child: FractionallySizedBox(
@@ -718,7 +733,7 @@ class _MatchDetailState extends State<MatchDetail>
             children: [
               // Header
               Container(
-                padding: const EdgeInsets.all(14),
+                padding: const EdgeInsets.fromLTRB(16, 14, 16, 14),
                 decoration: const BoxDecoration(
                   color: Color(0xFF40BBC4),
                   borderRadius: BorderRadius.vertical(top: Radius.circular(12)),
@@ -731,6 +746,7 @@ class _MatchDetailState extends State<MatchDetail>
                     Expanded(
                       child: Text(
                         title,
+                        overflow: TextOverflow.ellipsis,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -746,7 +762,6 @@ class _MatchDetailState extends State<MatchDetail>
                 ),
               ),
 
-              // Content
               Expanded(
                 child: isEmpty
                     ? Center(
@@ -766,13 +781,16 @@ class _MatchDetailState extends State<MatchDetail>
                           ],
                         ),
                       )
-                    : Align(
-                        alignment: Alignment.topLeft,
+                    : Scrollbar(
                         child: SingleChildScrollView(
-                          padding: const EdgeInsets.all(16),
-                          child: Text(
-                            content,
-                            style: const TextStyle(fontSize: 15, height: 1.4),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 8),
+                          child: SizedBox(
+                            width: double.infinity,
+                            child: Text(
+                              content,
+                              style: const TextStyle(fontSize: 15, height: 1.4),
+                            ),
                           ),
                         ),
                       ),

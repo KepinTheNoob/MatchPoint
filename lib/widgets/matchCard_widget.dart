@@ -39,7 +39,6 @@ Widget matchCard({
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // Tanggal dan Jenis Olahraga
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -138,38 +137,36 @@ Widget _buildTeamColumn(Team team, {bool isLeft = true}) {
           ? team.listTeam
           : ["??"];
 
-  return Expanded(
-    child: Column(
-      crossAxisAlignment:
-          isLeft ? CrossAxisAlignment.start : CrossAxisAlignment.end,
-      children: [
-        Text(
-          (team.nameTeam ?? "?? Team").length > 14
-              ? '${team.nameTeam!.substring(0, 10)}...'
-              : team.nameTeam ?? "?? Team",
-          style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-        ),
-        const SizedBox(height: 8),
-        Row(
-          mainAxisAlignment:
-              isLeft ? MainAxisAlignment.start : MainAxisAlignment.end,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: isLeft
-              ? [
-                  buildTeamProfileImage(team.picId),
-                  const SizedBox(width: 8),
-                  _buildMembersColumn(displayedMembers,
-                      align: CrossAxisAlignment.start),
-                ]
-              : [
-                  _buildMembersColumn(displayedMembers,
-                      align: CrossAxisAlignment.end),
-                  const SizedBox(width: 8),
-                  buildTeamProfileImage(team.picId),
-                ],
-        ),
-      ],
-    ),
+  return Column(
+    crossAxisAlignment:
+        isLeft ? CrossAxisAlignment.start : CrossAxisAlignment.end,
+    children: [
+      Text(
+        (team.nameTeam ?? "?? Team").length > 14
+            ? '${team.nameTeam!.substring(0, 10)}...'
+            : team.nameTeam ?? "?? Team",
+        style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+      ),
+      const SizedBox(height: 8),
+      Row(
+        mainAxisAlignment:
+            isLeft ? MainAxisAlignment.start : MainAxisAlignment.end,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: isLeft
+            ? [
+                buildTeamProfileImage(team.picId),
+                const SizedBox(width: 8),
+                _buildMembersColumn(displayedMembers,
+                    align: CrossAxisAlignment.start),
+              ]
+            : [
+                _buildMembersColumn(displayedMembers,
+                    align: CrossAxisAlignment.end),
+                const SizedBox(width: 8),
+                buildTeamProfileImage(team.picId),
+              ],
+      ),
+    ],
   );
 }
 
