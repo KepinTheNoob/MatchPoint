@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:matchpoint/model/match_service.dart';
 import 'package:matchpoint/page/matchDetail_page.dart';
-import 'package:matchpoint/page/viewMatchInfo_page.dart';
 import 'package:matchpoint/widgets/matchCard_widget.dart';
 
 enum FilterType {
@@ -339,19 +338,61 @@ class _FeatureMatchPageState extends State<FeatureMatchPage> {
                           if (snapshot.connectionState ==
                               ConnectionState.waiting) {
                             return const Center(
-                                child: CircularProgressIndicator());
+                              child: CircularProgressIndicator(),
+                            );
                           } else if (snapshot.hasError) {
                             return Center(
-                                child: Text("Error: ${snapshot.error}"));
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Icon(Icons.error_outline,
+                                      color: Colors.redAccent, size: 60),
+                                  SizedBox(height: 12),
+                                  Text(
+                                    "Oops! Something went wrong.",
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(height: 6),
+                                  Text(
+                                    "Please try again later.",
+                                    style: TextStyle(
+                                        fontSize: 14, color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                            );
                           } else if (!snapshot.hasData ||
                               snapshot.data!.isEmpty) {
-                            return const Center(
-                                child: Text("No matches found."));
+                            return Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Icon(Icons.inbox_rounded,
+                                      color: Colors.grey, size: 60),
+                                  SizedBox(height: 12),
+                                  Text(
+                                    "No matches found.",
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(height: 6),
+                                  Text(
+                                    "Try adjusting your filters.",
+                                    style: TextStyle(
+                                        fontSize: 14, color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                            );
                           }
 
                           final matches = snapshot.data!;
                           final filteredMatches = _filterMatches(matches);
 
+// Urutkan berdasarkan tanggal (desc)
                           filteredMatches.sort((a, b) {
                             final dateA = a.match.date;
                             final dateB = b.match.date;
@@ -361,6 +402,31 @@ class _FeatureMatchPageState extends State<FeatureMatchPage> {
                             if (dateB == null) return -1;
                             return dateB.compareTo(dateA);
                           });
+
+                          if (filteredMatches.isEmpty) {
+                            return Center(
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: const [
+                                  Icon(Icons.search_off_rounded,
+                                      size: 60, color: Colors.grey),
+                                  SizedBox(height: 12),
+                                  Text(
+                                    "No matches found",
+                                    style: TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                  SizedBox(height: 6),
+                                  Text(
+                                    "Try using different filters.",
+                                    style: TextStyle(
+                                        fontSize: 14, color: Colors.grey),
+                                  ),
+                                ],
+                              ),
+                            );
+                          }
 
                           return ListView.builder(
                             key: ValueKey(_selectedFilter),

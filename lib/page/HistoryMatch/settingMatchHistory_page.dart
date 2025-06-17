@@ -140,6 +140,12 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
     }
   }
 
+  String _getBackgroundImagePath() {
+    final type = (selectedSportType ?? '').toLowerCase().replaceAll(' ', '_');
+    final filename = type.isEmpty ? 'custom' : type;
+    return 'assets/background/$filename.png';
+  }
+
   Future<void> _selectTime() async {
     final TimeOfDay? picked = await showTimePicker(
       context: context,
@@ -187,21 +193,21 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
             bottom: -120,
             left: 0,
             right: 0,
-            child: SizedBox(
-              child: MediaQuery.of(context).size.height > 750
-                  ? Positioned(
-                      bottom: -90,
-                      left: 0,
-                      right: 0,
-                      child: SizedBox(
-                        child: Image.asset(
-                          'assets/background/${((selectedSportType ?? '').isEmpty ? 'custom' : selectedSportType!.toLowerCase().replaceAll(' ', '_'))}.png',
-                          fit: BoxFit.cover,
-                        ),
-                      ),
-                    )
-                  : const SizedBox.shrink(),
-            ),
+            child: MediaQuery.of(context).size.height > 750
+                ? Image.asset(
+                    _getBackgroundImagePath(),
+                    fit: BoxFit.cover,
+                    errorBuilder: (context, error, stackTrace) {
+                      return Container(
+                        height: 150,
+                        color: Colors.teal.withOpacity(0.1), // fallback warna
+                        alignment: Alignment.center,
+                        child:
+                            Icon(Icons.image_not_supported, color: Colors.grey),
+                      );
+                    },
+                  )
+                : const SizedBox.shrink(),
           ),
           Padding(
             padding: const EdgeInsets.fromLTRB(20, 7, 20, 7),
@@ -229,26 +235,54 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
                   ),
                 ),
                 const SizedBox(height: 12),
-                const Text('Match Location',
-                    style:
-                        TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    const Text(
+                      'Match Location',
+                      style:
+                          TextStyle(fontSize: 18, fontWeight: FontWeight.w600),
+                    ),
+                    ValueListenableBuilder<TextEditingValue>(
+                      valueListenable: locationController,
+                      builder: (context, value, _) {
+                        final currentLength = value.text.length;
+                        return Text(
+                          '$currentLength / 255 characters',
+                          style:
+                              const TextStyle(fontSize: 12, color: Colors.grey),
+                        );
+                      },
+                    ),
+                  ],
+                ),
                 const SizedBox(height: 3),
                 TextField(
                   controller: locationController,
-                  style: TextStyle(fontSize: 14),
+                  maxLength: 255,
+                  style: const TextStyle(fontSize: 14),
+                  buildCounter: (_,
+                          {required currentLength,
+                          required isFocused,
+                          maxLength}) =>
+                      null,
                   decoration: InputDecoration(
                     hintText: 'Location',
+                    hintStyle: const TextStyle(color: Colors.grey),
                     contentPadding:
                         const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
                     prefixIcon:
                         const Icon(Icons.location_on_outlined, size: 20),
                     suffixIcon: IconButton(
                       icon: const Icon(Icons.clear, size: 20),
-                      onPressed: () =>
-                          {locationController.clear(), updateParent()},
+                      onPressed: () {
+                        locationController.clear();
+                        updateParent();
+                      },
                     ),
                     border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10)),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 12),

@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:matchpoint/model/match_model.dart';
@@ -29,16 +27,25 @@ class _MatchDetailState extends State<MatchDetail>
   late ScrollController _scrollControllerTeam1;
   late ScrollController _scrollControllerTeam2;
 
+  void _handleTabSelection() {
+    setState(() {
+      // Biarkan kosong, tujuannya hanya untuk memicu build ulang
+      // agar widget yang benar ditampilkan di bawah TabBar.
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
+    _tabController.addListener(_handleTabSelection);
     _scrollControllerTeam1 = ScrollController();
     _scrollControllerTeam2 = ScrollController();
   }
 
   @override
   void dispose() {
+    _tabController.removeListener(_handleTabSelection);
     _tabController.dispose();
     _scrollControllerTeam1.dispose();
     _scrollControllerTeam2.dispose();
@@ -52,7 +59,6 @@ class _MatchDetailState extends State<MatchDetail>
     final matchInfo = widget.matchInfo;
     final bool isDraw = teamA.score == teamB.score;
     final bool isTeamAWinner = teamA.score > teamB.score;
-    final int highestScore = max(teamA.score, teamB.score);
 
     final timeFormatted = matchInfo.startingTime != null
         ? matchInfo.startingTime!.format(context)
@@ -62,6 +68,13 @@ class _MatchDetailState extends State<MatchDetail>
         : "N/A";
 
     bool isExpanded = false;
+
+    final List<Widget> tabContents = [
+      _buildTeamDetail(matchInfo, teamA, teamA.nameTeam ?? '', teamB.score,
+          _scrollControllerTeam1),
+      _buildTeamDetail(matchInfo, teamB, teamA.nameTeam ?? '', teamA.score,
+          _scrollControllerTeam2),
+    ];
 
     return Scaffold(
       backgroundColor: const Color(0xffF8FFFE),
@@ -144,276 +157,303 @@ class _MatchDetailState extends State<MatchDetail>
           ],
         ),
       ),
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView(padding: EdgeInsets.zero, children: [
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(vertical: 14, horizontal: 14),
-                child: isDraw
-                    ? Column(
+      body: SingleChildScrollView(
+        // Menggunakan SingleChildScrollView sebagai parent
+        child: Column(children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 14, horizontal: 14),
+            child: isDraw
+                ? Row(
+                    children: [
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              truncateWithEllipsis(teamA.nameTeam ?? '-'),
+                              style: TextStyle(
+                                foreground: Paint()
+                                  ..style = PaintingStyle.stroke
+                                  ..strokeWidth = 1
+                                  ..color = Colors.black,
+                                fontSize: 17,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 4),
+                            _buildTeamCircle(teamA),
+                          ],
+                        ),
+                      ),
+                      // DRAW Text di tengah layar
+                      Container(
+                        width: 80, // atur lebar sesuai kebutuhan
+                        alignment: Alignment.center,
+                        child: Text(
+                          "DRAW",
+                          style: TextStyle(
+                            foreground: Paint()
+                              ..style = PaintingStyle.stroke
+                              ..strokeWidth = 1
+                              ..color = Colors.orange,
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            Text(
+                              truncateWithEllipsis(teamB.nameTeam ?? '-'),
+                              style: TextStyle(
+                                foreground: Paint()
+                                  ..style = PaintingStyle.stroke
+                                  ..strokeWidth = 1
+                                  ..color = Colors.black,
+                                fontSize: 17,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 4),
+                            _buildTeamCircle(teamB),
+                          ],
+                        ),
+                      ),
+                    ],
+                  )
+                : Row(
+                    children: [
+                      _buildTeamCircle(isTeamAWinner ? teamA : teamB),
+                      const SizedBox(width: 16),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(teamA.nameTeam ?? '-',
-                                      style: TextStyle(
-                                          foreground: Paint()
-                                            ..style = PaintingStyle.stroke
-                                            ..strokeWidth = 1
-                                            ..color = Colors.black,
-                                          fontSize: 17)),
-                                  SizedBox(
-                                    height: 4,
-                                  ),
-                                  _buildTeamCircle(teamA),
-                                ],
-                              ),
                               Text(
-                                "DRAW",
+                                "WINNER ",
                                 style: TextStyle(
                                     foreground: Paint()
                                       ..style = PaintingStyle.stroke
                                       ..strokeWidth = 1
-                                      ..color = Colors.orange,
-                                    fontSize: 20),
-                              ),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(teamB.nameTeam ?? '-',
-                                      style: TextStyle(
-                                          foreground: Paint()
-                                            ..style = PaintingStyle.stroke
-                                            ..strokeWidth = 1
-                                            ..color = Colors.black,
-                                          fontSize: 17)),
-                                  SizedBox(
-                                    height: 4,
-                                  ),
-                                  _buildTeamCircle(teamB),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ],
-                      )
-                    : Row(
-                        children: [
-                          _buildTeamCircle(isTeamAWinner ? teamA : teamB),
-                          const SizedBox(width: 16),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Text(
-                                    "WINNER ",
-                                    style: TextStyle(
-                                        foreground: Paint()
-                                          ..style = PaintingStyle.stroke
-                                          ..strokeWidth = 1
-                                          ..color = Colors.green,
-                                        fontSize: 20),
-                                  ),
-                                  Icon(Icons.celebration, color: Colors.green),
-                                ],
-                              ),
-                              Text(
-                                isTeamAWinner
-                                    ? teamA.nameTeam ?? "-"
-                                    : teamB.nameTeam ?? "-",
-                                style: TextStyle(
-                                    foreground: Paint()
-                                      ..style = PaintingStyle.stroke
-                                      ..strokeWidth = 1.2
                                       ..color = Colors.green,
                                     fontSize: 20),
                               ),
+                              Icon(Icons.celebration, color: Colors.green),
                             ],
+                          ),
+                          Text(
+                            isTeamAWinner
+                                ? teamA.nameTeam ?? "-"
+                                : teamB.nameTeam ?? "-",
+                            style: TextStyle(
+                                foreground: Paint()
+                                  ..style = PaintingStyle.stroke
+                                  ..strokeWidth = 1.2
+                                  ..color = Colors.green,
+                                fontSize: 20),
                           ),
                         ],
                       ),
-              ),
-
-              const Divider(),
-
-              // Match Info
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16.0),
-                child: Column(
-                  children: [
-                    _buildMatchInfo("Sport", matchInfo.sportType ?? "-"),
-                    _buildMatchInfo("Date", dateFormatted),
-                    _buildMatchInfo("Starting Time", timeFormatted),
-                    _buildMatchInfo("Match Duration",
-                        "${matchInfo.duration ?? '-'} Minutes"),
-                    _buildMatchInfo("Location", matchInfo.location ?? "-"),
-                    Card(
-                      margin: const EdgeInsets.symmetric(vertical: 8),
-                      color: Colors.white,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        side: const BorderSide(color: Colors.black12),
-                      ),
-                      child: StatefulBuilder(
-                        builder: (context, setState) {
-                          return Column(
-                            crossAxisAlignment: CrossAxisAlignment.stretch,
-                            children: [
-                              InkWell(
-                                onTap: () =>
-                                    setState(() => isExpanded = !isExpanded),
-                                child: Container(
-                                  padding: const EdgeInsets.symmetric(
-                                      horizontal: 12, vertical: 10),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.vertical(
-                                        top: Radius.circular(10)),
-                                    color: isExpanded
-                                        ? const Color(0xFFE0F7F7)
-                                        : const Color(0xFFF3FEFD),
-                                  ),
-                                  child: Row(
-                                    children: [
-                                      const Icon(Icons.note_alt_outlined,
-                                          color: Colors.black54),
-                                      const SizedBox(width: 6),
-                                      const Text(
-                                        'Match Notes',
-                                        style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            fontSize: 15),
-                                      ),
-                                      const Spacer(),
-                                      AnimatedRotation(
-                                        duration:
-                                            const Duration(milliseconds: 200),
-                                        turns: isExpanded ? 0.5 : 0,
-                                        child: const Icon(
-                                            Icons.keyboard_arrow_down,
-                                            color: Colors.black54),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ),
-
-                              // Animated content with AnimatedSize
-                              AnimatedSize(
-                                duration: const Duration(milliseconds: 250),
-                                curve: Curves.easeInOut,
-                                child: Visibility(
-                                  visible: isExpanded,
-                                  maintainState: true,
-                                  maintainAnimation: true,
-                                  child: Container(
-                                    width: double.infinity,
-                                    padding: const EdgeInsets.fromLTRB(
-                                        14, 8, 14, 12),
-                                    decoration: const BoxDecoration(
-                                      color: Color(0xFFF9FFFF),
-                                      borderRadius: BorderRadius.vertical(
-                                          bottom: Radius.circular(10)),
-                                    ),
-                                    child: Text(
-                                      matchInfo.matchNotes?.isNotEmpty == true
-                                          ? matchInfo.matchNotes!
-                                          : 'No notes available.',
-                                      style: const TextStyle(
-                                          fontSize: 14, height: 1.4),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              // Tabs
-              Container(
-                decoration: const BoxDecoration(
-                  border: Border(
-                      bottom: BorderSide(color: Colors.black12, width: 1)),
-                ),
-                child: TabBar(
-                  controller: _tabController,
-                  indicatorColor: const Color(0xff40BBC4),
-                  labelColor: Colors.black,
-                  unselectedLabelColor: Colors.grey,
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  labelStyle: const TextStyle(
-                    fontFamily: 'Quicksand',
-                    fontWeight: FontWeight.bold,
+                    ],
                   ),
-                  unselectedLabelStyle: const TextStyle(
-                    fontFamily: 'Quicksand',
-                    fontWeight: FontWeight.w400,
-                  ),
-                  tabs: const [
-                    Tab(text: "Team 1"),
-                    Tab(text: "Team 2"),
-                  ],
-                ),
-              ),
-
-              // Team Details
-              SizedBox(
-                height: 370,
-                child: TabBarView(
-                  controller: _tabController,
-                  children: [
-                    _buildTeamDetail(matchInfo, teamA, teamA.nameTeam ?? '',
-                        teamB.score, _scrollControllerTeam1),
-                    _buildTeamDetail(matchInfo, teamB, teamA.nameTeam ?? '',
-                        teamA.score, _scrollControllerTeam2),
-                  ],
-                ),
-              ),
-            ]),
           ),
-        ],
+
+          const Divider(),
+
+          // Match Info
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            child: Column(
+              children: [
+                _buildMatchInfo("Sport", matchInfo.sportType ?? "-"),
+                _buildMatchInfo("Date", dateFormatted),
+                _buildMatchInfo("Starting Time", timeFormatted),
+                _buildMatchInfo(
+                    "Match Duration", "${matchInfo.duration ?? '-'} Minutes"),
+                _buildMatchInfo("Location", matchInfo.location ?? "-"),
+                Card(
+                  margin: const EdgeInsets.symmetric(vertical: 8),
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
+                    side: const BorderSide(color: Colors.black12),
+                  ),
+                  child: StatefulBuilder(
+                    builder: (context, setState) {
+                      return Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          InkWell(
+                            onTap: () =>
+                                setState(() => isExpanded = !isExpanded),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 12, vertical: 10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.vertical(
+                                    top: Radius.circular(10)),
+                                color: isExpanded
+                                    ? const Color(0xFFE0F7F7)
+                                    : const Color(0xFFF3FEFD),
+                              ),
+                              child: Row(
+                                children: [
+                                  const Icon(Icons.note_alt_outlined,
+                                      color: Colors.black54),
+                                  const SizedBox(width: 6),
+                                  const Text(
+                                    'Match Notes',
+                                    style: TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15),
+                                  ),
+                                  const Spacer(),
+                                  AnimatedRotation(
+                                    duration: const Duration(milliseconds: 200),
+                                    turns: isExpanded ? 0.5 : 0,
+                                    child: const Icon(Icons.keyboard_arrow_down,
+                                        color: Colors.black54),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+
+                          // Animated content with AnimatedSize
+                          AnimatedSize(
+                            duration: const Duration(milliseconds: 250),
+                            curve: Curves.easeInOut,
+                            child: Visibility(
+                              visible: isExpanded,
+                              maintainState: true,
+                              maintainAnimation: true,
+                              child: Container(
+                                width: double.infinity,
+                                padding:
+                                    const EdgeInsets.fromLTRB(14, 8, 14, 12),
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFFF9FFFF),
+                                  borderRadius: BorderRadius.vertical(
+                                      bottom: Radius.circular(10)),
+                                ),
+                                child: Text(
+                                  matchInfo.matchNotes?.isNotEmpty == true
+                                      ? matchInfo.matchNotes!
+                                      : 'No notes available.',
+                                  style: const TextStyle(
+                                      fontSize: 14, height: 1.4),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
+                      );
+                    },
+                  ),
+                ),
+              ],
+            ),
+          ),
+
+          Container(
+            decoration: const BoxDecoration(
+              border:
+                  Border(bottom: BorderSide(color: Colors.black12, width: 1)),
+            ),
+            child: TabBar(
+              controller: _tabController,
+              indicatorColor: const Color(0xff40BBC4),
+              labelColor: Colors.black,
+              unselectedLabelColor: Colors.grey,
+              indicatorSize: TabBarIndicatorSize.tab,
+              labelStyle: const TextStyle(
+                fontFamily: 'Quicksand',
+                fontWeight: FontWeight.bold,
+              ),
+              unselectedLabelStyle: const TextStyle(
+                fontFamily: 'Quicksand',
+                fontWeight: FontWeight.w400,
+              ),
+              tabs: const [
+                Tab(text: "Team 1"),
+                Tab(text: "Team 2"),
+              ],
+            ),
+          ),
+
+          // Team Details
+          tabContents[_tabController.index],
+          const SizedBox(height: 20),
+        ]),
       ),
     );
   }
 
+  String truncateWithEllipsis(String text, {int maxLength = 14}) {
+    if (text.length <= maxLength) return text;
+    return '${text.substring(0, maxLength)}...';
+  }
+
   Widget _buildMatchInfo(String label, String value) {
+    final bool isLongText = value.length > 26;
+
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 6),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(label,
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              )),
-          Text(
-            value,
-            style: const TextStyle(
-              fontSize: 16,
-              fontWeight: FontWeight.w500,
-              color: Colors.black,
+      child: isLongText
+          ? Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  value,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black,
+                  ),
+                ),
+              ],
+            )
+          : Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  label,
+                  style: const TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+                Flexible(
+                  child: Text(
+                    value,
+                    textAlign: TextAlign.right,
+                    overflow: TextOverflow.ellipsis,
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w500,
+                      color: Colors.black,
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ),
-        ],
-      ),
     );
   }
 
   Widget _buildTeamDetail(MatchInfo matchInfo, Team team, String nameTeamA,
       int rivalScore, ScrollController controller) {
     final members = team.listTeam;
-    final itemHeight = 40.0;
+    final itemHeight = 43.0;
     final visibleCount = members.length >= 4 ? 4 : members.length;
     final listHeight = itemHeight * visibleCount;
 

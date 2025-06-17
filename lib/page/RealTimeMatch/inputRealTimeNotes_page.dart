@@ -49,7 +49,7 @@ class _MatchNotesTabViewState extends State<MatchNotesTabView>
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        FocusScope.of(context).unfocus(); // Tutup keyboard
+        FocusScope.of(context).unfocus();
       },
       child: Column(
         children: [

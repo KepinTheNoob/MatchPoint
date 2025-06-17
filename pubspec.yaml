@@ -102,6 +102,7 @@ flutter:
     - assets/profile/8.png
     - assets/profile/9.png
     - assets/profile/10.png
+    - assets/background/
     - assets/background/basketball.png
     - assets/background/custom.png
     - assets/background/table_tennis.png
