@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:intl/intl.dart';
 import 'package:matchpoint/model/user.dart';
 
 class FirebaseService {
@@ -12,13 +13,19 @@ class FirebaseService {
         email: email, 
         password: password
       );
+
       if (credential.user == null) {
         throw Exception("User is Null");
       }
+
+      DateTime now = DateTime.now();
+      String date = DateFormat('dd-MM-yyyy').format(now);
       String uid = credential.user!.uid;
+
       await _userCollection.doc(uid).set({
         'username': username,
         'email': email,
+        'dateCreated': date,
       });
 
       return credential.user;
@@ -30,6 +37,7 @@ class FirebaseService {
   Future<Users?> getUserData(String uid) async {
     try {
       DocumentSnapshot doc = await _userCollection.doc(uid).get();
+
       if (doc.exists) {
         return Users.fromFirestore(doc);
       }

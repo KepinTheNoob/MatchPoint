@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:matchpoint/model/match_model.dart';
+import 'package:matchpoint/widgets/toast_widget.dart';
 
 class MatchWithTeams {
   final MatchInfo match;
@@ -62,11 +63,6 @@ class MatchService {
       'teamA': teamA.toJson(),
       'teamB': teamB.toJson(),
     };
-
-    // combinedData.remove('createdBy');
-
-    print("id: ${id}");
-    print(combinedData);
 
     await _firestore.doc(id).update(combinedData);
     } catch (e) {

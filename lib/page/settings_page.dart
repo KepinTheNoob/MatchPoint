@@ -22,6 +22,7 @@ class _SettingsPageState extends State<SettingsPage> {
   final FirebaseService _auth = FirebaseService();
 
   String _username = 'Loading...';
+  String _dateCreated = 'Loading...';
 
   @override
   void initState() {
@@ -35,10 +36,12 @@ class _SettingsPageState extends State<SettingsPage> {
       if (userData != null && mounted) {
         setState(() {
           _username = userData.username ?? "Unknown";
+          _dateCreated = userData.dateCreated ?? "Unknown";
         });
       }
     }
   }
+
 
   Widget build(BuildContext context) {
     return Scaffold(
@@ -144,13 +147,13 @@ class _SettingsPageState extends State<SettingsPage> {
           const Divider(height: 1, color: Colors.black12),
           ListTile(
             title: const Text("Account Created"),
-            trailing: const Text(
-              "Created at: 27 Aug 2025",
+            trailing: Text(
+              _dateCreated,
               style: TextStyle(color: Colors.grey),
             ),
-            onTap: () {
+            // onTap: () {
               // Sinkronisasi
-            },
+            // },
           ),
           const Divider(height: 1, color: Colors.black12),
           ListTile(

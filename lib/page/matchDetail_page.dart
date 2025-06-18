@@ -109,12 +109,18 @@ class _MatchDetailState extends State<MatchDetail>
           children: [
             TextButton(
               onPressed: () async {
-                final isConfirmed = await deleteMatchDialog(context, matchInfo);
-                if (isConfirmed == true) {
-                  Navigator.pushReplacement(
-                    context,
-                    MaterialPageRoute(builder: (context) => const Home()),
-                  );
+                try {
+                  final isConfirmed = await deleteMatchDialog(context, matchInfo);
+                  
+                  if (isConfirmed == true) {
+                    Navigator.pushReplacement(
+                      context,
+                      MaterialPageRoute(builder: (context) => const Home()),
+                    );
+                  }
+                } catch (e) {
+                  toastBool("Internal Server Error", true);
+                  print(e);
                 }
               },
               child: const Row(

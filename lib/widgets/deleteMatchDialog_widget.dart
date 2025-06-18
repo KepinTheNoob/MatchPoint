@@ -103,6 +103,7 @@ Future<bool?> deleteMatchDialog(BuildContext context, MatchInfo matchInfo) {
                               Navigator.pop(context, true);
                             } catch (e) {
                               Navigator.pop(context);
+                              print(e);
                             }
                           }
                           : null,
