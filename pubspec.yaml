@@ -53,14 +53,14 @@ dependencies:
 
 flutter_native_splash:
   color: "#F8FFFE"
-  image: assets/logos/RealLogo.png
+  image: assets/logos/logo.png
   branding: assets/logos/MatchPoint.png
   android: true
   ios: true
 
   android_12:
     color: "#F8FFFE"
-    image: assets/logos/RealLogo.png
+    image: assets/logos/logo.png
     branding: assets/logos/MatchPoint.png
 
 dev_dependencies:
@@ -91,6 +91,8 @@ flutter:
     - assets/logos/logo.png
     - assets/logos/RealLogo.png
     - assets/logos/icon.png
+    - assets/logos/newIcon.png
+    - assets/logos/newLogo.png
     # - assets/jeremy.png
     - assets/profile/1.png
     - assets/profile/2.png
@@ -142,6 +144,6 @@ flutter:
 flutter_icons:
   android: true
   ios: true
-  image_path: assets/logos/RealLogo.png
+  image_path: assets/logos/newIcon.png
   adaptive_icon_background: "#F8FFFE"
-  adaptive_icon_foreground: assets/logos/RealLogo.png
+  adaptive_icon_foreground: assets/logos/newIcon.png

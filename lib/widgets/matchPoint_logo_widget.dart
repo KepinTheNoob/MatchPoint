@@ -6,26 +6,24 @@ class MatchPointLogoName extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
+    return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Image.asset(
-          'assets/logos/icon.png',
-          height: 65,
-          width: 80,
+          'assets/logos/logo.png',
+          height: 55,
+          width: 50,
           fit: BoxFit.contain,
         ),
-        const SizedBox(height: 10),
-        Baseline(
-          baseline: 5,
-          baselineType: TextBaseline.alphabetic,
-          child: Text(
-            "Match Point",
-            style: GoogleFonts.quicksand(
-              fontSize: 20,
-              fontWeight: FontWeight.normal,
-              color: Colors.black,
-            ),
+        const SizedBox(width: 5),
+        Text(
+          "MatchPoint",
+          style: GoogleFonts.quicksand(
+            fontSize: 28,
+            fontWeight: FontWeight.bold,
+            color: Colors.black,
+            letterSpacing: 2,
           ),
         ),
       ],

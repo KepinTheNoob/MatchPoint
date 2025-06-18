@@ -250,47 +250,47 @@ class _RegisterPageState extends State<RegisterPage>
                     _validateAndRegister, "Register", _isLoading),
 
                 // Desain or doang
-                const Row(
-                  children: [
-                    Expanded(child: Divider()),
-                    Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 10),
-                      child: Text("or"),
-                    ),
-                    Expanded(child: Divider()),
-                  ],
-                ),
+                // const Row(
+                //   children: [
+                //     Expanded(child: Divider()),
+                //     Padding(
+                //       padding: EdgeInsets.symmetric(horizontal: 10),
+                //       child: Text("or"),
+                //     ),
+                //     Expanded(child: Divider()),
+                //   ],
+                // ),
 
-                // Tombol Google
-                ElevatedButton(
-                  onPressed: () {
-                    toastBool('Under Maintenance', false);
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    minimumSize: const Size(double.infinity, 50),
-                    elevation: 3,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                      side: BorderSide(color: Colors.grey, width: 1),
-                    ),
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Image.asset(
-                        'assets/google-logo.png',
-                        height: 24,
-                      ),
-                      const SizedBox(width: 10),
-                      const Text(
-                        "Sign in with Google",
-                        style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w600),
-                      ),
-                    ],
-                  ),
-                ),
+                // // Tombol Google
+                // ElevatedButton(
+                //   onPressed: () {
+                //     toastBool('Under Maintenance', false);
+                //   },
+                //   style: ElevatedButton.styleFrom(
+                //     backgroundColor: Colors.white,
+                //     minimumSize: const Size(double.infinity, 50),
+                //     elevation: 3,
+                //     shape: RoundedRectangleBorder(
+                //       borderRadius: BorderRadius.circular(8),
+                //       side: BorderSide(color: Colors.grey, width: 1),
+                //     ),
+                //   ),
+                //   child: Row(
+                //     mainAxisAlignment: MainAxisAlignment.center,
+                //     children: [
+                //       Image.asset(
+                //         'assets/google-logo.png',
+                //         height: 24,
+                //       ),
+                //       const SizedBox(width: 10),
+                //       const Text(
+                //         "Sign in with Google",
+                //         style: TextStyle(
+                //             fontSize: 16, fontWeight: FontWeight.w600),
+                //       ),
+                //     ],
+                //   ),
+                // ),
 
                 // Pindah ke Login page
                 TextButton(

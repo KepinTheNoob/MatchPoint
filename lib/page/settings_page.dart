@@ -42,7 +42,6 @@ class _SettingsPageState extends State<SettingsPage> {
     }
   }
 
-
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -120,14 +119,13 @@ class _SettingsPageState extends State<SettingsPage> {
                         builder: (context) => const ForgotPassword()),
                   );
                 },
-                // subtitle: const Text("johndoe@example.com"),
               ),
-              CheckboxListTile(
-                secondary: const Icon(Icons.login),
-                title: const Text("Sign in with Google"),
-                value: true,
-                onChanged: null, // disabled, hanya indikator
-              ),
+              // CheckboxListTile(
+              //   secondary: const Icon(Icons.login),
+              //   title: const Text("Sign in with Google"),
+              //   value: true,
+              //   onChanged: null, // disabled, hanya indikator
+              // ),
               ListTile(
                 leading: const Icon(Icons.delete_forever, color: Colors.red),
                 title: const Text(
@@ -152,7 +150,7 @@ class _SettingsPageState extends State<SettingsPage> {
               style: TextStyle(color: Colors.grey),
             ),
             // onTap: () {
-              // Sinkronisasi
+            // Sinkronisasi
             // },
           ),
           const Divider(height: 1, color: Colors.black12),

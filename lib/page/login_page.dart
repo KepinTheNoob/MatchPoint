@@ -67,9 +67,9 @@ class _LoginPageState extends State<LoginPage> {
         if (context.mounted) {
           toastBool(e.message ?? "Login Failed", false);
 
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text(e.message ?? 'An error occurred')),
-          );
+          // ScaffoldMessenger.of(context).showSnackBar(
+          //   SnackBar(content: Text(e.message ?? 'An error occurred')),
+          // );
         }
       } finally {
         if (mounted) {
@@ -122,70 +122,70 @@ class _LoginPageState extends State<LoginPage> {
               // Login Button
               loginRegisterButton(_validateAndLogin, "Login", _isLoading),
 
-              const Row(
-                children: [
-                  Expanded(child: Divider()),
-                  Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 10),
-                    child: Text("or"),
-                  ),
-                  Expanded(child: Divider()),
-                ],
-              ),
+              // const Row(
+              //   children: [
+              //     Expanded(child: Divider()),
+              //     Padding(
+              //       padding: EdgeInsets.symmetric(horizontal: 10),
+              //       child: Text("or"),
+              //     ),
+              //     Expanded(child: Divider()),
+              //   ],
+              // ),
 
-              ElevatedButton(
-                onPressed: () async {
-                  setState(() => _isLoading = true);
-                  try {
-                    final result = await _authService.signInWithGoogle();
-                    if (result != null) {
-                      if (context.mounted) {
-                        toastBool("Google Sign-in Success", true);
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(builder: (context) => const Home()),
-                        );
-                      }
-                    } else {
-                      if (context.mounted) {
-                        toastBool("Google Sign-in Failed", false);
-                      }
-                    }
-                  } catch (e) {
-                    if (context.mounted) {
-                      toastBool("Error: $e", false);
-                    }
-                  } finally {
-                    if (mounted) {
-                      setState(() => _isLoading = false);
-                    }
-                  }
-                },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.white,
-                  minimumSize: const Size(double.infinity, 50),
-                  elevation: 3,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(8),
-                    side: const BorderSide(color: Colors.grey, width: 1),
-                  ),
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Image.asset(
-                      'assets/google-logo.png',
-                      height: 24,
-                    ),
-                    const SizedBox(width: 10),
-                    const Text(
-                      "Sign in with Google",
-                      style:
-                          TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
-                    ),
-                  ],
-                ),
-              ),
+              // ElevatedButton(
+              //   onPressed: () async {
+              //     setState(() => _isLoading = true);
+              //     try {
+              //       final result = await _authService.signInWithGoogle();
+              //       if (result != null) {
+              //         if (context.mounted) {
+              //           toastBool("Google Sign-in Success", true);
+              //           Navigator.pushReplacement(
+              //             context,
+              //             MaterialPageRoute(builder: (context) => const Home()),
+              //           );
+              //         }
+              //       } else {
+              //         if (context.mounted) {
+              //           toastBool("Google Sign-in Failed", false);
+              //         }
+              //       }
+              //     } catch (e) {
+              //       if (context.mounted) {
+              //         toastBool("Error: $e", false);
+              //       }
+              //     } finally {
+              //       if (mounted) {
+              //         setState(() => _isLoading = false);
+              //       }
+              //     }
+              //   },
+              //   style: ElevatedButton.styleFrom(
+              //     backgroundColor: Colors.white,
+              //     minimumSize: const Size(double.infinity, 50),
+              //     elevation: 3,
+              //     shape: RoundedRectangleBorder(
+              //       borderRadius: BorderRadius.circular(8),
+              //       side: const BorderSide(color: Colors.grey, width: 1),
+              //     ),
+              //   ),
+              //   child: Row(
+              //     mainAxisAlignment: MainAxisAlignment.center,
+              //     children: [
+              //       Image.asset(
+              //         'assets/google-logo.png',
+              //         height: 24,
+              //       ),
+              //       const SizedBox(width: 10),
+              //       const Text(
+              //         "Sign in with Google",
+              //         style:
+              //             TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              //       ),
+              //     ],
+              //   ),
+              // ),
 
               TextButton(
                 onPressed: () {
