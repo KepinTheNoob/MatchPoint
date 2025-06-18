@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:matchpoint/page/forgotPassword_page.dart';
 
 // Password Register
 Widget buildPasswordField(
@@ -174,6 +175,34 @@ Widget buildTextField(String label, TextEditingController controller, String err
           ),
         ),
     ],
+  );
+}
+
+Widget forgotPasswordField(BuildContext context) {
+  return Padding(
+    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.end,
+      children: [
+        TextButton(
+          onPressed: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => const ForgotPassword()
+              ),
+            );
+          },
+          child: const Text(
+            "Forgot password?",
+            style: TextStyle(
+              color: Color(0xff174B7E),
+              decoration: TextDecoration.underline,
+            ),
+          ),
+        ),
+      ],
+    ),
   );
 }
 

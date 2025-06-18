@@ -116,6 +116,8 @@ class _LoginPageState extends State<LoginPage> {
                 _passwordError,
               ),
 
+              forgotPasswordField(context),
+
               // Login Button
               loginRegisterButton(_validateAndLogin, "Login", _isLoading),
 
