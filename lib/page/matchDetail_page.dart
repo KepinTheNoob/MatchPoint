@@ -110,8 +110,9 @@ class _MatchDetailState extends State<MatchDetail>
             TextButton(
               onPressed: () async {
                 try {
-                  final isConfirmed = await deleteMatchDialog(context, matchInfo);
-                  
+                  final isConfirmed =
+                      await deleteMatchDialog(context, matchInfo);
+
                   if (isConfirmed == true) {
                     Navigator.pushReplacement(
                       context,
@@ -142,15 +143,13 @@ class _MatchDetailState extends State<MatchDetail>
               onPressed: () {
                 try {
                   Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EditHistory(
-                        matchInfo: matchInfo,
-                        teamA: teamA,
-                        teamB: teamB,
-                      )
-                    )
-                  );
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => EditHistory(
+                                matchInfo: matchInfo,
+                                teamA: teamA,
+                                teamB: teamB,
+                              )));
                 } catch (e) {
                   toastBool("Internal Server Error", true);
                 }
@@ -281,6 +280,7 @@ class _MatchDetailState extends State<MatchDetail>
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16.0),
             child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildMatchInfo("Sport", matchInfo.sportType ?? "-"),
                 _buildMatchInfo("Date", dateFormatted),

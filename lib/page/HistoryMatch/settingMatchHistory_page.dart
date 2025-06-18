@@ -134,7 +134,7 @@ class _SettingsMatchPageState extends State<SettingsMatch> {
 
     if (picked != null && picked != selectedDate) {
       setState(() {
-        selectedDate = DateTime.now();
+        selectedDate = picked;
       });
       updateParent();
     }

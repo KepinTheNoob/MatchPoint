@@ -27,7 +27,11 @@ Future<bool?> showFinishMatchDialog(BuildContext context, String type) {
                   const SizedBox(height: 16),
                   Center(
                     child: Text(
-                      (type == 'History') ? 'Create Match' : 'Finish Match',
+                      (type == 'History')
+                          ? 'Create Match'
+                          : (type == 'Edit')
+                              ? 'Edit Match'
+                              : 'Finish Match',
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,

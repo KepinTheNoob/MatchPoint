@@ -53,15 +53,17 @@ dependencies:
 
 flutter_native_splash:
   color: "#F8FFFE"
-  image: assets/logos/logo.png
+  image: assets/logos/nativeLogo.png
   branding: assets/logos/MatchPoint.png
+  branding_mode: bottom
   android: true
   ios: true
 
   android_12:
     color: "#F8FFFE"
-    image: assets/logos/logo.png
+    image: assets/logos/nativeLogo.png
     branding: assets/logos/MatchPoint.png
+    branding_mode: bottom
 
 dev_dependencies:
   flutter_test:
@@ -93,6 +95,9 @@ flutter:
     - assets/logos/icon.png
     - assets/logos/newIcon.png
     - assets/logos/newLogo.png
+    - assets/logos/splashLogo.png
+    - assets/logos/nativeLogo.png
+    - assets/logos/logo.svg
     # - assets/jeremy.png
     - assets/profile/1.png
     - assets/profile/2.png
