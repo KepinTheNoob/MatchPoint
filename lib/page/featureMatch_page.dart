@@ -380,9 +380,10 @@ class _FeatureMatchPageState extends State<FeatureMatchPage> {
                                   ),
                                   SizedBox(height: 6),
                                   Text(
-                                    "Try adjusting your filters.",
+                                    "Try creating a match to get started.",
                                     style: TextStyle(
                                         fontSize: 14, color: Colors.grey),
+                                    textAlign: TextAlign.center,
                                   ),
                                 ],
                               ),
@@ -392,7 +393,6 @@ class _FeatureMatchPageState extends State<FeatureMatchPage> {
                           final matches = snapshot.data!;
                           final filteredMatches = _filterMatches(matches);
 
-// Urutkan berdasarkan tanggal (desc)
                           filteredMatches.sort((a, b) {
                             final dateA = a.match.date;
                             final dateB = b.match.date;
