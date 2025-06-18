@@ -108,15 +108,16 @@ class _LoginPageState extends State<LoginPage> {
               buildTextField("Email", _emailController, _emailError),
 
               // Password Field
-              buildPasswordField(
-                "Password",
-                _passwordController,
-                _isPasswordVisible,
-                (value) => setState(() => _isPasswordVisible = value),
-                _passwordError,
-              ),
-
-              forgotPasswordField(context),
+              Column(children: [
+                buildPasswordField(
+                  "Password",
+                  _passwordController,
+                  _isPasswordVisible,
+                  (value) => setState(() => _isPasswordVisible = value),
+                  _passwordError,
+                ),
+                forgotPasswordField(context),
+              ]),
 
               // Login Button
               loginRegisterButton(_validateAndLogin, "Login", _isLoading),
@@ -202,31 +203,54 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      "Terms of Use",
-                      style: TextStyle(
-                        color: Color(0xff174B7E),
-                        decoration: TextDecoration.underline,
+
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: const [
+                    Flexible(
+                      child: Text(
+                        "Note: The email must be linked to a registered device for future features.",
+                        style: TextStyle(
+                          color: Color(0xff174B7E),
+                          fontSize: 14,
+                        ),
+                        textAlign: TextAlign.center,
+                        softWrap: true,
                       ),
                     ),
-                  ),
-                  TextButton(
-                    onPressed: () {},
-                    child: const Text(
-                      "Privacy Policy",
-                      style: TextStyle(
-                        color: Color(0xff174B7E),
-                        decoration: TextDecoration.underline,
-                      ),
-                    ),
-                  ),
-                ],
+                  ],
+                ),
               ),
+
+              // Gak kepake, tapi simpen aja
+              // Row(
+              //   mainAxisAlignment: MainAxisAlignment.center,
+              //   children: [
+              //     TextButton(
+              //       onPressed: () {},
+              //       child: const Text(
+              //         "Terms of Use",
+              //         style: TextStyle(
+              //           color: Color(0xff174B7E),
+              //           decoration: TextDecoration.underline,
+              //         ),
+              //       ),
+              //     ),
+              //     TextButton(
+              //       onPressed: () {},
+              //       child: const Text(
+              //         "Privacy Policy",
+              //         style: TextStyle(
+              //           color: Color(0xff174B7E),
+              //           decoration: TextDecoration.underline,
+              //         ),
+              //       ),
+              //     ),
+              //   ],
+              // ),
             ],
           ),
         ),

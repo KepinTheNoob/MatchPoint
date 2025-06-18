@@ -302,7 +302,7 @@ class _RegisterPageState extends State<RegisterPage>
                     );
                   },
                   child: const Text(
-                    "Already have an account?",
+                    "Already have an account? Login",
                     style: TextStyle(
                       color: Color(0xff174B7E),
                       decoration: TextDecoration.underline,
@@ -310,31 +310,25 @@ class _RegisterPageState extends State<RegisterPage>
                   ),
                 ),
 
-                // Jujur ini gak tahu buat apa, pajangan aja
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    TextButton(
-                      onPressed: () {},
-                      child: const Text(
-                        "Terms of Use",
-                        style: TextStyle(
-                          color: Color(0xff174B7E),
-                          decoration: TextDecoration.underline,
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: const [
+                      Flexible(
+                        child: Text(
+                          "Note: The email must be linked to a registered device for future features.",
+                          style: TextStyle(
+                            color: Color(0xff174B7E),
+                            fontSize: 14,
+                          ),
+                          textAlign: TextAlign.center,
+                          softWrap: true,
                         ),
                       ),
-                    ),
-                    TextButton(
-                      onPressed: () {},
-                      child: const Text(
-                        "Privacy Policy",
-                        style: TextStyle(
-                          color: Color(0xff174B7E),
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ],
             ),

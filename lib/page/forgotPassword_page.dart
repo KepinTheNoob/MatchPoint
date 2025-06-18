@@ -33,11 +33,12 @@ class ForgotPasswordState extends State<ForgotPassword> {
 
       try {
         await _auth.sendPasswordResetEmail(email: _emailController.text);
+        toastBool("Successfully sent to email", true);
       } on FirebaseAuthException catch (e) {
-        toastBool("Internal Server Error", true);
+        toastBool("Internal Server Error", false);
         print(e);
       } finally {
-        if(mounted) {
+        if (mounted) {
           setState(() {
             _isLoading = false;
           });
@@ -55,17 +56,45 @@ class ForgotPasswordState extends State<ForgotPassword> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32),
           child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text("Enter Your Email and we will send you a password reset link"),
-
+              const SizedBox(height: 24),
+              IconButton(
+                icon: const Icon(Icons.arrow_back, color: Colors.black),
+                onPressed: () => Navigator.of(context).pop(),
+              ),
+              const SizedBox(height: 32),
+              Text(
+                "Reset Password",
+                style: TextStyle(
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                  color: const Color(0xFF174B7E),
+                ),
+              ),
+              const SizedBox(height: 12),
+              Text(
+                "Enter your email and we’ll send you a password reset link.",
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black87,
+                ),
+              ),
+              const SizedBox(height: 32),
               buildTextField("Email", _emailController, _emailError),
-
-              loginRegisterButton(_validateAndReset, "Reset Password", _isLoading),
+              const SizedBox(height: 32),
+              Center(
+                child: loginRegisterButton(
+                  _validateAndReset,
+                  "Send",
+                  _isLoading,
+                ),
+              ),
+              const Spacer(),
             ],
           ),
-        )
-      )
+        ),
+      ),
     );
   }
 }

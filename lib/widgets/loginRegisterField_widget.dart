@@ -141,7 +141,8 @@ Widget _requirementText(String text, bool met) {
 }
 
 // Field Text biasa
-Widget buildTextField(String label, TextEditingController controller, String errorText) {
+Widget buildTextField(
+    String label, TextEditingController controller, String errorText) {
   return Column(
     crossAxisAlignment: CrossAxisAlignment.start,
     children: [
@@ -180,20 +181,23 @@ Widget buildTextField(String label, TextEditingController controller, String err
 
 Widget forgotPasswordField(BuildContext context) {
   return Padding(
-    padding: const EdgeInsets.symmetric(horizontal: 25.0),
+    padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
     child: Row(
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         TextButton(
+          style: TextButton.styleFrom(
+            padding: EdgeInsets.zero,
+            minimumSize: Size(0, 0),
+            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+          ),
           onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(
-                builder: (context) => const ForgotPassword()
-              ),
+              MaterialPageRoute(builder: (context) => const ForgotPassword()),
             );
           },
-          child: const Text(
+          child: Text(
             "Forgot password?",
             style: TextStyle(
               color: Color(0xff174B7E),

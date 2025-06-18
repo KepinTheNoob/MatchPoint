@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:matchpoint/model/firebase_service.dart';
 import 'package:matchpoint/page/deleteAccount_page.dart';
+import 'package:matchpoint/page/forgotPassword_page.dart';
 import 'package:matchpoint/page/login_page.dart';
 import 'package:matchpoint/widgets/editUsernameDialog_widget.dart';
+import 'package:matchpoint/widgets/loginRegisterField_widget.dart';
 import 'package:matchpoint/widgets/logoutDialog_widget.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:matchpoint/widgets/toast_widget.dart';
@@ -105,14 +107,18 @@ class _SettingsPageState extends State<SettingsPage> {
                 title: const Text("Email"),
                 subtitle: Text(user?.email ?? 'johndoe@gmail.com'),
               ),
-              // ListTile(
-              //   leading: const Icon(Icons.key),
-              //   title: const Text("Change Password"),
-              //   onTap: () {
-              //     toastBool('Under Maintenance', false);
-              //   },
-              //   // subtitle: const Text("johndoe@example.com"),
-              // ),
+              ListTile(
+                leading: const Icon(Icons.key),
+                title: const Text("Reset Password"),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => const ForgotPassword()),
+                  );
+                },
+                // subtitle: const Text("johndoe@example.com"),
+              ),
               CheckboxListTile(
                 secondary: const Icon(Icons.login),
                 title: const Text("Sign in with Google"),
